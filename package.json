@@ -1,0 +1,13 @@
+{
+  "name": "GarageServer.IO",
+  "author": "Jeremiah Billmann",
+  "version": "0.0.1",
+  "description": "node.js game server",
+  "keywords": [
+    "game",
+    "server",
+    "client",
+    "multiplayer",
+    "socket"
+  ]
+}
