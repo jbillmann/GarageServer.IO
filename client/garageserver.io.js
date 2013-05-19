@@ -1,13 +1,13 @@
 window.GarageServerIO = (function (socketio) {
     
-    this.io = socketio;
+    var io = socketio,
     
-    var connectGarageServer = function (path) {
-        this.io.connect(path + '/garageserver');
+    connectToGarageServer = function (path) {
+        io.connect(path + '/garageserver');
     };
     
     return {
-        connectGarageServer: connectGarageServer
+        connectToGarageServer: connectToGarageServer
     };
 
 }) (io);
