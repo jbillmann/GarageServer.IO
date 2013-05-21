@@ -1,13 +1,27 @@
-window.GarageServerIO = (function (socketio) {
+window.GarageServerIO = (function (window, socketio) {
     
     var io = socketio,
     
-    connectToGarageServer = function (path) {
+    garageServerGame = null,
+    
+    connectToGarageServer = function (path, options) {
         io.connect(path + '/garageserver');
+    },
+    
+    startGarageServerGame = function (options) {
+        garageServerGame = new GarageServerGame(options);
+    };
+    
+    function GarageServerGame (options) {
+    
+    }
+    
+    GarageServerGame.prototype.update = function () {
+        
     };
     
     return {
         connectToGarageServer: connectToGarageServer
     };
 
-}) (io);
+}) (window, io);
