@@ -5,7 +5,7 @@ window.GarageServerIO = (function (window, socketio) {
     garageServerGame = null,
     
     connectToGarageServer = function (path, options) {
-        io.connect(path + '/garageserver');
+        io.connect(path + '/garageserver.io');
     },
     
     startGarageServerGame = function (options) {
