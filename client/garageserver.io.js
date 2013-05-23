@@ -6,6 +6,16 @@ window.GarageServerIO = (function (window, socketio) {
     
     connectToGarageServer = function (path, options) {
         io.connect(path + '/garageserver.io');
+        registerSocketEvents();
+    },
+    
+    registerSocketEvents = function () {
+        io.on('update', function(data) {
+        
+        });
+        io.on('ping', function(data) {
+            
+        });
     },
     
     startGarageServerGame = function (options) {
