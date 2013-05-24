@@ -11,10 +11,17 @@ window.GarageServerIO = (function (window, socketio) {
     
     registerSocketEvents = function () {
         io.on('update', function(data) {
-        
+            if(garageServerGame.addPlayerInput) {
+                garageServerGame.addPlayerInput(data);
+            }
         });
         io.on('ping', function(data) {
             
+        });
+        io.on('removePlayer', function(id) {
+            if(garageServerGame.removePlayer) {
+                garageServerGame.removePlayer(id);
+            }
         });
     },
     
@@ -23,15 +30,34 @@ window.GarageServerIO = (function (window, socketio) {
     };
     
     function GarageServerGame (options) {
-    
+        this.players = [];
+        this.updates = [];
     }
     
-    GarageServerGame.prototype.update = function () {
+    GarageServerGame.prototype.addPlayerInput = function (input) {
+        this.updates.push(input);
+    };
+    
+    GarageServerGame.prototype.sendPlayerInput = function (input) {
+        
+    };
+    
+    GarageServerGame.prototype.removePlayer = function (id) {
+        for(var i = 0; i < this.players.length; i ++) {
+            if(this.players[i].id === id) {
+                this.players.splice(i, 1)[0];
+                return;
+            }
+        }
+    };
+    
+    GarageServerGame.prototype.updatePlayers = function () {
         
     };
     
     return {
-        connectToGarageServer: connectToGarageServer
+        connectToGarageServer: connectToGarageServer,
+        startGarageServerGame: startGarageServerGame
     };
 
 }) (window, io);
