@@ -2,62 +2,60 @@ window.GarageServerIO = (function (window, socketio) {
     
     var io = socketio,
     
-    garageServerGame = null,
+    socket = null,
+    
+    sequenceNumber = 0,
+    
+    players = [],
+    
+    inputs = [],
+    
+    updates = [],
     
     // TODO: DONE CALLBACK
     connectToGarageServer = function (path, options) {
-        registerSocketEvents(io.connect(path + '/garageserver.io'));
+        socket = io.connect(path + '/garageserver.io');
+        registerSocketEvents();
     },
     
-    registerSocketEvents = function (socket) {
+    registerSocketEvents = function () {
         socket.on('update', function(data) {
-            if(garageServerGame.addPlayerInput) {
-                garageServerGame.addPlayerInput(data);
+            if(addPlayerInput) {
+                addPlayerInput(data);
             }
         });
         socket.on('ping', function(data) {
             
         });
         socket.on('removePlayer', function(id) {
-            if(garageServerGame.removePlayer) {
-                garageServerGame.removePlayer(id);
+            if(removePlayer) {
+                removePlayer(id);
             }
         });
     },
     
-    startGarageServerGame = function (options) {
-        garageServerGame = new GarageServerGame(options);
-    };
+    addPlayerInput = function (input) {
+        sequenceNumber += 1;
+        inputs.push({ input: input, seq: sequenceNumber });
+    },
     
-    function GarageServerGame (options) {
-        this.players = [];
-        this.updates = [];
-    }
-    
-    GarageServerGame.prototype.addPlayerInput = function (input) {
-        this.updates.push(input);
-    };
-    
-    GarageServerGame.prototype.sendPlayerInput = function (input) {
+    sendPlayerInput = function () {
         
-    };
+    },
     
-    GarageServerGame.prototype.removePlayer = function (id) {
-        for(var i = 0; i < this.players.length; i ++) {
-            if(this.players[i].id === id) {
-                this.players.splice(i, 1)[0];
+    removePlayer = function (id) {
+        for(var i = 0; i < players.length; i ++) {
+            if(players[i].id === id) {
+                players.splice(i, 1)[0];
                 return;
             }
         }
     };
     
-    GarageServerGame.prototype.updatePlayers = function () {
-        
-    };
-    
     return {
         connectToGarageServer: connectToGarageServer,
-        startGarageServerGame: startGarageServerGame
+        addPlayerInput: addPlayerInput,
+        sendPlayerInput: sendPlayerInput
     };
 
 }) (window, io);

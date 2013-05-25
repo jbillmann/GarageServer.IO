@@ -16,16 +16,22 @@ $(function () {
     handleInput = function (){
         if(keyboard.pressed('left')) {
             x -= 1;
+            GarageServerIO.addPlayerInput('left');
         }
         if(keyboard.pressed('right')) {
             x += 1;
+            GarageServerIO.addPlayerInput('right');
         }
         if(keyboard.pressed('down')) {
             y += 1;
+            GarageServerIO.addPlayerInput('down');
         }
         if(keyboard.pressed('up')) {
             y -= 1;
+            GarageServerIO.addPlayerInput('up');
         }
+        
+        GarageServerIO.sendPlayerInput();
     },
     
     update = function () {
