@@ -4,21 +4,21 @@ window.GarageServerIO = (function (window, socketio) {
     
     garageServerGame = null,
     
+    // TODO: DONE CALLBACK
     connectToGarageServer = function (path, options) {
-        io.connect(path + '/garageserver.io');
-        registerSocketEvents();
+        registerSocketEvents(io.connect(path + '/garageserver.io'));
     },
     
-    registerSocketEvents = function () {
-        io.on('update', function(data) {
+    registerSocketEvents = function (socket) {
+        socket.on('update', function(data) {
             if(garageServerGame.addPlayerInput) {
                 garageServerGame.addPlayerInput(data);
             }
         });
-        io.on('ping', function(data) {
+        socket.on('ping', function(data) {
             
         });
-        io.on('removePlayer', function(id) {
+        socket.on('removePlayer', function(id) {
             if(garageServerGame.removePlayer) {
                 garageServerGame.removePlayer(id);
             }

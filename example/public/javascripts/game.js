@@ -1,5 +1,51 @@
 $(function () {
-    
     GarageServerIO.connectToGarageServer('http://garageserver_io.jbillmann.c9.io');
+    
+    var gameCanvas = document.getElementById('gameCanvas'),
+    
+    keyboard = new THREEx.KeyboardState(),
+    
+    ctxGameCanvas = gameCanvas.getContext('2d'),
+    
+    x = 0,
+    
+    y =0,
+    
+    requestAnimFrame = (function(){
+        return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function (callback) { window.setTimeout(callback, 1000/60); };
+    })();
+
+    function handleInput(){
+        if(keyboard.pressed('left')) {
+            x -= 1;
+        }
+        if(keyboard.pressed('right')) {
+            x += 1;
+        }
+        if(keyboard.pressed('down')) {
+            y += 1;
+        }
+        if(keyboard.pressed('up')) {
+            y -= 1;
+        }
+    }
+
+    var fps = 0, now, lastUpdate = (new Date)*1 - 1;
+    var fpsFilter = 50;
+    
+    function update () {        
+        requestAnimFrame(update);
+        handleInput();
+        ctxGameCanvas.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+        ctxGameCanvas.fillRect(x, y, 10, 10);
+        
+        var thisFrameFPS = 1000 / ((now=new Date) - lastUpdate);
+        fps += (thisFrameFPS - fps) / fpsFilter;
+        lastUpdate = now;
+        
+        $('#fps').html('FPS: ' + Math.round(fps));
+    }
+    
+    update();
     
 });
