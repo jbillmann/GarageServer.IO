@@ -7,15 +7,13 @@ $(function () {
     
     ctxGameCanvas = gameCanvas.getContext('2d'),
     
-    x = 0,
-    
-    y =0,
+    x = 0, y =0, fps = 0, now, lastUpdate = (new Date)*1 - 1, fpsFilter = 50,
     
     requestAnimFrame = (function(){
         return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function (callback) { window.setTimeout(callback, 1000/60); };
-    })();
+    })(),
 
-    function handleInput(){
+    handleInput = function (){
         if(keyboard.pressed('left')) {
             x -= 1;
         }
@@ -28,12 +26,9 @@ $(function () {
         if(keyboard.pressed('up')) {
             y -= 1;
         }
-    }
-
-    var fps = 0, now, lastUpdate = (new Date)*1 - 1;
-    var fpsFilter = 50;
+    },
     
-    function update () {        
+    update = function () {
         requestAnimFrame(update);
         handleInput();
         ctxGameCanvas.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
@@ -44,7 +39,7 @@ $(function () {
         lastUpdate = now;
         
         $('#fps').html('FPS: ' + Math.round(fps));
-    }
+    };
     
     update();
     
