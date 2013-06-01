@@ -4,7 +4,7 @@ window.GarageServerIO = (function (window, socketio) {
 
     socket = null,
 
-    sequenceNumber = 1,
+    sequenceNumber = 0,
 
     players = [],
 
