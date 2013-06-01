@@ -63,7 +63,8 @@ window.GarageServerIO = (function (window, socketio) {
     },
 
     sendPlayerInput = function (input) {
-        socket.emit('input', { input: input, seq: sequenceNumber });
+        var currentTime = new Date().getTime();
+        socket.emit('input', { input: input, seq: sequenceNumber, timestamp: currentTime });
     },
 
     removePlayer = function (id) {
