@@ -33,11 +33,13 @@ window.GarageServerIO = (function (window, socketio) {
     updatePlayerInput = function (data) {
         var playerFound = false;
 
-        if(socket.id === data.id) {
+        if(socket.socket.sessionid === data.id) {
+            //TODO: Don't add if sequence state is already stored.
             updates.push(data);
         }
         else {
             for(var i = 0; i < players.length; i ++) {
+                //TODO: Don't add if sequence state is already stored.
                 if(players[i].id === data.id) {
                     playerFound = true;
                     players[i].state = data.state;
