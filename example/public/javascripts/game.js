@@ -30,8 +30,6 @@ $(function () {
             y -= 1;
             GarageServerIO.addPlayerInput('up');
         }
-        
-        GarageServerIO.sendPlayerInput();
     },
     
     update = function () {

@@ -8,8 +8,6 @@ window.GarageServerIO = (function (window, socketio) {
     
     players = [],
     
-    inputs = [],
-    
     updates = [],
     
     // TODO: DONE CALLBACK
@@ -36,11 +34,11 @@ window.GarageServerIO = (function (window, socketio) {
     
     addPlayerInput = function (input) {
         sequenceNumber += 1;
-        inputs.push({ input: input, seq: sequenceNumber });
+        sendPlayerInput(input);
     },
     
-    sendPlayerInput = function () {
-        
+    sendPlayerInput = function (input) {
+        socket.emit('input', { input: input, seq: sequenceNumber });
     },
     
     removePlayer = function (id) {
