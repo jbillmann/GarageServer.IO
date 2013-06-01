@@ -39,4 +39,8 @@ server.listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
 
-garageServer.createGarageServer(io.listen(server), { logging: true });
+var sockets = io.listen(server);
+
+sockets.set('log level', 0);
+
+garageServer.createGarageServer(sockets, { logging: true });
