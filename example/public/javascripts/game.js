@@ -1,5 +1,5 @@
 $(function () {
-    GarageServerIO.connectToGarageServer('http://garageserver_io.jbillmann.c9.io');
+    GarageServerIO.connectToGarageServer('http://garageserver_io.jbillmann.c9.io', { logging: true });
     
     var gameCanvas = document.getElementById('gameCanvas'),
     

@@ -15,11 +15,14 @@ window.GarageServerIO = (function (window, socketio) {
     // TODO: DONE CALLBACK
     connectToGarageServer = function (path, options) {
         socket = io.connect(path + '/garageserver.io');
-        registerSocketEvents();
+        registerSocketEvents(options);
     },
 
-    registerSocketEvents = function () {
+    registerSocketEvents = function (options) {
         socket.on('update', function(data) {
+            if(options.logging) {
+                console.log('garageserver.io:: socket update ' + ' ' + data.id + ' ' + data.state + ' ' + data.seq);
+            }
             updatePlayerInput(data);
         });
         socket.on('ping', function(data) {
