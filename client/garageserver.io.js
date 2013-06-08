@@ -1,3 +1,9 @@
+/*
+options = {
+    
+}
+*/
+
 window.GarageServerIO = (function (window, socketio) {
 
     var io = socketio,
@@ -31,28 +37,47 @@ window.GarageServerIO = (function (window, socketio) {
     },
 
     updatePlayerInput = function (data) {
-        var playerFound = false;
+        var playerFound = false,
+            updateFound = false,
+            playerIdx = 0,
+            updateIdx = 0;
 
-        if(socket.socket.sessionid === data.id) {
-            //TODO: Don't add if sequence state is already stored.
-            updates.push(data);
+        if (socket.socket.sessionid === data.id) {
+            for (updateIdx = 0; updateIdx < updates.length; updateIdx ++) {
+                if (updates[updateIdx].seq === data.seq) {
+                    updates[updateIdx].state = data.state;
+                    updateFound = true;
+                    break;
+                }
+            }
+            if (!updateFound) {
+                updates.push(data);
+            }
         }
         else {
-            for(var i = 0; i < players.length; i ++) {
-                //TODO: Don't add if sequence state is already stored.
-                if(players[i].id === data.id) {
+            for (playerIdx = 0; playerIdx < players.length; playerIdx ++) {
+                if(players[playerIdx].id === data.id) {
                     playerFound = true;
-                    players[i].state = data.state;
-                    players[i].seq = data.seq;
+                    for (updateIdx = 0; updateIdx < players[playerIdx].updates.length; updateIdx ++) {
+                        if (players[playerIdx].updates[updateIdx].seq === data.seq) {
+                            players[playerIdx].updates[updateIdx].state = data.state;
+                            updateFound = true;
+                            break;
+                        }
+                    }
+                    if (!updateFound) {
+                        players[playerIdx].updates.push( { state: data.state, seq: data.seq } );
+                    }
+                    break;
                 }
             }
 
-            if(!playerFound) {
+            if (!playerFound) {
                 var player = {
                     id: data.id,
-                    state: data.state,
-                    seq: data.seq
+                    updates: []
                 };
+                player.updates.push( { state: data.state, seq: data.seq } );
                 players.push(player);
             }
         }
@@ -70,8 +95,8 @@ window.GarageServerIO = (function (window, socketio) {
     },
 
     removePlayer = function (id) {
-        for(var i = 0; i < players.length; i ++) {
-            if(players[i].id === id) {
+        for (var i = 0; i < players.length; i ++) {
+            if (players[i].id === id) {
                 players.splice(i, 1)[0];
                 return;
             }
