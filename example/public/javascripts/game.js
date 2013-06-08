@@ -13,23 +13,29 @@ $(function () {
         return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function (callback) { window.setTimeout(callback, 1000/60); };
     })(),
 
-    handleInput = function (){
-        if(keyboard.pressed('left')) {
+    handleInput = function () {
+        if (keyboard.pressed('left')) {
             x -= 1;
             GarageServerIO.addPlayerInput('left');
         }
-        if(keyboard.pressed('right')) {
+        if (keyboard.pressed('right')) {
             x += 1;
             GarageServerIO.addPlayerInput('right');
         }
-        if(keyboard.pressed('down')) {
+        if (keyboard.pressed('down')) {
             y += 1;
             GarageServerIO.addPlayerInput('down');
         }
-        if(keyboard.pressed('up')) {
+        if (keyboard.pressed('up')) {
             y -= 1;
             GarageServerIO.addPlayerInput('up');
         }
+    },
+    
+    processInputs = function () {
+        //GarageServerIO.processPlayerInput
+        
+        
     },
 
     update = function () {

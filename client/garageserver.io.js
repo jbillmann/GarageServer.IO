@@ -109,6 +109,14 @@ window.GarageServerIO = (function (window, socketio) {
         var currentTime = new Date().getTime();
         socket.emit('input', { input: input, seq: sequenceNumber, timestamp: currentTime });
     },
+    
+    processPlayerInput = function () {
+        for (var i = 0; i < players.length; i ++) {
+            if (players[i].id !== socket.socket.sessionid) {
+
+            }
+        }
+    },
 
     removePlayer = function (id, options) {
         for (var i = 0; i < players.length; i ++) {
@@ -125,7 +133,8 @@ window.GarageServerIO = (function (window, socketio) {
 
     return {
         connectToGarageServer: connectToGarageServer,
-        addPlayerInput: addPlayerInput
+        addPlayerInput: addPlayerInput,
+        processPlayerInput: processPlayerInput
     };
 
 }) (window, io);
