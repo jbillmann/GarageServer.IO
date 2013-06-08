@@ -102,6 +102,19 @@ window.GarageServerIO = (function (window, socketio) {
         }
     },
 
+    removePlayer = function (id) {
+        for (var i = 0; i < players.length; i ++) {
+            if (players[i].id === id) {
+                players.splice(i, 1)[0];
+                return;
+            }
+        }
+
+        if (options.onPlayerDisconnect) {
+            options.onPlayerDisconnect(id);
+        }
+    },
+
     addPlayerInput = function (input) {
         sequenceNumber += 1;
         inputs.push(input);
@@ -129,17 +142,18 @@ window.GarageServerIO = (function (window, socketio) {
             }
         }
     },
-
-    removePlayer = function (id) {
+    
+    getPlayerStates = function (stateCallback) {
+        var maxUpdate = 0;
         for (var i = 0; i < players.length; i ++) {
-            if (players[i].id === id) {
-                players.splice(i, 1)[0];
-                return;
+            if (players[i].updates.length > 0) {
+                maxUpdate = players[i].updates.length - 1;
+                stateCallback(players[i].updates[maxUpdate].state);
             }
         }
-
-        if (options.onPlayerDisconnect) {
-            options.onPlayerDisconnect(id);
+        if (updates.length > 0) {
+            maxUpdate = updates.length - 1;
+            stateCallback(updates[maxUpdate].state);
         }
     };
 
@@ -147,7 +161,8 @@ window.GarageServerIO = (function (window, socketio) {
         connectToGarageServer: connectToGarageServer,
         addPlayerInput: addPlayerInput,
         processPlayerInput: processPlayerInput,
-        processClientInput: processClientInput
+        processClientInput: processClientInput,
+        getPlayerStates: getPlayerStates
     };
 
 }) (window, io);

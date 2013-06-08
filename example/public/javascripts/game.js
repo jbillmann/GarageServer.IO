@@ -1,5 +1,5 @@
 $(function () {
-    GarageServerIO.connectToGarageServer('http://garageserver_io.jbillmann.c9.io', { logging: true });
+    GarageServerIO.connectToGarageServer('http://garageserver_io.jbillmann.c9.io', { logging: false });
 
     var gameCanvas = document.getElementById('gameCanvas'),
 
@@ -36,7 +36,10 @@ $(function () {
     
     draw = function () {
         ctxGameCanvas.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-        ctxGameCanvas.fillRect(x, y, 10, 10);
+        
+        GarageServerIO.getPlayerStates(function (state) {
+            ctxGameCanvas.fillRect(state.x, state.y, 10, 10);
+        });
     },
 
     update = function () {
