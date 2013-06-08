@@ -1,6 +1,10 @@
 /*
 options = {
-    
+    onUpdatePlayerPhysics: function (state),
+    onConnect: function()
+    onPlayerUpdate: function (data),
+    onPlayerDisconnect: function (id),
+    onPing: function (data),
 }
 */
 
@@ -26,17 +30,17 @@ window.GarageServerIO = (function (window, socketio) {
 
     registerSocketEvents = function (options) {
         socket.on('update', function(data) {
-            updatePlayerInput(data);
+            updatePlayerInput(data, options);
         });
-        socket.on('ping', function(data) {
+        socket.on('ping', function(data, options) {
             
         });
-        socket.on('removePlayer', function(id) {
-            removePlayer(id);
+        socket.on('removePlayer', function(id, options) {
+            removePlayer(id, options);
         });
     },
 
-    updatePlayerInput = function (data) {
+    updatePlayerInput = function (data, options) {
         var playerFound = false,
             updateFound = false,
             playerIdx = 0,
@@ -56,7 +60,7 @@ window.GarageServerIO = (function (window, socketio) {
         }
         else {
             for (playerIdx = 0; playerIdx < players.length; playerIdx ++) {
-                if(players[playerIdx].id === data.id) {
+                if (players[playerIdx].id === data.id) {
                     playerFound = true;
                     for (updateIdx = 0; updateIdx < players[playerIdx].updates.length; updateIdx ++) {
                         if (players[playerIdx].updates[updateIdx].seq === data.seq) {
@@ -81,6 +85,10 @@ window.GarageServerIO = (function (window, socketio) {
                 players.push(player);
             }
         }
+        
+        if (options.onPlayerUpdate) {
+            options.onPlayerUpdate(data);
+        }
     },
 
     addPlayerInput = function (input) {
@@ -94,12 +102,16 @@ window.GarageServerIO = (function (window, socketio) {
         socket.emit('input', { input: input, seq: sequenceNumber, timestamp: currentTime });
     },
 
-    removePlayer = function (id) {
+    removePlayer = function (id, options) {
         for (var i = 0; i < players.length; i ++) {
             if (players[i].id === id) {
                 players.splice(i, 1)[0];
                 return;
             }
+        }
+
+        if (options.onPlayerDisconnect) {
+            options.onPlayerDisconnect(id);
         }
     };
 
