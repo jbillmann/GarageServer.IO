@@ -13,7 +13,7 @@ $(function () {
         return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function (callback) { window.setTimeout(callback, 1000/60); };
     })(),
 
-    handleInput = function () {
+    processClientInput = function () {
         if (keyboard.pressed('left')) {
             GarageServerIO.addPlayerInput('left');
         }
@@ -28,18 +28,24 @@ $(function () {
         }
     },
     
-    processInputs = function () {
+    processServerInput = function () {
         //GarageServerIO.processPlayerInput
         
         //GarageServerIO.processClientInput
     },
+    
+    draw = function () {
+        ctxGameCanvas.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+        ctxGameCanvas.fillRect(x, y, 10, 10);
+    },
 
     update = function () {
         requestAnimFrame(update);
-        handleInput();
-        processInputs();
-        ctxGameCanvas.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-        ctxGameCanvas.fillRect(x, y, 10, 10);
+        
+        processClientInput();
+        processServerInput();
+
+        draw();
 
         var thisFrameFPS = 1000 / ((now=new Date) - lastUpdate);
         fps += (thisFrameFPS - fps) / fpsFilter;
