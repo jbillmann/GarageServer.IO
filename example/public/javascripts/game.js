@@ -3,60 +3,64 @@ $(function () {
 
     var gameCanvas = document.getElementById('gameCanvas'),
 
-    keyboard = new THREEx.KeyboardState(),
+        keyboard = new THREEx.KeyboardState(),
 
-    ctxGameCanvas = gameCanvas.getContext('2d'),
+        ctxGameCanvas = gameCanvas.getContext('2d'),
 
-    x = 0, y =0, fps = 0, now, lastUpdate = (new Date)*1 - 1, fpsFilter = 50,
+        fps = 0,
 
-    requestAnimFrame = (function(){
-        return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function (callback) { window.setTimeout(callback, 1000/60); };
-    })(),
+        now,
 
-    processClientInput = function () {
-        if (keyboard.pressed('left')) {
-            GarageServerIO.addPlayerInput('left');
-        }
-        if (keyboard.pressed('right')) {
-            GarageServerIO.addPlayerInput('right');
-        }
-        if (keyboard.pressed('down')) {
-            GarageServerIO.addPlayerInput('down');
-        }
-        if (keyboard.pressed('up')) {
-            GarageServerIO.addPlayerInput('up');
-        }
-    },
-    
-    processServerInput = function () {
-        //GarageServerIO.processPlayerInput
-        
-        //GarageServerIO.processClientInput
-    },
-    
-    draw = function () {
-        ctxGameCanvas.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-        
-        GarageServerIO.getPlayerStates(function (state) {
-            ctxGameCanvas.fillRect(state.x, state.y, 10, 10);
-        });
-    },
+        lastUpdate = (new Date()) * 1 - 1,
 
-    update = function () {
-        requestAnimFrame(update);
-        
-        processClientInput();
-        processServerInput();
+        fpsFilter = 50,
 
-        draw();
+        requestAnimFrame = (function () {
+            return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function (callback) { window.setTimeout(callback, 1000/60); };
+        })(),
 
-        var thisFrameFPS = 1000 / ((now=new Date) - lastUpdate);
-        fps += (thisFrameFPS - fps) / fpsFilter;
-        lastUpdate = now;
+        processClientInput = function () {
+            if (keyboard.pressed('left')) {
+                GarageServerIO.addPlayerInput('left');
+            }
+            if (keyboard.pressed('right')) {
+                GarageServerIO.addPlayerInput('right');
+            }
+            if (keyboard.pressed('down')) {
+                GarageServerIO.addPlayerInput('down');
+            }
+            if (keyboard.pressed('up')) {
+                GarageServerIO.addPlayerInput('up');
+            }
+        },
 
-        $('#fps').html('FPS: ' + Math.round(fps));
-    };
+        processServerInput = function () {
+            //GarageServerIO.processPlayerInput
+            //GarageServerIO.processClientInput
+        },
+
+        draw = function () {
+            ctxGameCanvas.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+
+            GarageServerIO.getPlayerStates(function (state) {
+                ctxGameCanvas.fillRect(state.x, state.y, 10, 10);
+            });
+        },
+
+        update = function () {
+            requestAnimFrame(update);
+
+            processClientInput();
+            processServerInput();
+
+            draw();
+
+            var thisFrameFPS = 1000 / ((now = new Date()) - lastUpdate);
+            fps += (thisFrameFPS - fps) / fpsFilter;
+            lastUpdate = now;
+
+            $('#fps').html('FPS: ' + Math.round(fps));
+        };
 
     update();
-
 });
