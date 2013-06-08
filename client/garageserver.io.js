@@ -31,12 +31,20 @@ window.GarageServerIO = (function (window, socketio) {
     registerSocketEvents = function (options) {
         socket.on('update', function(data) {
             updatePlayerInput(data, options);
+            if (options.logging) {
+                console.log('garageserver.io:: socket update ' + data);
+            }
         });
         socket.on('ping', function(data, options) {
-            
+            if (options.logging) {
+                console.log('garageserver.io:: socket ping ' + data);
+            }
         });
         socket.on('removePlayer', function(id, options) {
             removePlayer(id, options);
+            if (options.logging) {
+                console.log('garageserver.io:: socket removePlayer ' + id);
+            }
         });
     },
 
