@@ -22,33 +22,36 @@ window.GarageServerIO = (function (window, socketio) {
 
     updates = [],
 
+    options = null,
+
     // TODO: DONE CALLBACK
-    connectToGarageServer = function (path, options) {
+    connectToGarageServer = function (path, opts) {
         socket = io.connect(path + '/garageserver.io');
-        registerSocketEvents(options);
+        options = opts;
+        registerSocketEvents();
     },
 
-    registerSocketEvents = function (options) {
+    registerSocketEvents = function () {
         socket.on('update', function(data) {
-            updatePlayerInput(data, options);
+            updatePlayerInput(data);
             if (options.logging) {
                 console.log('garageserver.io:: socket update ' + data);
             }
         });
-        socket.on('ping', function(data, options) {
+        socket.on('ping', function(data) {
             if (options.logging) {
                 console.log('garageserver.io:: socket ping ' + data);
             }
         });
-        socket.on('removePlayer', function(id, options) {
-            removePlayer(id, options);
+        socket.on('removePlayer', function(id) {
+            removePlayer(id);
             if (options.logging) {
                 console.log('garageserver.io:: socket removePlayer ' + id);
             }
         });
     },
 
-    updatePlayerInput = function (data, options) {
+    updatePlayerInput = function (data) {
         var playerFound = false,
             updateFound = false,
             playerIdx = 0,
@@ -109,7 +112,7 @@ window.GarageServerIO = (function (window, socketio) {
         var currentTime = new Date().getTime();
         socket.emit('input', { input: input, seq: sequenceNumber, timestamp: currentTime });
     },
-    
+
     processPlayerInput = function () {
         for (var i = 0; i < players.length; i ++) {
             if (players[i].id !== socket.socket.sessionid) {
@@ -118,7 +121,16 @@ window.GarageServerIO = (function (window, socketio) {
         }
     },
 
-    removePlayer = function (id, options) {
+    processClientInput = function () {
+        for (var i = 0; i < players.length; i ++) {
+            if (players[i].id === socket.socket.sessionid) {
+                
+                break;
+            }
+        }
+    },
+
+    removePlayer = function (id) {
         for (var i = 0; i < players.length; i ++) {
             if (players[i].id === id) {
                 players.splice(i, 1)[0];
@@ -134,7 +146,8 @@ window.GarageServerIO = (function (window, socketio) {
     return {
         connectToGarageServer: connectToGarageServer,
         addPlayerInput: addPlayerInput,
-        processPlayerInput: processPlayerInput
+        processPlayerInput: processPlayerInput,
+        processClientInput: processClientInput
     };
 
 }) (window, io);

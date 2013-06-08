@@ -43,4 +43,23 @@ var sockets = io.listen(server);
 
 sockets.set('log level', 0);
 
-garageServer.createGarageServer(sockets, { logging: true });
+garageServer.createGarageServer(sockets, { 
+    logging: true,
+    onUpdatePhysics: function (state, inputs) {
+        var i = 0;
+        for (i = 0; i < inputs.length; i ++) {
+            if (inputs[i] === 'left') {
+                state.x -= 1;
+            }
+            else if (inputs[i] === 'right') {
+                state.x += 1;
+            }
+            else if (inputs[i] === 'down') {
+                state.y += 1;
+            }
+            else if (inputs[i] === 'up') {
+                state.y -= 1;
+            }
+        }
+    }
+});
