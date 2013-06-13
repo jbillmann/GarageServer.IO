@@ -1,6 +1,5 @@
 /*
 options = {
-    onUpdatePlayerPhysics: function (state),
     onConnect: function()
     onPlayerUpdate: function (data),
     onPlayerDisconnect: function (id),
@@ -16,6 +15,7 @@ window.GarageServerIO = (function (window, socketio) {
     var io = socketio,
         socket = null,
         sequenceNumber = 0,
+        processedSequenceNumber = 0,
         players = [],
         inputs = [],
         updates = [],
@@ -65,6 +65,21 @@ window.GarageServerIO = (function (window, socketio) {
                 if (!updateFound) {
                     updates.push(data);
                 }
+                if (options.clientSidePrediction) {
+                    for (updateIdx = 0; updateIdx < updates.length; updateIdx ++) {
+                        if (updates[updateIdx].seq == processedSequenceNumber) {
+                            updates.splice(0, updateIdx);
+                        }
+                    }
+                    for (updateIdx = 0; updateIdx < inputs.length; updateIdx ++) {
+                        if (inputs[updateIdx].seq == processedSequenceNumber) {
+                            inputs.splice(0, updateIdx + 1);
+                        }
+                    }
+                    if (updates.length > 0 && inputs.length > 0) {
+                        options.onUpdatePhysics(updates[0].state, inputs);
+                    }
+                }
             } else {
                 for (playerIdx = 0; playerIdx < players.length; playerIdx ++) {
                     if (players[playerIdx].id === data.id) {
@@ -77,7 +92,7 @@ window.GarageServerIO = (function (window, socketio) {
                             }
                         }
                         if (!updateFound) {
-                            players[playerIdx].updates.push( { state: data.state, seq: data.seq } );
+                            players[playerIdx].updates.push({ state: data.state, seq: data.seq });
                         }
                         break;
                     }
@@ -88,7 +103,7 @@ window.GarageServerIO = (function (window, socketio) {
                         id: data.id,
                         updates: []
                     };
-                    player.updates.push( { state: data.state, seq: data.seq } );
+                    player.updates.push({ state: data.state, seq: data.seq });
                     players.push(player);
                 }
             }
@@ -111,18 +126,34 @@ window.GarageServerIO = (function (window, socketio) {
             }
         },
 
-        addPlayerInput = function (input) {
-            sequenceNumber += 1;
-            inputs.push(input);
-            if (options.clientSidePrediction && options.onUpdatePhysics) {
+        addPlayerInput = function (clientInput) {
+            var currentState = {},
+                newState = {},
+                inputsToProcess = [];
 
+            if (options.clientSidePrediction) {
+                for (var i = 0; i < updates.length; i ++) {
+                    if (updates[i].seq == processedSequenceNumber) {
+                        currentState = updates[i].state;
+                    }
+                }
             }
-            sendPlayerInput(input);
+
+            sequenceNumber += 1;
+            inputs.push({ input: clientInput, seq: sequenceNumber });
+
+            if (options.clientSidePrediction && options.onUpdatePhysics) {
+                inputsToProcess.push({ input: clientInput });
+                newState = options.onUpdatePhysics(currentState, inputsToProcess);
+                processedSequenceNumber += 1;
+                updates.push({ state: newState, seq: processedSequenceNumber });
+            }
+            sendPlayerInput(clientInput);
         },
 
-        sendPlayerInput = function (input) {
+        sendPlayerInput = function (clientInput) {
             var currentTime = new Date().getTime();
-            socket.emit('input', { input: input, seq: sequenceNumber, timestamp: currentTime });
+            socket.emit('input', { input: clientInput, seq: sequenceNumber, timestamp: currentTime });
         },
 
         getPlayerStates = function (stateCallback) {
