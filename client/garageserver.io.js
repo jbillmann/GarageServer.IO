@@ -5,6 +5,9 @@ options = {
     onPlayerUpdate: function (data),
     onPlayerDisconnect: function (id),
     onPing: function (data),
+    logging: true,
+    clientSidePrediction: true,
+    onUpdatePhysics: function (state, inputs)
 }
 */
 
@@ -111,29 +114,15 @@ window.GarageServerIO = (function (window, socketio) {
         addPlayerInput = function (input) {
             sequenceNumber += 1;
             inputs.push(input);
+            if (options.clientSidePrediction && options.onUpdatePhysics) {
+
+            }
             sendPlayerInput(input);
         },
 
         sendPlayerInput = function (input) {
             var currentTime = new Date().getTime();
             socket.emit('input', { input: input, seq: sequenceNumber, timestamp: currentTime });
-        },
-
-        processPlayerInput = function () {
-            for (var i = 0; i < players.length; i ++) {
-                if (players[i].id !== socket.socket.sessionid) {
-
-                }
-            }
-        },
-
-        processClientInput = function () {
-            for (var i = 0; i < players.length; i ++) {
-                if (players[i].id === socket.socket.sessionid) {
-                
-                    break;
-                }
-            }
         },
 
         getPlayerStates = function (stateCallback) {
@@ -153,8 +142,6 @@ window.GarageServerIO = (function (window, socketio) {
     return {
         connectToGarageServer: connectToGarageServer,
         addPlayerInput: addPlayerInput,
-        processPlayerInput: processPlayerInput,
-        processClientInput: processClientInput,
         getPlayerStates: getPlayerStates
     };
 

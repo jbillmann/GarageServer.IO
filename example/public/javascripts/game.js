@@ -34,11 +34,6 @@ $(function () {
             }
         },
 
-        processServerInput = function () {
-            //GarageServerIO.processPlayerInput
-            //GarageServerIO.processClientInput
-        },
-
         draw = function () {
             ctxGameCanvas.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
 
@@ -51,7 +46,6 @@ $(function () {
             requestAnimFrame(update);
 
             processClientInput();
-            processServerInput();
 
             draw();
 
