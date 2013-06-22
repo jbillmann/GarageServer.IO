@@ -41,7 +41,7 @@ window.GarageServerIO = (function (window, socketio) {
                 }
             });
             socket.on('ping', function(data) {
-                pingDelay = new Date() - Date.parse(data);
+                pingDelay = new Date().getTime() - data;
                 if (options.logging) {
                     console.log('garageserver.io:: socket ping delay ' + pingDelay);
                 }
@@ -60,7 +60,7 @@ window.GarageServerIO = (function (window, socketio) {
                 interval = options.pingInterval;
             }
             setInterval(function (){
-                socket.emit('ping', new Date());
+                socket.emit('ping', new Date().getTime());
             }, interval);
         },
 
