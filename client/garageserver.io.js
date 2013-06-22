@@ -24,6 +24,7 @@ window.GarageServerIO = (function (window, socketio) {
         updates = [],
         options = null,
         pingDelay = 100,
+        serverOffset,
 
         // TODO: DONE CALLBACK
         connectToGarageServer = function (path, opts) {
@@ -41,9 +42,10 @@ window.GarageServerIO = (function (window, socketio) {
                 }
             });
             socket.on('ping', function(data) {
-                pingDelay = new Date().getTime() - data;
+                pingDelay = new Date().getTime() - data.pingTime;
+                serverOffset = new Date().getTime() - data.serverTime + pingDelay;
                 if (options.logging) {
-                    console.log('garageserver.io:: socket ping delay ' + pingDelay);
+                    console.log('garageserver.io:: socket ping delay ' + pingDelay + ', server offset ' + serverOffset);
                 }
             });
             socket.on('removePlayer', function(id) {
@@ -108,7 +110,7 @@ window.GarageServerIO = (function (window, socketio) {
                             }
                         }
                         if (!updateFound) {
-                            players[playerIdx].updates.push({ state: data.state, seq: data.seq });
+                            players[playerIdx].updates.push({ state: data.state, seq: data.seq, timestamp: data.timestamp });
                         }
                         break;
                     }
@@ -168,16 +170,24 @@ window.GarageServerIO = (function (window, socketio) {
         },
 
         sendPlayerInput = function (clientInput) {
-            var currentTime = new Date().getTime();
-            socket.emit('input', { input: clientInput, seq: sequenceNumber, timestamp: currentTime });
+            socket.emit('input', { input: clientInput, seq: sequenceNumber });
         },
 
         getPlayerStates = function (stateCallback) {
             var maxUpdate = 0;
-            for (var i = 0; i < players.length; i ++) {
-                if (players[i].updates.length > 0) {
-                    maxUpdate = players[i].updates.length - 1;
-                    stateCallback(players[i].updates[maxUpdate].state);
+            for (var playerIdx = 0; playerIdx < players.length; playerIdx ++) {
+                if (players[playerIdx].updates.length > 0) {
+                    if (options.interpolation) {
+                        for (var updateIdx = players[playerIdx].updates.length - 1; updateIdx >= 0; updateIdx --) {
+                            if (players[playerIdx].updates[updateIdx].timestamp >  (new Date().getTime() - serverOffset)) {
+                                stateCallback(players[playerIdx].updates[updateIdx].state);
+                                break;
+                            }
+                        }
+                    } else {
+                        maxUpdate = players[playerIdx].updates.length - 1;
+                        stateCallback(players[playerIdx].updates[maxUpdate].state);
+                    }
                 }
             }
             if (updates.length > 0) {
