@@ -6,7 +6,10 @@ options = {
     onPing: function (data),
     logging: true,
     clientSidePrediction: true,
-    onUpdatePhysics: function (state, inputs)
+    onUpdatePhysics: function (state, inputs),
+    interpolation: true,
+    interpolationDelay: 100,
+    pingInterval: 2000
 }
 */
 
@@ -20,12 +23,14 @@ window.GarageServerIO = (function (window, socketio) {
         inputs = [],
         updates = [],
         options = null,
+        pingDelay = 100,
 
         // TODO: DONE CALLBACK
         connectToGarageServer = function (path, opts) {
             socket = io.connect(path + '/garageserver.io');
             options = opts;
             registerSocketEvents();
+            registerPinger();
         },
 
         registerSocketEvents = function () {
@@ -36,8 +41,9 @@ window.GarageServerIO = (function (window, socketio) {
                 }
             });
             socket.on('ping', function(data) {
+                pingDelay = new Date() - Date.parse(data);
                 if (options.logging) {
-                    console.log('garageserver.io:: socket ping ' + data);
+                    console.log('garageserver.io:: socket ping delay ' + pingDelay);
                 }
             });
             socket.on('removePlayer', function(id) {
@@ -46,6 +52,16 @@ window.GarageServerIO = (function (window, socketio) {
                     console.log('garageserver.io:: socket removePlayer ' + id);
                 }
             });
+        },
+        
+        registerPinger = function () {
+            var interval = 2000;
+            if (options.pingInterval) {
+                interval = options.pingInterval;
+            }
+            setInterval(function (){
+                socket.emit('ping', new Date());
+            }, interval);
         },
 
         updatePlayerInput = function (data) {
