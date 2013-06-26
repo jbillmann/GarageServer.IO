@@ -6,9 +6,9 @@ options = {
     onPing: function (data),
     logging: true,
     clientSidePrediction: true,
-    onUpdatePhysics: function (state, inputs),
+    onUpdatePlayerPhysics: function (state, inputs),
     interpolation: true,
-    interpolationDelay: 100,
+    onInterpolation: function(statePrevious, stateTarget, amount)
     pingInterval: 2000
 }
 */
@@ -17,14 +17,12 @@ window.GarageServerIO = (function (window, socketio) {
 
     var io = socketio,
         socket = null,
-        sequenceNumber = 0,
-        processedSequenceNumber = 0,
+        sequenceNumber = 1,
         players = [],
         inputs = [],
-        updates = [],
+        currentState = {},
         options = null,
         pingDelay = 100,
-        serverOffset,
 
         // TODO: DONE CALLBACK
         connectToGarageServer = function (path, opts) {
@@ -36,16 +34,15 @@ window.GarageServerIO = (function (window, socketio) {
 
         registerSocketEvents = function () {
             socket.on('update', function(data) {
-                updatePlayerInput(data);
+                updateState(data);
                 if (options.logging) {
-                    console.log('garageserver.io:: socket update ' + data);
+                    //console.log('garageserver.io:: socket state update');
                 }
             });
             socket.on('ping', function(data) {
-                pingDelay = new Date().getTime() - data.pingTime;
-                serverOffset = new Date().getTime() - data.serverTime + pingDelay;
+                pingDelay = new Date().getTime() - data;
                 if (options.logging) {
-                    console.log('garageserver.io:: socket ping delay ' + pingDelay + ', server offset ' + serverOffset);
+                    console.log('garageserver.io:: socket ping delay ' + pingDelay);
                 }
             });
             socket.on('removePlayer', function(id) {
@@ -65,70 +62,75 @@ window.GarageServerIO = (function (window, socketio) {
                 socket.emit('ping', new Date().getTime());
             }, interval);
         },
+        
+        updateState = function (data) {
+            updatePlayerState(data);
+            updateEntityState(data);
+        },
 
-        updatePlayerInput = function (data) {
-            var playerFound = false,
-                updateFound = false,
+        updatePlayerState = function (data) {
+            var updateFound = false,
+                playerFound = false,
                 playerIdx = 0,
-                updateIdx = 0;
+                updateIdx = 0,
+                stateIdx = 0,
+                playerState;
 
-            if (socket.socket.sessionid === data.id) {
-                for (updateIdx = 0; updateIdx < updates.length; updateIdx ++) {
-                    if (updates[updateIdx].seq === data.seq) {
-                        updates[updateIdx].state = data.state;
-                        updateFound = true;
-                        break;
-                    }
-                }
-                if (!updateFound) {
-                    updates.push(data);
-                }
-                if (options.clientSidePrediction) {
-                    for (updateIdx = 0; updateIdx < updates.length; updateIdx ++) {
-                        if (updates[updateIdx].seq == processedSequenceNumber) {
-                            updates.splice(0, updateIdx);
-                        }
-                    }
-                    for (updateIdx = 0; updateIdx < inputs.length; updateIdx ++) {
-                        if (inputs[updateIdx].seq == processedSequenceNumber) {
-                            inputs.splice(0, updateIdx + 1);
-                        }
-                    }
-                    if (updates.length > 0 && inputs.length > 0) {
-                        options.onUpdatePhysics(updates[0].state, inputs);
-                    }
-                }
-            } else {
-                for (playerIdx = 0; playerIdx < players.length; playerIdx ++) {
-                    if (players[playerIdx].id === data.id) {
-                        playerFound = true;
-                        for (updateIdx = 0; updateIdx < players[playerIdx].updates.length; updateIdx ++) {
-                            if (players[playerIdx].updates[updateIdx].seq === data.seq) {
-                                players[playerIdx].updates[updateIdx].state = data.state;
-                                updateFound = true;
+            for(stateIdx = 0; stateIdx < data.playerStates.length; stateIdx ++) {
+                playerFound = false;
+                updateFound = false;
+                playerState = data.playerStates[stateIdx];
+
+                if (socket.socket.sessionid === playerState.id) {
+                    currentState = playerState.state;
+
+                    if (options.clientSidePrediction) {
+                        for (updateIdx = 0; updateIdx < inputs.length; updateIdx ++) {
+                            if (inputs[updateIdx].seq == playerState.seq) {
+                                inputs.splice(0, updateIdx + 1);
                                 break;
                             }
                         }
-                        if (!updateFound) {
-                            players[playerIdx].updates.push({ state: data.state, seq: data.seq, timestamp: data.timestamp });
+                        if (inputs.length > 0) {
+                            currentState = options.onUpdatePlayerPhysics(currentState, inputs);
                         }
-                        break;
+                    }
+                } else {
+                    for (playerIdx = 0; playerIdx < players.length; playerIdx ++) {
+                        if (players[playerIdx].id === playerState.id) {
+                            playerFound = true;
+                            for (updateIdx = 0; updateIdx < players[playerIdx].updates.length; updateIdx ++) {
+                                if (players[playerIdx].updates[updateIdx].seq === playerState.seq) {
+                                    players[playerIdx].updates[updateIdx].state = playerState.state;
+                                    updateFound = true;
+                                    break;
+                                }
+                            }
+                            if (!updateFound) {
+                                players[playerIdx].updates.push({ state: playerState.state, seq: playerState.seq, time: playerState.time });
+                            }
+                            break;
+                        }
+                    }
+
+                    if (!playerFound) {
+                        var player = {
+                            id: playerState.id,
+                            updates: []
+                        };
+                        player.updates.push({ state: playerState.state, seq: playerState.seq, time: playerState.time });
+                        players.push(player);
                     }
                 }
 
-                if (!playerFound) {
-                    var player = {
-                        id: data.id,
-                        updates: []
-                    };
-                    player.updates.push({ state: data.state, seq: data.seq });
-                    players.push(player);
+                if (options.onPlayerUpdate) {
+                    options.onPlayerUpdate(playerState);
                 }
             }
-
-            if (options.onPlayerUpdate) {
-                options.onPlayerUpdate(data);
-            }
+        },
+        
+        updateEntityState = function (data) {
+            
         },
 
         removePlayer = function (id) {
@@ -145,26 +147,14 @@ window.GarageServerIO = (function (window, socketio) {
         },
 
         addPlayerInput = function (clientInput) {
-            var currentState = {},
-                newState = {},
-                inputsToProcess = [];
-
-            if (options.clientSidePrediction) {
-                for (var i = 0; i < updates.length; i ++) {
-                    if (updates[i].seq == processedSequenceNumber) {
-                        currentState = updates[i].state;
-                    }
-                }
-            }
+            var inputsToProcess = [];
 
             sequenceNumber += 1;
             inputs.push({ input: clientInput, seq: sequenceNumber });
 
-            if (options.clientSidePrediction && options.onUpdatePhysics) {
+            if (options.clientSidePrediction && options.onUpdatePlayerPhysics) {
                 inputsToProcess.push({ input: clientInput });
-                newState = options.onUpdatePhysics(currentState, inputsToProcess);
-                processedSequenceNumber += 1;
-                updates.push({ state: newState, seq: processedSequenceNumber });
+                currentState = options.onUpdatePlayerPhysics(currentState, inputsToProcess);
             }
             sendPlayerInput(clientInput);
         },
@@ -178,22 +168,16 @@ window.GarageServerIO = (function (window, socketio) {
             for (var playerIdx = 0; playerIdx < players.length; playerIdx ++) {
                 if (players[playerIdx].updates.length > 0) {
                     if (options.interpolation) {
-                        for (var updateIdx = players[playerIdx].updates.length - 1; updateIdx >= 0; updateIdx --) {
-                            if (players[playerIdx].updates[updateIdx].timestamp >  (new Date().getTime() - serverOffset)) {
-                                stateCallback(players[playerIdx].updates[updateIdx].state);
-                                break;
-                            }
-                        }
+
+
+
                     } else {
                         maxUpdate = players[playerIdx].updates.length - 1;
                         stateCallback(players[playerIdx].updates[maxUpdate].state);
                     }
                 }
             }
-            if (updates.length > 0) {
-                maxUpdate = updates.length - 1;
-                stateCallback(updates[maxUpdate].state);
-            }
+            stateCallback(currentState);
         };
 
     return {

@@ -45,7 +45,7 @@ sockets.set('log level', 0);
 
 garageServer.createGarageServer(sockets,{
     logging: true,
-    onUpdatePhysics: function (state, inputs) {
+    onUpdatePlayerPhysics: function (state, inputs) {
         var i = 0;
         if (!state.x && !state.y) {
             state.x = 0;

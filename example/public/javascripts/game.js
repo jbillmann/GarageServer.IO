@@ -3,7 +3,7 @@ $(function () {
         logging: true,
         clientSidePrediction: true,
         //interpolation: true,
-        onUpdatePhysics: function (state, inputs) {
+        onUpdatePlayerPhysics: function (state, inputs) {
             var i = 0;
             if (!state.x && !state.y) {
                 state.x = 0;
