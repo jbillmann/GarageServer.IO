@@ -30,7 +30,7 @@ window.GarageServerIO = (function (window, socketio) {
             }
             InputController.prototype = {
                 any: function () {
-                    return this.inputs.lenth > 0;
+                    return this.inputs.length > 0;
                 },
                 getSequence: function () {
                     return this.sequenceNumber;
@@ -42,12 +42,12 @@ window.GarageServerIO = (function (window, socketio) {
                 getInputs: function () {
                     return this.inputs;
                 },
-                removeInput: function (start, length) {
-                    this.inputs.splice(start, length);
-                },
-                forEach: function (callback) {
+                removeUpToSequence: function (seq) {
                     for (var i = 0; i < this.inputs.length; i ++) {
-                        callback(this.inputs[i], i);
+                        if (this.inputs[i].seq == seq) {
+                            this.inputs.splice(0, i + 1);
+                            break;
+                        }
                     }
                 }
             };
@@ -65,9 +65,89 @@ window.GarageServerIO = (function (window, socketio) {
                 }
             };
 
+            function Player (id) {
+                this.updates = [];
+            }
+            Player.prototype = {
+                anyUpdates: function () {
+                    return this.updates.length > 0;
+                },
+                addUpate: function (state, seq, time) {
+                    this.updates.push({ state: state, seq: seq, time: time });
+                    if (this.updates.length > 60) {
+                        this.updates.updates.splice(0, 1);
+                    }
+                },
+                getUpdate: function (seq) {
+                    for (var i = 0; i < this.updates.length; i ++) {
+                        if (this.updates[i].seq == seq) {
+                            return this.updates[i];
+                        }
+                    }
+                },
+                getLatestUpdate: function () {
+                    return this.updates[this.updates.length - 1];
+                },
+                forEachUpdate: function (callback) {
+                    for (var i = 0; i < this.updates.length; i ++) {
+                        callback(this.updates[i]);
+                    }
+                },
+                getPositions: function (time, frameTime) {
+                    var positions = {}, range, difference, amount;
+                    for (var i = 0; i < this.updates.length; i ++) {
+                        var previous = this.updates[i];
+                        var target = this.updates[i + 1];
+                
+                        if(previous && target && time > previous.time && time < target.time) {
+                            var frameDiff = new Date().getTime() - frameTime;
+                    
+                            range = target.time - previous.time;
+                            difference = time - previous.time + frameDiff;
+                            amount = parseFloat((difference / range).toFixed(3));
+
+                            positions.previousState = previous.state;
+                            positions.targetState = target.state;
+                            positions.amount = amount;
+                            break;
+                        }
+                    }
+                }
+            };
+
+            function PlayerController () {
+                this.players = [];
+            }
+            PlayerController.prototype = {
+                addPlayer: function (id) {
+                    var player = new Player(id);
+                    this.players.push(player);
+                    return player;
+                },
+                getPlayer: function (id) {
+                    for (var i = 0; i < this.players.length; i ++) {
+                        if (this.players[i].id == id) {
+                            return this.players[i];
+                        }
+                    }
+                },
+                removePlayer: function (id) {
+                    for (var i = 0; i < this.players.length; i ++) {
+                        this.players.splice(i, 1);
+                        return;
+                    }
+                },
+                forEach: function (callback) {
+                    for (var i = 0; i < this.players.length; i ++) {
+                        callback(this.players[i]);
+                    }
+                }
+            };
+            
             return {
                 Input: InputController,
-                State: StateController
+                State: StateController,
+                Player: PlayerController
             };
 
         }) (),
@@ -152,11 +232,7 @@ window.GarageServerIO = (function (window, socketio) {
                     stateController.playerId = playerState.id;
 
                     if (options.clientSidePrediction) {
-                        inputController.forEach(function (input, idx) {
-                            if (input.seq == playerState.seq) {
-                                inputController.removeInput(0, idx + 1);
-                            }
-                        });
+                        inputController.removeUpToSequence(playerState.seq);
                         if (inputController.any()) {
                             stateController.state = options.onUpdatePlayerPhysics(stateController.state, inputController.getInputs());
                         }
