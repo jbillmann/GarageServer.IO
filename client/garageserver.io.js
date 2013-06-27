@@ -205,6 +205,31 @@ window.GarageServerIO = (function (window, socketio) {
             }, interval);
         },
 
+        getPlayerId = function () {
+            return stateController.playerId;
+        },
+
+        setPlayerState = function (state) {
+            socket.emit('state', state);
+        },
+
+        removePlayer = function (id) {
+            playerController.removePlayer(id);
+
+            if (options.onPlayerRemove) {
+                options.onPlayerRemove(id);
+            }
+        },
+
+        addPlayerInput = function (clientInput) {
+            inputController.addInput(clientInput);
+
+            if (options.clientSidePrediction && options.onUpdatePlayerPhysics) {
+                stateController.state = options.onUpdatePlayerPhysics(stateController.state, [{ input: clientInput }]);
+            }
+            socket.emit('input', { input: clientInput, seq: inputController.getSequence() });
+        },
+
         updateState = function (data) {
             stateController.setTime(data.time, pingDelay);
             stateController.frameTime = new Date().getTime();
@@ -225,12 +250,10 @@ window.GarageServerIO = (function (window, socketio) {
 
                 if (socket.socket.sessionid === playerState.id) {
                     stateController.state = playerState.state;
+                    inputController.removeUpToSequence(playerState.seq);
 
-                    if (options.clientSidePrediction) {
-                        inputController.removeUpToSequence(playerState.seq);
-                        if (inputController.any()) {
-                            stateController.state = options.onUpdatePlayerPhysics(stateController.state, inputController.getInputs());
-                        }
+                    if (options.clientSidePrediction && inputController.any()) {
+                        stateController.state = options.onUpdatePlayerPhysics(stateController.state, inputController.getInputs());
                     }
                 } else {
                     playerController.forEach(function (player) {
@@ -241,8 +264,8 @@ window.GarageServerIO = (function (window, socketio) {
                         return;
                     });
                     if (!playerFound) {
-                        var player = playerController.addPlayer(playerState.id);
-                        player.addUpate(playerState.state, playerState.seq, data.time);
+                        var newPlayer = playerController.addPlayer(playerState.id);
+                        newPlayer.addUpate(playerState.state, playerState.seq, data.time);
                     }
                 }
 
@@ -254,27 +277,6 @@ window.GarageServerIO = (function (window, socketio) {
         
         updateEntityState = function (data) {
             
-        },
-
-        removePlayer = function (id) {
-            playerController.removePlayer(id);
-
-            if (options.onPlayerRemove) {
-                options.onPlayerRemove(id);
-            }
-        },
-
-        addPlayerInput = function (clientInput) {
-            inputController.addInput(clientInput);
-
-            if (options.clientSidePrediction && options.onUpdatePlayerPhysics) {
-                stateController.state = options.onUpdatePlayerPhysics(stateController.state, [{ input: clientInput }]);
-            }
-            sendPlayerInput(clientInput);
-        },
-
-        sendPlayerInput = function (clientInput) {
-            socket.emit('input', { input: clientInput, seq: inputController.getSequence() });
         },
 
         getPlayerStates = function (stateCallback) {
@@ -296,14 +298,6 @@ window.GarageServerIO = (function (window, socketio) {
                 }
             });
             stateCallback(stateController.state);
-        },
-
-        getPlayerId = function () {
-            return stateController.playerId;
-        },
-
-        setPlayerState = function (state) {
-            socket.emit('state', state);
         };
 
     return {
