@@ -38,15 +38,9 @@ window.GarageServerIO = (function (window, socketio) {
         any: function () {
             return this.inputs.length > 0;
         },
-        getSequence: function () {
-            return this.sequenceNumber;
-        },
         addInput: function (input) {
             this.sequenceNumber += 1;
             this.inputs.push({ input: input, seq: this.sequenceNumber });
-        },
-        getInputs: function () {
-            return this.inputs;
         },
         removeUpToSequence: function (seq) {
             for (var i = 0; i < this.inputs.length; i ++) {
@@ -215,7 +209,7 @@ window.GarageServerIO = (function (window, socketio) {
             if (_options.clientSidePrediction && _options.onUpdatePlayerPhysics) {
                 _stateController.state = _options.onUpdatePlayerPhysics(_stateController.state, [{ input: clientInput }]);
             }
-            _socket.emit('input', { input: clientInput, seq: _inputController.getSequence() });
+            _socket.emit('input', { input: clientInput, seq: _inputController.sequenceNumber });
         },
 
         updateState = function (data) {
@@ -241,7 +235,7 @@ window.GarageServerIO = (function (window, socketio) {
                     _inputController.removeUpToSequence(playerState.seq);
 
                     if (_options.clientSidePrediction && _inputController.any()) {
-                        _stateController.state = _options.onUpdatePlayerPhysics(_stateController.state, _inputController.getInputs());
+                        _stateController.state = _options.onUpdatePlayerPhysics(_stateController.state, _inputController.inputs);
                     }
                 } else {
                     _playerController.forEach(function (player) {
