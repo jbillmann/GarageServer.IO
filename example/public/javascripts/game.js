@@ -21,6 +21,14 @@ $(function () {
                 }
             }
             return state;
+        },
+        onInterpolation: function (previousState, targetState, amount) {
+            var newState = {};
+
+            newState.x = (previousState.x + amount * (targetState.x - previousState.x));
+            newState.y = (previousState.y + amount * (targetState.y - previousState.y));
+
+            return newState;
         }
     });
 

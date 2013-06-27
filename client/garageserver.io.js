@@ -1,14 +1,16 @@
 /*
 options = {
-    onConnect: function()
+    onPlayerConnect: function()
+    onPlayerDisconnect: function (),
+    onPlayerReconnect: function (),
     onPlayerUpdate: function (data),
-    onPlayerDisconnect: function (id),
+    onPlayerRemove: function (id),
     onPing: function (data),
+    onUpdatePlayerPhysics: function (state, inputs),
+    onInterpolation: function(previousState, targetState, amount)
     logging: true,
     clientSidePrediction: true,
-    onUpdatePlayerPhysics: function (state, inputs),
     interpolation: true,
-    onInterpolation: function(statePrevious, stateTarget, amount)
     pingInterval: 2000
 }
 */
@@ -21,23 +23,37 @@ window.GarageServerIO = (function (window, socketio) {
         players = [],
         inputs = [],
         currentState = {},
+        currentTime,
+        currentDelta,
+        currentPlayerId,
         options = null,
         pingDelay = 100,
 
-        // TODO: DONE CALLBACK
         connectToGarageServer = function (path, opts) {
-            socket = io.connect(path + '/garageserver.io');
             options = opts;
+            socket = io.connect(path + '/garageserver.io');
             registerSocketEvents();
             registerPinger();
         },
 
         registerSocketEvents = function () {
+            socket.on('connect', function () {
+                if (options.onPlayerConnect) {
+                    options.onPlayerConnect(); 
+                }
+            });
+            socket.on('disconnect', function () {
+                if (options.onPlayerDisconnect) {
+                    options.onPlayerDisconnect();
+                }
+            });
+            socket.on('reconnect', function () {
+                if (options.onPlayerReconnect) {
+                    options.onPlayerReconnect();
+                }
+            });
             socket.on('update', function(data) {
                 updateState(data);
-                if (options.logging) {
-                    //console.log('garageserver.io:: socket state update');
-                }
             });
             socket.on('ping', function(data) {
                 pingDelay = new Date().getTime() - data;
@@ -52,7 +68,7 @@ window.GarageServerIO = (function (window, socketio) {
                 }
             });
         },
-        
+
         registerPinger = function () {
             var interval = 2000;
             if (options.pingInterval) {
@@ -62,8 +78,11 @@ window.GarageServerIO = (function (window, socketio) {
                 socket.emit('ping', new Date().getTime());
             }, interval);
         },
-        
+
         updateState = function (data) {
+            currentTime = data.time - pingDelay / 2;
+            currentDelta = data.delta;
+
             updatePlayerState(data);
             updateEntityState(data);
         },
@@ -83,6 +102,7 @@ window.GarageServerIO = (function (window, socketio) {
 
                 if (socket.socket.sessionid === playerState.id) {
                     currentState = playerState.state;
+                    currentPlayerId = playerState.id;
 
                     if (options.clientSidePrediction) {
                         for (updateIdx = 0; updateIdx < inputs.length; updateIdx ++) {
@@ -110,6 +130,9 @@ window.GarageServerIO = (function (window, socketio) {
                                 players[playerIdx].updates.push({ state: playerState.state, seq: playerState.seq, time: playerState.time });
                             }
                             break;
+                        }
+                        if (players[playerIdx].updates.length > 60) {
+                            players[playerIdx].updates.splice(0, players[playerIdx].updates.length - 60);
                         }
                     }
 
@@ -141,8 +164,8 @@ window.GarageServerIO = (function (window, socketio) {
                 }
             }
 
-            if (options.onPlayerDisconnect) {
-                options.onPlayerDisconnect(id);
+            if (options.onPlayerRemove) {
+                options.onPlayerRemove(id);
             }
         },
 
@@ -162,28 +185,68 @@ window.GarageServerIO = (function (window, socketio) {
         sendPlayerInput = function (clientInput) {
             socket.emit('input', { input: clientInput, seq: sequenceNumber });
         },
+        
+        getPositions = function (playerUpdates) {
+            var positions = {},
+                range,
+                difference,
+                amount;
+
+            for (var updateIdx = 0; updateIdx < playerUpdates.length; updateIdx ++) {
+                var previous = playerUpdates[updateIdx];
+                var target = playerUpdates[updateIdx + 1];
+                
+                if(currentTime > previous.time && currentTime < target.time) {
+                    range = target.time - previous.time;
+                    difference = currentTime - previous.time;
+                    amount = Math.toFixed( difference / range, 3);
+            
+                    positions.previousState = previous.state;
+                    positions.targetState = target.state;
+                    positions.amount = amount;
+
+                    break;
+                }
+            }
+            return positions;
+        },
 
         getPlayerStates = function (stateCallback) {
             var maxUpdate = 0;
             for (var playerIdx = 0; playerIdx < players.length; playerIdx ++) {
                 if (players[playerIdx].updates.length > 0) {
-                    if (options.interpolation) {
+                    maxUpdate = players[playerIdx].updates.length - 1;
 
-
-
+                    if (options.interpolation && options.onInterpolation) {
+                        var positions = getPositions(players[playerIdx].updates);
+                        if (positions.previousState && positions.targetState) {
+                            stateCallback(options.onInterpolation(positions.previousState, positions.targetState, positions.amount));
+                        }
+                        else {
+                            stateCallback(players[playerIdx].updates[maxUpdate].state);
+                        }
                     } else {
-                        maxUpdate = players[playerIdx].updates.length - 1;
                         stateCallback(players[playerIdx].updates[maxUpdate].state);
                     }
                 }
             }
             stateCallback(currentState);
+        },
+        
+        getPlayerId = function () {
+            return currentPlayerId;
+        },
+        
+        setPlayerState = function (state) {
+            socket.emit('state', state);
         };
 
     return {
         connectToGarageServer: connectToGarageServer,
         addPlayerInput: addPlayerInput,
-        getPlayerStates: getPlayerStates
+        getPlayerStates: getPlayerStates,
+        getPlayerId: getPlayerId,
+        setPlayerState: setPlayerState
     };
 
 }) (window, io);
