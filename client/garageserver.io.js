@@ -7,7 +7,7 @@ options = {
     onPlayerRemove: function (id),
     onPing: function (data),
     onUpdatePlayerPhysics: function (state, inputs),
-    onInterpolation: function(previousState, targetState, amount)
+    onInterpolation: function(currentState, previousState, targetState, amount, delta)
     logging: true,
     clientSidePrediction: true,
     interpolation: true,
@@ -220,7 +220,7 @@ window.GarageServerIO = (function (window, socketio) {
                     if (options.interpolation && options.onInterpolation) {
                         var positions = getPositions(players[playerIdx].updates);
                         if (positions.previousState && positions.targetState) {
-                            stateCallback(options.onInterpolation(positions.previousState, positions.targetState, positions.amount));
+                            stateCallback(options.onInterpolation(players[playerIdx].updates[maxUpdate].state, positions.previousState, positions.targetState, positions.amount, 0.015));
                         }
                         else {
                             stateCallback(players[playerIdx].updates[maxUpdate].state);

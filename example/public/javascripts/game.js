@@ -2,7 +2,7 @@ $(function () {
     GarageServerIO.connectToGarageServer('http://garageserver_io.jbillmann.c9.io', { 
         logging: true,
         clientSidePrediction: true,
-        //interpolation: true,
+        interpolation: true,
         onUpdatePlayerPhysics: function (state, inputs) {
             var i = 0;
             if (!state.x && !state.y) {
@@ -22,13 +22,17 @@ $(function () {
             }
             return state;
         },
-        onInterpolation: function (previousState, targetState, amount) {
-            var newState = {};
+        onInterpolation: function (currentState, previousState, targetState, amount, delta) {
+            var interpolationState = {},
+                smoothState = {};
 
-            newState.x = (previousState.x + amount * (targetState.x - previousState.x));
-            newState.y = (previousState.y + amount * (targetState.y - previousState.y));
+            interpolationState.x = (previousState.x + amount * (targetState.x - previousState.x));
+            interpolationState.y = (previousState.y + amount * (targetState.y - previousState.y));
+            
+            smoothState.x = (currentState.x + (20 * delta) * (interpolationState.x - currentState.x));
+            smoothState.y = (currentState.y + (20 * delta) * (interpolationState.y - currentState.y));
 
-            return newState;
+            return smoothState;
         }
     });
 
