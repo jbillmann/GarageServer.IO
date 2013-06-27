@@ -22,17 +22,13 @@ $(function () {
             }
             return state;
         },
-        onInterpolation: function (currentState, previousState, targetState, amount, delta) {
-            var interpolationState = {},
-                smoothState = {};
+        onInterpolation: function (currentState, previousState, targetState, amount) {
+            var interpolationState = {};
 
             interpolationState.x = (previousState.x + amount * (targetState.x - previousState.x));
             interpolationState.y = (previousState.y + amount * (targetState.y - previousState.y));
-            
-            smoothState.x = (currentState.x + (20 * delta) * (interpolationState.x - currentState.x));
-            smoothState.y = (currentState.y + (20 * delta) * (interpolationState.y - currentState.y));
 
-            return smoothState;
+            return interpolationState;
         }
     });
 

@@ -24,6 +24,7 @@ window.GarageServerIO = (function (window, socketio) {
         inputs = [],
         currentState = {},
         currentTime,
+        currentFrameTime = new Date().getTime(),
         currentDelta,
         currentPlayerId,
         options = null,
@@ -81,6 +82,7 @@ window.GarageServerIO = (function (window, socketio) {
 
         updateState = function (data) {
             currentTime = data.time - pingDelay / 2;
+            currentFrameTime = new Date().getTime();
             currentDelta = data.delta;
 
             updatePlayerState(data);
@@ -197,10 +199,12 @@ window.GarageServerIO = (function (window, socketio) {
                 var target = playerUpdates[updateIdx + 1];
                 
                 if(previous && target && currentTime > previous.time && currentTime < target.time) {
+                    var frameDiff = new Date().getTime() - currentFrameTime;
+                    
                     range = target.time - previous.time;
-                    difference = currentTime - previous.time;
+                    difference = currentTime - previous.time + frameDiff;
                     amount = parseFloat((difference / range).toFixed(3));
-            
+
                     positions.previousState = previous.state;
                     positions.targetState = target.state;
                     positions.amount = amount;
@@ -220,7 +224,7 @@ window.GarageServerIO = (function (window, socketio) {
                     if (options.interpolation && options.onInterpolation) {
                         var positions = getPositions(players[playerIdx].updates);
                         if (positions.previousState && positions.targetState) {
-                            stateCallback(options.onInterpolation(players[playerIdx].updates[maxUpdate].state, positions.previousState, positions.targetState, positions.amount, 0.015));
+                            stateCallback(options.onInterpolation(players[playerIdx].updates[maxUpdate].state, positions.previousState, positions.targetState, positions.amount));
                         }
                         else {
                             stateCallback(players[playerIdx].updates[maxUpdate].state);
