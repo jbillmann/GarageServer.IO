@@ -19,16 +19,61 @@ window.GarageServerIO = (function (window, socketio) {
 
     var io = socketio,
         socket = null,
-        sequenceNumber = 1,
         players = [],
-        inputs = [],
-        currentState = {},
-        currentTime,
-        currentFrameTime = new Date().getTime(),
-        currentDelta,
-        currentPlayerId,
         options = null,
         pingDelay = 100,
+
+        Controllers = (function () {
+            function InputController () {
+                this.inputs = [];
+                this.sequenceNumber = 1;
+            }
+            InputController.prototype = {
+                any: function () {
+                    return this.inputs.lenth > 0;
+                },
+                getSequence: function () {
+                    return this.sequenceNumber;
+                },
+                addInput: function (input) {
+                    this.sequenceNumber += 1;
+                    this.inputs.push({ input: input, seq: this.sequenceNumber });
+                },
+                getInputs: function () {
+                    return this.inputs;
+                },
+                removeInput: function (start, length) {
+                    this.inputs.splice(start, length);
+                },
+                forEach: function (callback) {
+                    for (var i = 0; i < this.inputs.length; i ++) {
+                        callback(this.inputs[i], i);
+                    }
+                }
+            };
+
+            function StateController () {
+                this.state = {};
+                this.time;
+                this.frameTime = new Date().getTime();
+                this.delta;
+                this.playerId;
+            }
+            StateController.prototype = {
+                setTime: function (serverTime, delay) {
+                    this.time = serverTime - delay / 2;
+                }
+            };
+
+            return {
+                Input: InputController,
+                State: StateController
+            };
+
+        }) (),
+
+        stateController = new Controllers.State(),
+        inputController = new Controllers.Input(),
 
         connectToGarageServer = function (path, opts) {
             options = opts;
@@ -81,9 +126,9 @@ window.GarageServerIO = (function (window, socketio) {
         },
 
         updateState = function (data) {
-            currentTime = data.time - pingDelay / 2;
-            currentFrameTime = new Date().getTime();
-            currentDelta = data.delta;
+            stateController.setTime(data.time, pingDelay);
+            stateController.frameTime = new Date().getTime();
+            stateController.delta = data.delta;
 
             updatePlayerState(data);
             updateEntityState(data);
@@ -103,18 +148,17 @@ window.GarageServerIO = (function (window, socketio) {
                 playerState = data.playerStates[stateIdx];
 
                 if (socket.socket.sessionid === playerState.id) {
-                    currentState = playerState.state;
-                    currentPlayerId = playerState.id;
+                    stateController.state = playerState.state;
+                    stateController.playerId = playerState.id;
 
                     if (options.clientSidePrediction) {
-                        for (updateIdx = 0; updateIdx < inputs.length; updateIdx ++) {
-                            if (inputs[updateIdx].seq == playerState.seq) {
-                                inputs.splice(0, updateIdx + 1);
-                                break;
+                        inputController.forEach(function (input, idx) {
+                            if (input.seq == playerState.seq) {
+                                inputController.removeInput(0, idx + 1);
                             }
-                        }
-                        if (inputs.length > 0) {
-                            currentState = options.onUpdatePlayerPhysics(currentState, inputs);
+                        });
+                        if (inputController.any()) {
+                            stateController.state = options.onUpdatePlayerPhysics(stateController.state, inputController.getInputs());
                         }
                     }
                 } else {
@@ -172,20 +216,16 @@ window.GarageServerIO = (function (window, socketio) {
         },
 
         addPlayerInput = function (clientInput) {
-            var inputsToProcess = [];
-
-            sequenceNumber += 1;
-            inputs.push({ input: clientInput, seq: sequenceNumber });
+            inputController.addInput(clientInput);
 
             if (options.clientSidePrediction && options.onUpdatePlayerPhysics) {
-                inputsToProcess.push({ input: clientInput });
-                currentState = options.onUpdatePlayerPhysics(currentState, inputsToProcess);
+                stateController.state = options.onUpdatePlayerPhysics(stateController.state, [{ input: clientInput }]);
             }
             sendPlayerInput(clientInput);
         },
 
         sendPlayerInput = function (clientInput) {
-            socket.emit('input', { input: clientInput, seq: sequenceNumber });
+            socket.emit('input', { input: clientInput, seq: inputController.getSequence() });
         },
         
         getPositions = function (playerUpdates) {
@@ -198,11 +238,11 @@ window.GarageServerIO = (function (window, socketio) {
                 var previous = playerUpdates[updateIdx];
                 var target = playerUpdates[updateIdx + 1];
                 
-                if(previous && target && currentTime > previous.time && currentTime < target.time) {
-                    var frameDiff = new Date().getTime() - currentFrameTime;
+                if(previous && target && stateController.time > previous.time && stateController.time < target.time) {
+                    var frameDiff = new Date().getTime() - stateController.frameTime;
                     
                     range = target.time - previous.time;
-                    difference = currentTime - previous.time + frameDiff;
+                    difference = stateController.time - previous.time + frameDiff;
                     amount = parseFloat((difference / range).toFixed(3));
 
                     positions.previousState = previous.state;
@@ -234,13 +274,13 @@ window.GarageServerIO = (function (window, socketio) {
                     }
                 }
             }
-            stateCallback(currentState);
+            stateCallback(stateController.state);
         },
-        
+
         getPlayerId = function () {
-            return currentPlayerId;
+            return stateController.playerId;
         },
-        
+
         setPlayerState = function (state) {
             socket.emit('state', state);
         };
