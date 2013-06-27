@@ -7,7 +7,7 @@ options = {
     onPlayerRemove: function (id),
     onPing: function (data),
     onUpdatePlayerPhysics: function (state, inputs),
-    onInterpolation: function(currentState, previousState, targetState, amount, delta)
+    onInterpolation: function(currentState, previousState, targetState, amount)
     logging: true,
     clientSidePrediction: true,
     interpolation: true,
