@@ -127,12 +127,12 @@ window.GarageServerIO = (function (window, socketio) {
                                 }
                             }
                             if (!updateFound) {
-                                players[playerIdx].updates.push({ state: playerState.state, seq: playerState.seq, time: playerState.time });
+                                players[playerIdx].updates.push({ state: playerState.state, seq: playerState.seq, time: data.time });
+                                if (players[playerIdx].updates.length > 60) {
+                                    players[playerIdx].updates.splice(0, 1);
+                                }
                             }
                             break;
-                        }
-                        if (players[playerIdx].updates.length > 60) {
-                            players[playerIdx].updates.splice(0, players[playerIdx].updates.length - 60);
                         }
                     }
 
@@ -141,7 +141,7 @@ window.GarageServerIO = (function (window, socketio) {
                             id: playerState.id,
                             updates: []
                         };
-                        player.updates.push({ state: playerState.state, seq: playerState.seq, time: playerState.time });
+                        player.updates.push({ state: playerState.state, seq: playerState.seq, time: data.time });
                         players.push(player);
                     }
                 }
@@ -196,10 +196,10 @@ window.GarageServerIO = (function (window, socketio) {
                 var previous = playerUpdates[updateIdx];
                 var target = playerUpdates[updateIdx + 1];
                 
-                if(currentTime > previous.time && currentTime < target.time) {
+                if(previous && target && currentTime > previous.time && currentTime < target.time) {
                     range = target.time - previous.time;
                     difference = currentTime - previous.time;
-                    amount = Math.toFixed( difference / range, 3);
+                    amount = parseFloat((difference / range).toFixed(3));
             
                     positions.previousState = previous.state;
                     positions.targetState = target.state;
