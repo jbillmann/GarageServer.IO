@@ -260,25 +260,37 @@ window.GarageServerIO = (function (window, socketio) {
         updateEntityState = function (data) {
             
         },
-
-        getPlayerStates = function (stateCallback) {
+        
+        getPlayerStatesCurrent = function (stateCallback) {
             _playerController.forEach(function (player) {
                 if (player.anyUpdates()) {
-                    var latestUpdate = player.getLatestUpdate();
-
-                    if (_options.interpolation && _options.onInterpolation) {
-                        var positions = player.getPositions(_stateController.time, _stateController.frameTime);
-                        if (positions.previousState && positions.targetState) {
-                            stateCallback(_options.onInterpolation(latestUpdate.state, positions.previousState, positions.targetState, positions.amount));
-                        }
-                        else {
-                            stateCallback(latestUpdate.state);
-                        }
-                    } else {
+                    stateCallback(player.getLatestUpdate());
+                }
+            });
+        },
+        
+        getPlayerStatesInterpolated = function (stateCallback) {
+            _playerController.forEach(function (player) {
+                if (player.anyUpdates()) {
+                    var latestUpdate = player.getLatestUpdate(),
+                        positions = player.getPositions(_stateController.time, _stateController.frameTime);
+                    if (positions.previousState && positions.targetState) {
+                        stateCallback(_options.onInterpolation(latestUpdate.state, positions.previousState, positions.targetState, positions.amount));
+                    }
+                    else {
                         stateCallback(latestUpdate.state);
                     }
                 }
             });
+        },
+
+        getPlayerStates = function (stateCallback) {
+            if(_options.interpolation && _options.onInterpolation) {
+                getPlayerStatesInterpolated(stateCallback);
+            }
+            else {
+                getPlayerStatesCurrent(stateCallback);
+            }
             stateCallback(_stateController.state);
         };
 
