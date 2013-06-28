@@ -29,6 +29,11 @@ window.GarageServerIO = (function (window, socketio) {
             this.time = serverTime - delay / 2;
         }
     };
+    
+    function Input (input, seq) {
+        this.input = input;
+        this.seq = seq;
+    }
 
     function InputController () {
         this.inputs = [];
@@ -40,7 +45,7 @@ window.GarageServerIO = (function (window, socketio) {
         },
         addInput: function (input) {
             this.sequenceNumber += 1;
-            this.inputs.push({ input: input, seq: this.sequenceNumber });
+            this.inputs.push(new Input(input, this.sequenceNumber));
         },
         removeUpToSequence: function (seq) {
             for (var i = 0; i < this.inputs.length; i ++) {
@@ -51,6 +56,12 @@ window.GarageServerIO = (function (window, socketio) {
             }
         }
     };
+    
+    function Update(state, seq, time) {
+        this.state = state;
+        this.seq = seq;
+        this.time = time;
+    }
 
     function Player (id) {
         this.updates = [];
@@ -61,7 +72,7 @@ window.GarageServerIO = (function (window, socketio) {
             return this.updates.length > 0;
         },
         addUpate: function (state, seq, time) {
-            this.updates.push({ state: state, seq: seq, time: time });
+            this.updates.push(new Update(state, seq, time));
             if (this.updates.length > 60) {
                 this.updates.splice(0, 1);
             }
@@ -82,20 +93,15 @@ window.GarageServerIO = (function (window, socketio) {
                 this.addUpate(playerState.state, playerState.seq, time);
             }
         },
-        getPositions: function (time, frameTime) {
-            var positions = {}, range, difference, amount;
+        getSurroundingPositions: function (time) {
+            var positions = {};
             for (var i = 0; i < this.updates.length; i ++) {
                 var previous = this.updates[i];
                 var target = this.updates[i + 1];
-        
+
                 if(previous && target && time > previous.time && time < target.time) {
-                    var frameDiff = new Date().getTime() - frameTime;
-                    range = target.time - previous.time;
-                    difference = time - previous.time + frameDiff;
-                    amount = parseFloat((difference / range).toFixed(3));
-                    positions.previousState = previous.state;
-                    positions.targetState = target.state;
-                    positions.amount = amount;
+                    positions.previous = previous;
+                    positions.target = target;
                     break;
                 }
             }
@@ -278,18 +284,29 @@ window.GarageServerIO = (function (window, socketio) {
         },
         
         getPlayerStatesInterpolated = function (stateCallback) {
+            var latestUpdate, positions, amount;
             _playerController.players.forEach(function (player) {
                 if (player.anyUpdates()) {
-                    var latestUpdate = player.getLatestUpdate(),
-                        positions = player.getPositions(_stateController.time, _stateController.frameTime);
-                    if (positions.previousState && positions.targetState) {
-                        stateCallback(_options.onInterpolation(latestUpdate.state, positions.previousState, positions.targetState, positions.amount));
+                    latestUpdate = player.getLatestUpdate();
+                    positions = player.getSurroundingPositions(_stateController.time);
+                    if (positions.previous && positions.target) {
+                        amount = getInterpolatedAmount(positions.previous.time, positions.target.time);
+                        stateCallback(_options.onInterpolation(latestUpdate.state, positions.previous.state, positions.target.state, amount));
                     }
                     else {
                         stateCallback(latestUpdate.state);
                     }
                 }
             });
+        },
+        
+        getInterpolatedAmount = function (previousTime, targetTime) {
+            var frameDiff = new Date().getTime() - _stateController.frameTime;
+            var range = targetTime - previousTime;
+            var difference = _stateController.time - previousTime + frameDiff;
+            var amount = parseFloat((difference / range).toFixed(3));
+
+            return amount;
         };
 
     return {
