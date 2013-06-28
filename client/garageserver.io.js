@@ -133,6 +133,7 @@ window.GarageServerIO = (function (window, socketio) {
         _stateController = new StateController(),
         _inputController = new InputController(),
         _playerController = new PlayerController(),
+        _fps = 0, _fpsLastUpdate = (new Date()) * 1 - 1, _fpsFilter = 50,
 
         connectToGarageServer = function (path, opts) {
             _options = opts;
@@ -315,6 +316,14 @@ window.GarageServerIO = (function (window, socketio) {
                 amount = parseFloat((difference / range).toFixed(3));
 
             return amount;
+        },
+        
+        getFPS = function () {
+            var now;
+            var thisFrameFPS = 1000 / ((now = new Date()) - _fpsLastUpdate);
+            _fps += (thisFrameFPS - _fps) / _fpsFilter;
+            _fpsLastUpdate = now;
+            return Math.round(_fps);
         };
 
     return {
@@ -322,7 +331,8 @@ window.GarageServerIO = (function (window, socketio) {
         addPlayerInput: addPlayerInput,
         getPlayerStates: getPlayerStates,
         getPlayerId: getPlayerId,
-        setPlayerState: setPlayerState
+        setPlayerState: setPlayerState,
+        getFPS: getFPS
     };
 
 }) (window, io);

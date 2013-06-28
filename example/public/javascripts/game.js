@@ -33,18 +33,8 @@ $(function () {
     });
 
     var gameCanvas = document.getElementById('gameCanvas'),
-
         keyboard = new THREEx.KeyboardState(),
-
         ctxGameCanvas = gameCanvas.getContext('2d'),
-
-        fps = 0,
-
-        now,
-
-        lastUpdate = (new Date()) * 1 - 1,
-
-        fpsFilter = 50,
 
         requestAnimFrame = (function () {
             return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function (callback) { window.setTimeout(callback, 1000/60); };
@@ -80,11 +70,7 @@ $(function () {
 
             draw();
 
-            var thisFrameFPS = 1000 / ((now = new Date()) - lastUpdate);
-            fps += (thisFrameFPS - fps) / fpsFilter;
-            lastUpdate = now;
-
-            $('#fps').html('FPS: ' + Math.round(fps));
+            $('#fps').html('FPS: ' + GarageServerIO.getFPS());
         };
 
     update();
