@@ -29,7 +29,7 @@ window.GarageServerIO = (function (window, socketio) {
             this.time = serverTime - delay / 2;
         }
     };
-    
+
     function Input (input, seq) {
         this.input = input;
         this.seq = seq;
@@ -56,7 +56,7 @@ window.GarageServerIO = (function (window, socketio) {
             }
         }
     };
-    
+
     function Update(state, seq, time) {
         this.state = state;
         this.seq = seq;
@@ -245,7 +245,7 @@ window.GarageServerIO = (function (window, socketio) {
                 }
             });
         },
-        
+
         updatePlayerState = function (playerState) {
             _stateController.state = playerState.state;
             _inputController.removeUpToSequence(playerState.seq);
@@ -308,7 +308,7 @@ window.GarageServerIO = (function (window, socketio) {
                 }
             });
         },
-        
+
         getInterpolatedAmount = function (previousTime, targetTime) {
             var frameDiff = new Date().getTime() - _stateController.frameTime,
                 range = targetTime - previousTime,
@@ -319,10 +319,12 @@ window.GarageServerIO = (function (window, socketio) {
         },
         
         getFPS = function () {
-            var now;
-            var thisFrameFPS = 1000 / ((now = new Date()) - _fpsLastUpdate);
+            var now,
+                thisFrameFPS = 1000 / ((now = new Date()) - _fpsLastUpdate);
+
             _fps += (thisFrameFPS - _fps) / _fpsFilter;
             _fpsLastUpdate = now;
+
             return Math.round(_fps);
         };
 
