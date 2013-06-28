@@ -222,38 +222,44 @@ window.GarageServerIO = (function (window, socketio) {
         },
 
         updatePlayersState = function (data) {
-            var playerFound = false,
-                stateIdx = 0,
-                playerState;
+            var stateIdx = 0, playerState;
 
             for(stateIdx = 0; stateIdx < data.playerStates.length; stateIdx ++) {
-                playerFound = false;
                 playerState = data.playerStates[stateIdx];
 
                 if (_socket.socket.sessionid === playerState.id) {
-                    _stateController.state = playerState.state;
-                    _inputController.removeUpToSequence(playerState.seq);
-
-                    if (_options.clientSidePrediction && _inputController.any()) {
-                        _stateController.state = _options.onUpdatePlayerPhysics(_stateController.state, _inputController.inputs);
-                    }
+                    updatePlayerState(playerState);
                 } else {
-                    _playerController.forEach(function (player) {
-                        if (player.id === playerState.id) {
-                            playerFound = true;
-                            player.processState(playerState, data.time);
-                        }
-                        return;
-                    });
-                    if (!playerFound) {
-                        var newPlayer = _playerController.addPlayer(playerState.id);
-                        newPlayer.addUpate(playerState.state, playerState.seq, data.time);
-                    }
+                    updateOtherPlayersState(playerState, data.time);
                 }
 
                 if (_options.onPlayerUpdate) {
                     _options.onPlayerUpdate(playerState);
                 }
+            }
+        },
+        
+        updatePlayerState = function (playerState) {
+            _stateController.state = playerState.state;
+            _inputController.removeUpToSequence(playerState.seq);
+
+            if (_options.clientSidePrediction && _inputController.any()) {
+                _stateController.state = _options.onUpdatePlayerPhysics(_stateController.state, _inputController.inputs);
+            }
+        },
+        
+        updateOtherPlayersState = function (playerState, time) {
+            var playerFound = false;
+            _playerController.forEach(function (player) {
+                if (player.id === playerState.id) {
+                    playerFound = true;
+                    player.processState(playerState, time);
+                }
+                return;
+            });
+            if (!playerFound) {
+                var newPlayer = _playerController.addPlayer(playerState.id);
+                newPlayer.addUpate(playerState.state, playerState.seq, time);
             }
         },
 
