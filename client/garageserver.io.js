@@ -3,9 +3,9 @@ options = {
     onPlayerConnect: function()
     onPlayerDisconnect: function (),
     onPlayerReconnect: function (),
-    onPlayerUpdate: function (data),
+    onPlayerUpdate: function (state),
     onPlayerRemove: function (id),
-    onPing: function (data),
+    onPing: function (pingDelay),
     onUpdatePlayerPhysics: function (state, inputs),
     onInterpolation: function(currentState, previousState, targetState, amount)
     logging: true,
@@ -160,6 +160,9 @@ window.GarageServerIO = (function (window, socketio) {
             });
             _socket.on('ping', function(data) {
                 _pingDelay = new Date().getTime() - data;
+                if (_options.onPing) {
+                    _options.onPing(_pingDelay);
+                }
                 if (_options.logging) {
                     console.log('garageserver.io:: socket ping delay ' + _pingDelay);
                 }
@@ -225,7 +228,7 @@ window.GarageServerIO = (function (window, socketio) {
                 }
 
                 if (_options.onPlayerUpdate) {
-                    _options.onPlayerUpdate(playerState);
+                    _options.onPlayerUpdate(playerState.state);
                 }
             });
         },
