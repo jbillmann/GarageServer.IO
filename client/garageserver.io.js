@@ -120,11 +120,6 @@ window.GarageServerIO = (function (window, socketio) {
                 this.players.splice(i, 1);
                 return;
             }
-        },
-        forEach: function (callback) {
-            for (var i = 0; i < this.players.length; i ++) {
-                callback(this.players[i]);
-            }
         }
     };
 
@@ -222,11 +217,7 @@ window.GarageServerIO = (function (window, socketio) {
         },
 
         updatePlayersState = function (data) {
-            var stateIdx = 0, playerState;
-
-            for(stateIdx = 0; stateIdx < data.playerStates.length; stateIdx ++) {
-                playerState = data.playerStates[stateIdx];
-
+            data.playerStates.forEach(function (playerState) {
                 if (_socket.socket.sessionid === playerState.id) {
                     updatePlayerState(playerState);
                 } else {
@@ -236,7 +227,7 @@ window.GarageServerIO = (function (window, socketio) {
                 if (_options.onPlayerUpdate) {
                     _options.onPlayerUpdate(playerState);
                 }
-            }
+            });
         },
         
         updatePlayerState = function (playerState) {
@@ -250,7 +241,7 @@ window.GarageServerIO = (function (window, socketio) {
         
         updateOtherPlayersState = function (playerState, time) {
             var playerFound = false;
-            _playerController.forEach(function (player) {
+            _playerController.players.forEach(function (player) {
                 if (player.id === playerState.id) {
                     playerFound = true;
                     player.processState(playerState, time);
@@ -278,7 +269,7 @@ window.GarageServerIO = (function (window, socketio) {
         },
 
         getPlayerStatesCurrent = function (stateCallback) {
-            _playerController.forEach(function (player) {
+            _playerController.players.forEach(function (player) {
                 if (player.anyUpdates()) {
                     stateCallback(player.getLatestUpdate());
                 }
@@ -286,7 +277,7 @@ window.GarageServerIO = (function (window, socketio) {
         },
         
         getPlayerStatesInterpolated = function (stateCallback) {
-            _playerController.forEach(function (player) {
+            _playerController.players.forEach(function (player) {
                 if (player.anyUpdates()) {
                     var latestUpdate = player.getLatestUpdate(),
                         positions = player.getPositions(_stateController.time, _stateController.frameTime);
