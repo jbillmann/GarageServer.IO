@@ -44,7 +44,7 @@ window.GarageServerIO = (function (window, socketio) {
         },
         removeUpToSequence: function (seq) {
             for (var i = 0; i < this.inputs.length; i ++) {
-                if (this.inputs[i].seq == seq) {
+                if (this.inputs[i].seq === seq) {
                     this.inputs.splice(0, i + 1);
                     break;
                 }
