@@ -246,7 +246,6 @@ window.GarageServerIO = (function (window, socketio) {
         },
         
         updateOtherPlayersState = function (playerState, time) {
-            // FIX:  Loops over every play for each state
             var playerFound = false;
             _playerController.players.some(function (player) {
                 if (player.id === playerState.id) {
@@ -301,10 +300,10 @@ window.GarageServerIO = (function (window, socketio) {
         },
         
         getInterpolatedAmount = function (previousTime, targetTime) {
-            var frameDiff = new Date().getTime() - _stateController.frameTime;
-            var range = targetTime - previousTime;
-            var difference = _stateController.time - previousTime + frameDiff;
-            var amount = parseFloat((difference / range).toFixed(3));
+            var frameDiff = new Date().getTime() - _stateController.frameTime,
+                range = targetTime - previousTime,
+                difference = _stateController.time - previousTime + frameDiff,
+                amount = parseFloat((difference / range).toFixed(3));
 
             return amount;
         };
