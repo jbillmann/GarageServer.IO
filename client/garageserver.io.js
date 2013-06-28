@@ -147,15 +147,24 @@ window.GarageServerIO = (function (window, socketio) {
                 if (_options.onPlayerConnect) {
                     _options.onPlayerConnect(); 
                 }
+                if (_options.logging) {
+                    console.log('garageserver.io:: socket connect');
+                }
             });
             _socket.on('disconnect', function () {
                 if (_options.onPlayerDisconnect) {
                     _options.onPlayerDisconnect();
                 }
+                if (_options.logging) {
+                    console.log('garageserver.io:: socket disconnect');
+                }
             });
             _socket.on('reconnect', function () {
                 if (_options.onPlayerReconnect) {
                     _options.onPlayerReconnect();
+                }
+                if (_options.logging) {
+                    console.log('garageserver.io:: socket reconnect');
                 }
             });
             _socket.on('update', function(data) {
