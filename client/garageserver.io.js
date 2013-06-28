@@ -63,7 +63,7 @@ window.GarageServerIO = (function (window, socketio) {
         addUpate: function (state, seq, time) {
             this.updates.push({ state: state, seq: seq, time: time });
             if (this.updates.length > 60) {
-                this.updates.updates.splice(0, 1);
+                this.updates.splice(0, 1);
             }
         },
         getLatestUpdate: function () {
@@ -71,18 +71,15 @@ window.GarageServerIO = (function (window, socketio) {
         },
         processState: function (playerState, time) {
             var updateFound = false;
-            for (var i = 0; i < this.updates.length; i ++) {
-                if (this.updates[i].seq === playerState.seq) {
-                    this.updates[i].state = playerState.state;
-                    updateFound = true;
-                    break;
-                }
-            }
+            this.updates.some(function (update) {
+               if (update.seq === playerState.seq) {
+                   update.state = playerState.state;
+                   updateFound = true;
+                   return true;
+               } 
+            });
             if (!updateFound) {
-                this.updates.push({ state: playerState.state, seq: playerState.seq, time: time });
-                if (this.updates.length > 60) {
-                    this.updates.splice(0, 1);
-                }
+                this.addUpate(playerState.state, playerState.seq, time);
             }
         },
         getPositions: function (time, frameTime) {
@@ -243,13 +240,14 @@ window.GarageServerIO = (function (window, socketio) {
         },
         
         updateOtherPlayersState = function (playerState, time) {
+            // FIX:  Loops over every play for each state
             var playerFound = false;
-            _playerController.players.forEach(function (player) {
+            _playerController.players.some(function (player) {
                 if (player.id === playerState.id) {
                     playerFound = true;
                     player.processState(playerState, time);
+                    return true;
                 }
-                return;
             });
             if (!playerFound) {
                 var newPlayer = _playerController.addPlayer(playerState.id);
