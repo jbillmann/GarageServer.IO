@@ -19,7 +19,7 @@ options = {
 
 window.GarageServerIO = (function (window, socketio) {
 
-    function StateController () {
+    function StateController() {
         this.state = {};
         this.time;
         this.frameTime = new Date().getTime();
@@ -37,12 +37,12 @@ window.GarageServerIO = (function (window, socketio) {
         }
     };
 
-    function Input (input, seq) {
+    function Input(input, seq) {
         this.input = input;
         this.seq = seq;
     }
 
-    function InputController () {
+    function InputController() {
         this.inputs = [];
         this.sequenceNumber = 1;
     }
@@ -70,7 +70,7 @@ window.GarageServerIO = (function (window, socketio) {
         this.time = time;
     }
 
-    function Player (id) {
+    function Player(id) {
         this.updates = [];
         this.id = id;
     }
@@ -116,7 +116,7 @@ window.GarageServerIO = (function (window, socketio) {
         }
     };
 
-    function PlayerController () {
+    function PlayerController() {
         this.players = [];
     }
     PlayerController.prototype = {
