@@ -12,6 +12,7 @@ options = {
     clientSidePrediction: true,
     clientSmoothing: true,
     interpolation: true,
+    interpolationDelay: 100,
     pingInterval: 2000
 }
 */
@@ -32,7 +33,7 @@ window.GarageServerIO = (function (window, socketio) {
     }
     StateController.prototype = {
         setTime: function (serverTime, delay) {
-            this.time = serverTime - delay / 2;
+            this.time = serverTime - delay;
         }
     };
 
@@ -230,7 +231,7 @@ window.GarageServerIO = (function (window, socketio) {
         },
 
         updateState = function (data) {
-            _stateController.setTime(data.time, _stateController.pingDelay);
+            _stateController.setTime(data.time, _options.interpolationDelay ? _options.interpolationDelay : 100);
             _stateController.frameTime = new Date().getTime();
             _stateController.delta = data.delta;
 
