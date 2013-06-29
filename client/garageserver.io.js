@@ -226,7 +226,7 @@ window.GarageServerIO = (function (window, socketio) {
             if (_options.clientSidePrediction && _options.onUpdatePlayerPhysics) {
                 _stateController.state = _options.onUpdatePlayerPhysics(_stateController.state, [{ input: clientInput }]);
             }
-            _socket.emit('input', { input: clientInput, seq: _inputController.sequenceNumber });
+            _socket.emit('input', { input: clientInput, seq: _inputController.sequenceNumber, time: _stateController.time });
         },
 
         updateState = function (data) {
