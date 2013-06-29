@@ -2,6 +2,7 @@ $(function () {
     GarageServerIO.connectToGarageServer('http://garageserver_io.jbillmann.c9.io', { 
         logging: true,
         clientSidePrediction: true,
+        clientSmoothing: true,
         interpolation: true,
         onUpdatePlayerPhysics: OnProcessGamePhysics,
         onInterpolation: function (currentState, previousState, targetState, amount) {

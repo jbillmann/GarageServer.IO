@@ -10,6 +10,7 @@ options = {
     onInterpolation: function(currentState, previousState, targetState, amount)
     logging: true,
     clientSidePrediction: true,
+    clientSmoothing: true,
     interpolation: true,
     pingInterval: 2000
 }
@@ -176,7 +177,7 @@ window.GarageServerIO = (function (window, socketio) {
             });
             _socket.on('ping', function(data) {
                 var newPingDelay = new Date().getTime() - data;
-                _stateController.clientSmoothing = _stateController.pingDelay / newPingDelay;
+                _stateController.clientSmoothing = _options.clientSmoothing ? (_stateController.pingDelay / newPingDelay) : 1;
                 _stateController.pingDelay = newPingDelay;
                 if (_options.onPing) {
                     _options.onPing(_stateController.pingDelay);
