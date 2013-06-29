@@ -23,6 +23,8 @@ window.GarageServerIO = (function (window, socketio) {
         this.frameTime = new Date().getTime();
         this.delta;
         this.playerId;
+        this.clientSmoothing = 1;
+        this.pingDelay = 100;
     }
     StateController.prototype = {
         setTime: function (serverTime, delay) {
@@ -73,7 +75,7 @@ window.GarageServerIO = (function (window, socketio) {
         },
         addUpate: function (state, seq, time) {
             this.updates.push(new Update(state, seq, time));
-            if (this.updates.length > 60) {
+            if (this.updates.length > 120) {
                 this.updates.splice(0, 1);
             }
         },
@@ -129,7 +131,6 @@ window.GarageServerIO = (function (window, socketio) {
     var _io = socketio,
         _socket = null,
         _options = null,
-        _pingDelay = 100,
         _stateController = new StateController(),
         _inputController = new InputController(),
         _playerController = new PlayerController(),
@@ -172,12 +173,14 @@ window.GarageServerIO = (function (window, socketio) {
                 updateState(data);
             });
             _socket.on('ping', function(data) {
-                _pingDelay = new Date().getTime() - data;
+                var newPingDelay = new Date().getTime() - data;
+                _stateController.clientSmoothing = _stateController.pingDelay / newPingDelay;
+                _stateController.pingDelay = newPingDelay;
                 if (_options.onPing) {
-                    _options.onPing(_pingDelay);
+                    _options.onPing(_stateController.pingDelay);
                 }
                 if (_options.logging) {
-                    console.log('garageserver.io:: socket ping delay ' + _pingDelay);
+                    console.log('garageserver.io:: socket ping delay ' + _stateController.pingDelay);
                 }
             });
             _socket.on('removePlayer', function(id) {
@@ -224,7 +227,7 @@ window.GarageServerIO = (function (window, socketio) {
         },
 
         updateState = function (data) {
-            _stateController.setTime(data.time, _pingDelay);
+            _stateController.setTime(data.time, _stateController.pingDelay);
             _stateController.frameTime = new Date().getTime();
             _stateController.delta = data.delta;
 
@@ -312,7 +315,7 @@ window.GarageServerIO = (function (window, socketio) {
         getInterpolatedAmount = function (previousTime, targetTime) {
             var frameDiff = new Date().getTime() - _stateController.frameTime,
                 range = targetTime - previousTime,
-                difference = _stateController.time - previousTime + frameDiff,
+                difference = _stateController.time - previousTime + (frameDiff * _stateController.clientSmoothing),
                 amount = parseFloat((difference / range).toFixed(3));
 
             return amount;
