@@ -294,7 +294,7 @@ window.GarageServerIO = (function (window, socketio) {
         getPlayerStatesCurrent = function (stateCallback) {
             _playerController.players.forEach(function (player) {
                 if (player.anyUpdates()) {
-                    stateCallback(player.getLatestUpdate());
+                    stateCallback(player.getLatestUpdate().state);
                 }
             });
         },
