@@ -10,7 +10,6 @@ options = {
     onInterpolation: function(currentState, previousState, targetState, amount)
     logging: true,
     clientSidePrediction: true,
-    clientSmoothing: true,
     interpolation: true,
     interpolationDelay: 100,
     pingInterval: 2000
@@ -22,10 +21,8 @@ window.GarageServerIO = (function (window, socketio) {
     function StateController() {
         this.state = {};
         this.time;
-        this.frameTime = new Date().getTime();
         this.delta;
         this.playerId;
-        this.clientSmoothing = 1;
         this.pingDelay = 100;
         this.fps = 0;
         this.fpsLastUpdate = (new Date()) * 1 - 1;
@@ -177,9 +174,7 @@ window.GarageServerIO = (function (window, socketio) {
                 updateState(data);
             });
             _socket.on('ping', function(data) {
-                var newPingDelay = new Date().getTime() - data;
-                _stateController.clientSmoothing = _options.clientSmoothing ? ((_stateController.clientSmoothing + (_stateController.pingDelay / newPingDelay)) / 2) : 1;
-                _stateController.pingDelay = newPingDelay;
+                _stateController.pingDelay = new Date().getTime() - data;
                 if (_options.onPing) {
                     _options.onPing(_stateController.pingDelay);
                 }
@@ -232,7 +227,6 @@ window.GarageServerIO = (function (window, socketio) {
 
         updateState = function (data) {
             _stateController.setTime(data.time, _options.interpolationDelay ? _options.interpolationDelay : 100);
-            _stateController.frameTime = new Date().getTime();
             _stateController.delta = data.delta;
 
             updatePlayersState(data);
@@ -317,9 +311,8 @@ window.GarageServerIO = (function (window, socketio) {
         },
 
         getInterpolatedAmount = function (previousTime, targetTime) {
-            var frameDiff = new Date().getTime() - _stateController.frameTime,
-                range = targetTime - previousTime,
-                difference = _stateController.time - previousTime + (frameDiff * _stateController.clientSmoothing),
+            var range = targetTime - previousTime,
+                difference = _stateController.time - previousTime,
                 amount = parseFloat((difference / range).toFixed(3));
 
             return amount;
