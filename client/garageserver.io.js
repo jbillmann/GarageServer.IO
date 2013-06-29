@@ -25,6 +25,9 @@ window.GarageServerIO = (function (window, socketio) {
         this.playerId;
         this.clientSmoothing = 1;
         this.pingDelay = 100;
+        this.fps = 0;
+        this.fpsLastUpdate = (new Date()) * 1 - 1;
+        this.fpsFilter = 50;
     }
     StateController.prototype = {
         setTime: function (serverTime, delay) {
@@ -134,7 +137,6 @@ window.GarageServerIO = (function (window, socketio) {
         _stateController = new StateController(),
         _inputController = new InputController(),
         _playerController = new PlayerController(),
-        _fps = 0, _fpsLastUpdate = (new Date()) * 1 - 1, _fpsFilter = 50,
 
         connectToGarageServer = function (path, opts) {
             _options = opts;
@@ -323,12 +325,12 @@ window.GarageServerIO = (function (window, socketio) {
         
         getFPS = function () {
             var now,
-                thisFrameFPS = 1000 / ((now = new Date()) - _fpsLastUpdate);
+                thisFrameFPS = 1000 / ((now = new Date()) - _stateController.fpsLastUpdate);
 
-            _fps += (thisFrameFPS - _fps) / _fpsFilter;
-            _fpsLastUpdate = now;
+            _stateController.fps += (thisFrameFPS - _stateController.fps) / _stateController.fpsFilter;
+            _stateController.fpsLastUpdate = now;
 
-            return Math.round(_fps);
+            return Math.round(_stateController.fps);
         };
 
     return {
