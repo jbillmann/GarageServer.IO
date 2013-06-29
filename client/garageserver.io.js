@@ -177,7 +177,7 @@ window.GarageServerIO = (function (window, socketio) {
             });
             _socket.on('ping', function(data) {
                 var newPingDelay = new Date().getTime() - data;
-                _stateController.clientSmoothing = _options.clientSmoothing ? (_stateController.pingDelay / newPingDelay) : 1;
+                _stateController.clientSmoothing = _options.clientSmoothing ? ((_stateController.clientSmoothing + (_stateController.pingDelay / newPingDelay)) / 2) : 1;
                 _stateController.pingDelay = newPingDelay;
                 if (_options.onPing) {
                     _options.onPing(_stateController.pingDelay);
