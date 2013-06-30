@@ -21,7 +21,7 @@ window.GarageServerIO = (function (window, socketio) {
     function StateController() {
         this.state = {};
         this.clientTime;
-        this.renderTime = 0;
+        this.renderTime;
         this.renderDelta = 0;
         this.tickerTime = new Date().getTime(),
         this.physicsDelta;
