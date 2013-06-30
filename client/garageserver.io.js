@@ -23,6 +23,7 @@ window.GarageServerIO = (function (window, socketio) {
         this.clientTime;
         this.renderTime = 0;
         this.renderDelta = 0;
+        this.tickerTime = new Date().getTime(),
         this.physicsDelta;
         this.stateDelta;
         this.playerId;
@@ -36,6 +37,7 @@ window.GarageServerIO = (function (window, socketio) {
         setTime: function (serverTime) {
             this.clientTime = serverTime;
             this.renderTime = this.clientTime - this.interpolationDelay;
+            this.renderDelta = 0;
         }
     };
 
@@ -283,6 +285,10 @@ window.GarageServerIO = (function (window, socketio) {
         },
 
         getPlayerStates = function (stateCallback) {
+            var newTickTime = new Date().getTime();
+            _stateController.renderDelta += (newTickTime - _stateController.tickerTime);
+            _stateController.tickerTime = newTickTime;
+
             if(_options.interpolation && _options.onInterpolation) {
                 getPlayerStatesInterpolated(stateCallback);
             }
