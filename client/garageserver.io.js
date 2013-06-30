@@ -21,9 +21,11 @@ window.GarageServerIO = (function (window, socketio) {
     function StateController() {
         this.state = {};
         this.time;
-        this.delta;
+        this.physicsDelta;
+        this.stateDelta;
         this.playerId;
         this.pingDelay = 100;
+        this.renderTime = 0;
         this.fps = 0;
         this.fpsLastUpdate = (new Date()) * 1 - 1;
         this.fpsFilter = 50;
@@ -31,6 +33,7 @@ window.GarageServerIO = (function (window, socketio) {
     StateController.prototype = {
         setTime: function (serverTime, delay) {
             this.time = serverTime - delay;
+            this.renderTime = this.time;
         }
     };
 
@@ -226,8 +229,9 @@ window.GarageServerIO = (function (window, socketio) {
         },
 
         updateState = function (data) {
+            _stateController.stateDelta = data.stateDelta;
+            _stateController.physicsDelta = data.physicsDelta;
             _stateController.setTime(data.time, _options.interpolationDelay ? _options.interpolationDelay : 100);
-            _stateController.delta = data.delta;
 
             updatePlayersState(data);
             updateEntitiesState(data);
