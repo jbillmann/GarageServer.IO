@@ -25,14 +25,15 @@ window.GarageServerIO = (function (window, socketio) {
         this.stateDelta;
         this.playerId;
         this.pingDelay = 100;
+        this.interpolationDelay = 100;
         this.renderTime = 0;
         this.fps = 0;
         this.fpsLastUpdate = (new Date()) * 1 - 1;
         this.fpsFilter = 50;
     }
     StateController.prototype = {
-        setTime: function (serverTime, delay) {
-            this.time = serverTime - delay;
+        setTime: function (serverTime) {
+            this.time = serverTime - this.interpolationDelay;
             this.renderTime = this.time;
         }
     };
@@ -150,6 +151,7 @@ window.GarageServerIO = (function (window, socketio) {
         registerSocketEvents = function () {
             _socket.on('connect', function () {
                 _stateController.playerId = _socket.id;
+                _stateController.interpolationDelay = _options.interpolationDelay ? _options.interpolationDelay : 100;
                 if (_options.onPlayerConnect) {
                     _options.onPlayerConnect(); 
                 }
@@ -231,7 +233,7 @@ window.GarageServerIO = (function (window, socketio) {
         updateState = function (data) {
             _stateController.stateDelta = data.stateDelta;
             _stateController.physicsDelta = data.physicsDelta;
-            _stateController.setTime(data.time, _options.interpolationDelay ? _options.interpolationDelay : 100);
+            _stateController.setTime(data.time);
 
             updatePlayersState(data);
             updateEntitiesState(data);
