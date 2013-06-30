@@ -20,21 +20,22 @@ window.GarageServerIO = (function (window, socketio) {
 
     function StateController() {
         this.state = {};
-        this.time;
+        this.clientTime;
+        this.renderTime = 0;
+        this.renderDelta = 0;
         this.physicsDelta;
         this.stateDelta;
         this.playerId;
         this.pingDelay = 100;
         this.interpolationDelay = 100;
-        this.renderTime = 0;
         this.fps = 0;
         this.fpsLastUpdate = (new Date()) * 1 - 1;
         this.fpsFilter = 50;
     }
     StateController.prototype = {
         setTime: function (serverTime) {
-            this.time = serverTime - this.interpolationDelay;
-            this.renderTime = this.time;
+            this.clientTime = serverTime;
+            this.renderTime = this.clientTime - this.interpolationDelay;
         }
     };
 
@@ -227,7 +228,7 @@ window.GarageServerIO = (function (window, socketio) {
             if (_options.clientSidePrediction && _options.onUpdatePlayerPhysics) {
                 _stateController.state = _options.onUpdatePlayerPhysics(_stateController.state, [{ input: clientInput }]);
             }
-            _socket.emit('input', { input: clientInput, seq: _inputController.sequenceNumber, time: _stateController.time });
+            _socket.emit('input', { input: clientInput, seq: _inputController.sequenceNumber, time: _stateController.renderTime });
         },
 
         updateState = function (data) {
@@ -304,7 +305,7 @@ window.GarageServerIO = (function (window, socketio) {
             _playerController.players.forEach(function (player) {
                 if (player.anyUpdates()) {
                     latestUpdate = player.getLatestUpdate();
-                    positions = player.getSurroundingPositions(_stateController.time);
+                    positions = player.getSurroundingPositions(_stateController.renderTime);
                     if (positions.previous && positions.target) {
                         amount = getInterpolatedAmount(positions.previous.time, positions.target.time);
                         stateCallback(_options.onInterpolation(latestUpdate.state, positions.previous.state, positions.target.state, amount));
@@ -318,7 +319,7 @@ window.GarageServerIO = (function (window, socketio) {
 
         getInterpolatedAmount = function (previousTime, targetTime) {
             var range = targetTime - previousTime,
-                difference = _stateController.time - previousTime,
+                difference = _stateController.renderTime - previousTime,
                 amount = parseFloat((difference / range).toFixed(3));
 
             return amount;
