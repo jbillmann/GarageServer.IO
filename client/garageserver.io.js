@@ -5,6 +5,7 @@ options = {
     onPlayerReconnect: function (),
     onPlayerUpdate: function (state),
     onPlayerRemove: function (id),
+    onGameState: function (),
     onPing: function (pingDelay),
     onUpdatePlayerPhysics: function (state, inputs),
     onInterpolation: function(currentState, previousState, targetState, amount)
@@ -22,10 +23,9 @@ window.GarageServerIO = (function (window, socketio) {
         this.state = {};
         this.clientTime;
         this.renderTime;
-        this.renderDelta = 0;
+        this.deltaTime = 0;
         this.tickerTime = new Date().getTime(),
         this.physicsDelta;
-        this.stateDelta;
         this.playerId;
         this.pingDelay = 100;
         this.interpolationDelay = 100;
@@ -37,7 +37,6 @@ window.GarageServerIO = (function (window, socketio) {
         setTime: function (serverTime) {
             this.clientTime = serverTime;
             this.renderTime = this.clientTime - this.interpolationDelay;
-            this.renderDelta = 0;
         }
     };
 
@@ -162,6 +161,12 @@ window.GarageServerIO = (function (window, socketio) {
                     console.log('garageserver.io:: socket connect');
                 }
             });
+            _socket.on('state', function(data) {
+                if (_options.onGameState) {
+                    _options.onGameState(); 
+                }
+                _stateController.physicsDelta = data.physicsDelta;
+            });
             _socket.on('disconnect', function () {
                 if (_options.onPlayerDisconnect) {
                     _options.onPlayerDisconnect();
@@ -213,7 +218,7 @@ window.GarageServerIO = (function (window, socketio) {
         },
 
         setPlayerState = function (state) {
-            _socket.emit('state', state);
+            _socket.emit('playerState', state);
         },
 
         removePlayer = function (id) {
@@ -234,8 +239,6 @@ window.GarageServerIO = (function (window, socketio) {
         },
 
         updateState = function (data) {
-            _stateController.stateDelta = data.stateDelta;
-            _stateController.physicsDelta = data.physicsDelta;
             _stateController.setTime(data.time);
 
             updatePlayersState(data);
@@ -286,7 +289,7 @@ window.GarageServerIO = (function (window, socketio) {
 
         getPlayerStates = function (stateCallback) {
             var newTickTime = new Date().getTime();
-            _stateController.renderDelta += (newTickTime - _stateController.tickerTime);
+            _stateController.deltaTime = newTickTime - _stateController.tickerTime;
             _stateController.tickerTime = newTickTime;
 
             if(_options.interpolation && _options.onInterpolation) {
