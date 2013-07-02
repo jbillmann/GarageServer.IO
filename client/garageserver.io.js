@@ -7,7 +7,7 @@ options = {
     onPlayerRemove: function (id),
     onGameState: function (),
     onPing: function (pingDelay),
-    onUpdatePlayerPhysics: function (state, inputs),
+    onUpdatePlayerPhysics: function (state, inputs, deltaTime),
     onInterpolation: function(currentState, previousState, targetState, amount)
     logging: true,
     clientSidePrediction: true,
@@ -233,7 +233,7 @@ window.GarageServerIO = (function (window, socketio) {
             _inputController.addInput(clientInput);
 
             if (_options.clientSidePrediction && _options.onUpdatePlayerPhysics) {
-                _stateController.state = _options.onUpdatePlayerPhysics(_stateController.state, [{ input: clientInput }]);
+                _stateController.state = _options.onUpdatePlayerPhysics(_stateController.state, [{ input: clientInput }], _stateController.physicsDelta);
             }
             _socket.emit('input', { input: clientInput, seq: _inputController.sequenceNumber, time: _stateController.renderTime });
         },
@@ -264,7 +264,7 @@ window.GarageServerIO = (function (window, socketio) {
             _inputController.removeUpToSequence(playerState.seq);
 
             if (_options.clientSidePrediction && _inputController.any()) {
-                _stateController.state = _options.onUpdatePlayerPhysics(_stateController.state, _inputController.inputs);
+                _stateController.state = _options.onUpdatePlayerPhysics(_stateController.state, _inputController.inputs, _stateController.physicsDelta);
             }
         },
         
