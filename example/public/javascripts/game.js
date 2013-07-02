@@ -40,7 +40,7 @@ $(function () {
             ctxGameCanvas.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
 
             GarageServerIO.getPlayerStates(function (state) {
-                ctxGameCanvas.fillRect(state.x, state.y, 10, 10);
+                ctxGameCanvas.fillRect(state.x, state.y, 15, 15);
             });
         },
 

@@ -23,8 +23,6 @@ window.GarageServerIO = (function (window, socketio) {
         this.state = {};
         this.clientTime;
         this.renderTime;
-        this.deltaTime = 0;
-        this.tickerTime = new Date().getTime(),
         this.physicsDelta;
         this.playerId;
         this.pingDelay = 100;
@@ -231,7 +229,6 @@ window.GarageServerIO = (function (window, socketio) {
 
         addPlayerInput = function (clientInput) {
             _inputController.addInput(clientInput);
-
             if (_options.clientSidePrediction && _options.onUpdatePlayerPhysics) {
                 _stateController.state = _options.onUpdatePlayerPhysics(_stateController.state, [{ input: clientInput }], _stateController.physicsDelta);
             }
@@ -288,10 +285,6 @@ window.GarageServerIO = (function (window, socketio) {
         },
 
         getPlayerStates = function (stateCallback) {
-            var newTickTime = new Date().getTime();
-            _stateController.deltaTime = newTickTime - _stateController.tickerTime;
-            _stateController.tickerTime = newTickTime;
-
             if(_options.interpolation && _options.onInterpolation) {
                 getPlayerStatesInterpolated(stateCallback);
             }
