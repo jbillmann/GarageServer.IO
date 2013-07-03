@@ -1,6 +1,6 @@
 (function(exports){
 
-   exports.onUpdatePlayerPhysics = function (state, inputs, deltaTime) {
+   exports.onUpdatePlayerPhysics = function (id, state, inputs, deltaTime) {
        var i = 0;
 
        if (!state.x && !state.y) {

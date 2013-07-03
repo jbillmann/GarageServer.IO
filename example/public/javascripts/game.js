@@ -9,7 +9,7 @@ $(function () {
         clientSidePrediction: true,
         interpolation: true,
         onUpdatePlayerPhysics: onUpdatePlayerPhysics,
-        onInterpolation: function (previousState, targetState, amount) {
+        onInterpolation: function (id, previousState, targetState, amount) {
             var interpolationState = {};
             interpolationState.x = (previousState.x + amount * (targetState.x - previousState.x));
             interpolationState.y = (previousState.y + amount * (targetState.y - previousState.y));

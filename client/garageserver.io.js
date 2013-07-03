@@ -7,9 +7,9 @@ options = {
     onPlayerRemove: function (id),
     onGameState: function (state),
     onPing: function (pingDelay),
-    onUpdatePlayerPhysics: function (state, inputs, deltaTime),
+    onUpdatePlayerPhysics: function (id, state, inputs, deltaTime),
     onUpdate: function (),
-    onInterpolation: function(previousState, targetState, amount)
+    onInterpolation: function(id, previousState, targetState, amount)
     logging: true,
     clientSidePrediction: true,
     interpolation: true,
@@ -261,7 +261,7 @@ window.GarageServerIO = (function (window, socketio) {
         addPlayerInput = function (clientInput) {
             _inputController.addInput(clientInput);
             if (_options.clientSidePrediction && _options.onUpdatePlayerPhysics) {
-                _stateController.state = _options.onUpdatePlayerPhysics(_stateController.state, [{ input: clientInput }], _stateController.physicsDelta);
+                _stateController.state = _options.onUpdatePlayerPhysics(_stateController.playerId, _stateController.state, [{ input: clientInput }], _stateController.physicsDelta);
             }
             _socket.emit('input', [ clientInput, _inputController.sequenceNumber, _stateController.renderTime ]);
         },
@@ -292,7 +292,7 @@ window.GarageServerIO = (function (window, socketio) {
             _inputController.removeUpToSequence(playerState[2]);
 
             if (_options.clientSidePrediction && _inputController.any()) {
-                _stateController.state = _options.onUpdatePlayerPhysics(_stateController.state, _inputController.inputs, _stateController.physicsDelta);
+                _stateController.state = _options.onUpdatePlayerPhysics(_stateController.playerId, _stateController.state, _inputController.inputs, _stateController.physicsDelta);
             }
         },
         
@@ -340,8 +340,8 @@ window.GarageServerIO = (function (window, socketio) {
                     positions = player.getSurroundingPositions(_stateController.renderTime);
                     if (positions.previous && positions.target) {
                         amount = getInterpolatedAmount(positions.previous.time, positions.target.time);
-                        newState = _options.onInterpolation(positions.previous.state, positions.target.state, amount);
-                        player.currentState = newState = _options.onInterpolation(player.currentState, newState, _stateController.physicsDelta * 20);
+                        newState = _options.onInterpolation(player.id, positions.previous.state, positions.target.state, amount);
+                        player.currentState = newState = _options.onInterpolation(player.id, player.currentState, newState, _stateController.physicsDelta * 20);
                         stateCallback(player.currentState);
                     }
                     else {
