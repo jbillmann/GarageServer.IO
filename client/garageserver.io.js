@@ -5,10 +5,11 @@ options = {
     onPlayerReconnect: function (),
     onPlayerUpdate: function (state),
     onPlayerRemove: function (id),
-    onGameState: function (),
+    onGameState: function (state),
     onPing: function (pingDelay),
     onUpdatePlayerPhysics: function (state, inputs, deltaTime),
-    onInterpolation: function(currentState, previousState, targetState, amount)
+    onUpdate: function (),
+    onInterpolation: function(previousState, targetState, amount)
     logging: true,
     clientSidePrediction: true,
     interpolation: true,
@@ -24,17 +25,26 @@ window.GarageServerIO = (function (window, socketio) {
         this.clientTime;
         this.renderTime;
         this.physicsDelta;
+        this.physicsIntervalId;
+        this.currentTime;
+        this.accumulator = 0.0;
         this.playerId;
         this.pingDelay = 100;
         this.interpolationDelay = 100;
-        this.fps = 0;
-        this.fpsLastUpdate = (new Date()) * 1 - 1;
-        this.fpsFilter = 50;
     }
     StateController.prototype = {
         setTime: function (serverTime) {
             this.clientTime = serverTime;
             this.renderTime = this.clientTime - this.interpolationDelay;
+        },
+        accumulate: function () {
+            var newTime = new Date().getTime(),
+                frameTime = newTime - this.currentTime;
+            if (frameTime  > 250) {
+                frameTime = 250;
+            }
+            this.currentTime = newTime;
+            this.accumulator += frameTime;
         }
     };
 
@@ -74,13 +84,18 @@ window.GarageServerIO = (function (window, socketio) {
     function Player(id) {
         this.updates = [];
         this.id = id;
+        this.currentState = {};
     }
     Player.prototype = {
         anyUpdates: function () {
             return this.updates.length > 0;
         },
         addUpate: function (state, seq, time) {
-            this.updates.push(new Update(state, seq, time));
+            var newUpdate = new Update(state, seq, time);
+            if (this.updates.length === 0) {
+                this.currentState = newUpdate.state;
+            }
+            this.updates.push(newUpdate);
             if (this.updates.length > 120) {
                 this.updates.splice(0, 1);
             }
@@ -88,17 +103,17 @@ window.GarageServerIO = (function (window, socketio) {
         getLatestUpdate: function () {
             return this.updates[this.updates.length - 1];
         },
-        processState: function (playerState, time) {
+        processState: function (state, seq, time) {
             var updateFound = false;
             this.updates.some(function (update) {
-               if (update.seq === playerState.seq) {
-                   update.state = playerState.state;
+               if (update.seq === seq) {
+                   update.state = state;
                    updateFound = true;
                    return true;
                } 
             });
             if (!updateFound) {
-                this.addUpate(playerState.state, playerState.seq, time);
+                this.addUpate(state, seq, time);
             }
         },
         getSurroundingPositions: function (time) {
@@ -141,7 +156,7 @@ window.GarageServerIO = (function (window, socketio) {
         _inputController = new InputController(),
         _playerController = new PlayerController(),
 
-        connectToGarageServer = function (path, opts) {
+        initializeGarageServer = function (path, opts) {
             _options = opts;
             _socket = _io.connect(path + '/garageserver.io');
             registerSocketEvents();
@@ -161,7 +176,7 @@ window.GarageServerIO = (function (window, socketio) {
             });
             _socket.on('state', function(data) {
                 if (_options.onGameState) {
-                    _options.onGameState(); 
+                    _options.onGameState(data); 
                 }
                 _stateController.physicsDelta = data.physicsDelta;
             });
@@ -195,6 +210,9 @@ window.GarageServerIO = (function (window, socketio) {
             });
             _socket.on('removePlayer', function(id) {
                 removePlayer(id);
+                if (_options.onPlayerRemove) {
+                    _options.onPlayerRemove(id);
+                }
                 if (_options.logging) {
                     console.log('garageserver.io:: socket removePlayer ' + id);
                 }
@@ -211,6 +229,12 @@ window.GarageServerIO = (function (window, socketio) {
             }, interval);
         },
 
+        start = function () {
+            var self = this;
+            _stateController.currentTime = new Date().getTime();
+            _stateController.physicsIntervalId = setInterval(function () { self.update(); }, this.physicsDelta * 1000);
+        },
+
         getPlayerId = function () {
             return _stateController.playerId;
         },
@@ -221,9 +245,16 @@ window.GarageServerIO = (function (window, socketio) {
 
         removePlayer = function (id) {
             _playerController.removePlayer(id);
+        },
 
-            if (_options.onPlayerRemove) {
-                _options.onPlayerRemove(id);
+        update = function () {
+            if (_options.onUpdate) {
+                _stateController.accumulate();
+                while (_stateController.accumulator >= (_stateController.physicsDelta * 1000))
+                {
+                    _options.onUpdate();
+                    _stateController.accumulator -= (_stateController.physicsDelta * 1000);
+                }
             }
         },
 
@@ -232,7 +263,7 @@ window.GarageServerIO = (function (window, socketio) {
             if (_options.clientSidePrediction && _options.onUpdatePlayerPhysics) {
                 _stateController.state = _options.onUpdatePlayerPhysics(_stateController.state, [{ input: clientInput }], _stateController.physicsDelta);
             }
-            _socket.emit('input', { input: clientInput, seq: _inputController.sequenceNumber, time: _stateController.renderTime });
+            _socket.emit('input', [ clientInput, _inputController.sequenceNumber, _stateController.renderTime ]);
         },
 
         updateState = function (data) {
@@ -244,21 +275,21 @@ window.GarageServerIO = (function (window, socketio) {
 
         updatePlayersState = function (data) {
             data.playerStates.forEach(function (playerState) {
-                if (_socket.socket.sessionid === playerState.id) {
+                if (_socket.socket.sessionid === playerState[0]) {
                     updatePlayerState(playerState);
                 } else {
                     updateOtherPlayersState(playerState, data.time);
                 }
 
                 if (_options.onPlayerUpdate) {
-                    _options.onPlayerUpdate(playerState.state);
+                    _options.onPlayerUpdate(playerState[1]);
                 }
             });
         },
 
         updatePlayerState = function (playerState) {
-            _stateController.state = playerState.state;
-            _inputController.removeUpToSequence(playerState.seq);
+            _stateController.state = playerState[1];
+            _inputController.removeUpToSequence(playerState[2]);
 
             if (_options.clientSidePrediction && _inputController.any()) {
                 _stateController.state = _options.onUpdatePlayerPhysics(_stateController.state, _inputController.inputs, _stateController.physicsDelta);
@@ -268,15 +299,15 @@ window.GarageServerIO = (function (window, socketio) {
         updateOtherPlayersState = function (playerState, time) {
             var playerFound = false;
             _playerController.players.some(function (player) {
-                if (player.id === playerState.id) {
+                if (player.id === playerState[0]) {
                     playerFound = true;
-                    player.processState(playerState, time);
+                    player.processState(playerState[1], playerState[2], time);
                     return true;
                 }
             });
             if (!playerFound) {
-                var newPlayer = _playerController.addPlayer(playerState.id);
-                newPlayer.addUpate(playerState.state, playerState.seq, time);
+                var newPlayer = _playerController.addPlayer(playerState[0]);
+                newPlayer.addUpate(playerState[1], playerState[2], time);
             }
         },
 
@@ -301,19 +332,20 @@ window.GarageServerIO = (function (window, socketio) {
                 }
             });
         },
-        
+
         getPlayerStatesInterpolated = function (stateCallback) {
-            var latestUpdate, positions, amount;
+            var positions, amount, newState;
             _playerController.players.forEach(function (player) {
                 if (player.anyUpdates()) {
-                    latestUpdate = player.getLatestUpdate();
                     positions = player.getSurroundingPositions(_stateController.renderTime);
                     if (positions.previous && positions.target) {
                         amount = getInterpolatedAmount(positions.previous.time, positions.target.time);
-                        stateCallback(_options.onInterpolation(latestUpdate.state, positions.previous.state, positions.target.state, amount));
+                        newState = _options.onInterpolation(positions.previous.state, positions.target.state, amount);
+                        player.currentState = newState = _options.onInterpolation(player.currentState, newState, _stateController.physicsDelta * 20);
+                        stateCallback(player.currentState);
                     }
                     else {
-                        stateCallback(latestUpdate.state);
+                        stateCallback(player.currentState);
                     }
                 }
             });
@@ -325,25 +357,16 @@ window.GarageServerIO = (function (window, socketio) {
                 amount = parseFloat((difference / range).toFixed(3));
 
             return amount;
-        },
-        
-        getFPS = function () {
-            var now,
-                thisFrameFPS = 1000 / ((now = new Date()) - _stateController.fpsLastUpdate);
-
-            _stateController.fps += (thisFrameFPS - _stateController.fps) / _stateController.fpsFilter;
-            _stateController.fpsLastUpdate = now;
-
-            return Math.round(_stateController.fps);
         };
 
     return {
-        connectToGarageServer: connectToGarageServer,
+        initializeGarageServer: initializeGarageServer,
+        start: start,
+        update: update,
         addPlayerInput: addPlayerInput,
         getPlayerStates: getPlayerStates,
         getPlayerId: getPlayerId,
-        setPlayerState: setPlayerState,
-        getFPS: getFPS
+        setPlayerState: setPlayerState
     };
 
 }) (window, io);

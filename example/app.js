@@ -47,5 +47,5 @@ sockets.set('log level', 0);
 
 garageServer.createGarageServer(sockets,{
     logging: true,
-    onUpdatePlayerPhysics: gamePhysics.OnProcessGamePhysics
+    onUpdatePlayerPhysics: gamePhysics.onUpdatePlayerPhysics
 });

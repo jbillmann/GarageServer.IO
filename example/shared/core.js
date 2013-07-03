@@ -1,6 +1,6 @@
 (function(exports){
 
-   exports.OnProcessGamePhysics = function (state, inputs, deltaTime) {
+   exports.onUpdatePlayerPhysics = function (state, inputs, deltaTime) {
        var i = 0;
 
        if (!state.x && !state.y) {
