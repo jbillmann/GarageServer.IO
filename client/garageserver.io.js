@@ -139,18 +139,22 @@ window.GarageServerIO = (function (window, socketio) {
     }
     Player.prototype = Object.create(Entity.prototype);
 
+    function EntityController() {
+        this.entities = [];
+    }
+
     function PlayerController() {
-        this.players = [];
+        EntityController.call(this);
     }
     PlayerController.prototype = {
         add: function (id) {
             var player = new Player(id);
-            this.players.push(player);
+            this.entities.push(player);
             return player;
         },
         remove: function (id) {
-            for (var i = 0; i < this.players.length; i ++) {
-                this.players.splice(i, 1);
+            for (var i = 0; i < this.entities.length; i ++) {
+                this.entities.splice(i, 1);
                 return;
             }
         }
@@ -162,6 +166,7 @@ window.GarageServerIO = (function (window, socketio) {
         _stateController = new StateController(),
         _inputController = new InputController(),
         _playerController = new PlayerController(),
+        _entityController = new EntityController(),
 
         initializeGarageServer = function (path, opts) {
             _options = opts;
@@ -302,24 +307,14 @@ window.GarageServerIO = (function (window, socketio) {
                 _stateController.state = _options.onUpdatePlayerPhysics(_stateController.playerId, _stateController.state, _inputController.inputs, _stateController.physicsDelta);
             }
         },
-        
+
         updateOtherPlayersState = function (playerState, time) {
-            var playerFound = false;
-            _playerController.players.some(function (player) {
-                if (player.id === playerState[0]) {
-                    playerFound = true;
-                    player.updateState(playerState[1], playerState[2], time);
-                    return true;
-                }
-            });
-            if (!playerFound) {
-                var newPlayer = _playerController.add(playerState[0]);
-                newPlayer.addUpate(playerState[1], playerState[2], time);
-            }
+            updateEntityState(_playerController, playerState, time);
         },
 
         updateEntitiesState = function (data) {
             data.entityStates.forEach(function (entityState) {
+                updateEntityState(_entityController, entityState, data.time);
 
                 if (_options.onEntityUpdate) {
                     _options.onEntityUpdate(entityState[1]);
@@ -327,37 +322,60 @@ window.GarageServerIO = (function (window, socketio) {
             });
         },
 
+        updateEntityState = function (entityController, entityState, time) {
+            var entityFound = false;
+            entityController.entities.some(function (entity) {
+                if (entity.id === entityState[0]) {
+                    entityFound = true;
+                    entity.updateState(entityState[1], entityState[2], time);
+                    return true;
+                }
+            });
+            if (!entityFound) {
+                var newEntity = entityController.add(entityState[0]);
+                newEntity.addUpate(entityState[1], entityState[2], time);
+            }
+        },
+
         getPlayerStates = function (stateCallback) {
-            if(_options.interpolation && _options.onInterpolation) {
-                getPlayerStatesInterpolated(stateCallback);
-            }
-            else {
-                getPlayerStatesCurrent(stateCallback);
-            }
+            getStates(_playerController, stateCallback);
             stateCallback(_stateController.state);
         },
 
-        getPlayerStatesCurrent = function (stateCallback) {
-            _playerController.players.forEach(function (player) {
-                if (player.anyUpdates()) {
-                    stateCallback(player.latestUpdate().state);
+        getEntityStates = function (stateCallback) {
+            getStates(_entityController, stateCallback);
+        },
+
+        getStates = function (controller, stateCallback) {
+            if(_options.interpolation && _options.onInterpolation) {
+                getEntityStatesInterpolated(controller, stateCallback);
+            }
+            else {
+                getEntityStatesCurrent(controller, stateCallback);
+            }
+        },
+
+        getEntityStatesCurrent = function (entityController, stateCallback) {
+            entityController.entities.forEach(function (entity) {
+                if (entity.anyUpdates()) {
+                    stateCallback(entity.latestUpdate().state);
                 }
             });
         },
 
-        getPlayerStatesInterpolated = function (stateCallback) {
+        getEntityStatesInterpolated = function (entityController, stateCallback) {
             var positions, amount, newState;
-            _playerController.players.forEach(function (player) {
-                if (player.anyUpdates()) {
-                    positions = player.surroundingPositions(_stateController.renderTime);
+            entityController.entities.forEach(function (entity) {
+                if (entity.anyUpdates()) {
+                    positions = entity.surroundingPositions(_stateController.renderTime);
                     if (positions.previous && positions.target) {
                         amount = getInterpolatedAmount(positions.previous.time, positions.target.time);
-                        newState = _options.onInterpolation(player.id, positions.previous.state, positions.target.state, amount);
-                        player.currentState = newState = _options.onInterpolation(player.id, player.currentState, newState, _stateController.physicsDelta * 20);
-                        stateCallback(player.currentState);
+                        newState = _options.onInterpolation(entity.id, positions.previous.state, positions.target.state, amount);
+                        entity.currentState = newState = _options.onInterpolation(entity.id, entity.currentState, newState, _stateController.physicsDelta * 20);
+                        stateCallback(entity.currentState);
                     }
                     else {
-                        stateCallback(player.currentState);
+                        stateCallback(entity.currentState);
                     }
                 }
             });
@@ -377,6 +395,7 @@ window.GarageServerIO = (function (window, socketio) {
         update: update,
         addPlayerInput: addPlayerInput,
         getPlayerStates: getPlayerStates,
+        getEntityStates: getEntityStates,
         getPlayerId: getPlayerId,
         setPlayerState: setPlayerState
     };
