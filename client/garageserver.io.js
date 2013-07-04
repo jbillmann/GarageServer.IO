@@ -62,11 +62,11 @@ window.GarageServerIO = (function (window, socketio) {
         any: function () {
             return this.inputs.length > 0;
         },
-        addInput: function (input) {
+        add: function (input) {
             this.sequenceNumber += 1;
             this.inputs.push(new Input(input, this.sequenceNumber));
         },
-        removeUpToSequence: function (seq) {
+        remove: function (seq) {
             for (var i = 0; i < this.inputs.length; i ++) {
                 if (this.inputs[i].seq === seq) {
                     this.inputs.splice(0, i + 1);
@@ -88,9 +88,6 @@ window.GarageServerIO = (function (window, socketio) {
         this.currentState = {};
     }
     Entity.prototype = {
-        anyUpdates: function () {
-            return this.updates.length > 0;
-        },
         addUpate: function (state, seq, time) {
             var newUpdate = new Update(state, seq, time);
             if (this.updates.length === 0) {
@@ -101,10 +98,7 @@ window.GarageServerIO = (function (window, socketio) {
                 this.updates.splice(0, 1);
             }
         },
-        getLatestUpdate: function () {
-            return this.updates[this.updates.length - 1];
-        },
-        processState: function (state, seq, time) {
+        updateState: function (state, seq, time) {
             var updateFound = false;
             this.updates.some(function (update) {
                if (update.seq === seq) {
@@ -117,7 +111,13 @@ window.GarageServerIO = (function (window, socketio) {
                 this.addUpate(state, seq, time);
             }
         },
-        getSurroundingPositions: function (time) {
+        anyUpdates: function () {
+            return this.updates.length > 0;
+        },
+        latestUpdate: function () {
+            return this.updates[this.updates.length - 1];
+        },
+        surroundingPositions: function (time) {
             var positions = {};
             for (var i = 0; i < this.updates.length; i ++) {
                 var previous = this.updates[i];
@@ -143,12 +143,12 @@ window.GarageServerIO = (function (window, socketio) {
         this.players = [];
     }
     PlayerController.prototype = {
-        addPlayer: function (id) {
+        add: function (id) {
             var player = new Player(id);
             this.players.push(player);
             return player;
         },
-        removePlayer: function (id) {
+        remove: function (id) {
             for (var i = 0; i < this.players.length; i ++) {
                 this.players.splice(i, 1);
                 return;
@@ -251,7 +251,7 @@ window.GarageServerIO = (function (window, socketio) {
         },
 
         removePlayer = function (id) {
-            _playerController.removePlayer(id);
+            _playerController.remove(id);
         },
 
         update = function () {
@@ -266,7 +266,7 @@ window.GarageServerIO = (function (window, socketio) {
         },
 
         addPlayerInput = function (clientInput) {
-            _inputController.addInput(clientInput);
+            _inputController.add(clientInput);
             if (_options.clientSidePrediction && _options.onUpdatePlayerPhysics) {
                 _stateController.state = _options.onUpdatePlayerPhysics(_stateController.playerId, _stateController.state, [{ input: clientInput }], _stateController.physicsDelta);
             }
@@ -296,7 +296,7 @@ window.GarageServerIO = (function (window, socketio) {
 
         updatePlayerState = function (playerState) {
             _stateController.state = playerState[1];
-            _inputController.removeUpToSequence(playerState[2]);
+            _inputController.remove(playerState[2]);
 
             if (_options.clientSidePrediction && _inputController.any()) {
                 _stateController.state = _options.onUpdatePlayerPhysics(_stateController.playerId, _stateController.state, _inputController.inputs, _stateController.physicsDelta);
@@ -308,12 +308,12 @@ window.GarageServerIO = (function (window, socketio) {
             _playerController.players.some(function (player) {
                 if (player.id === playerState[0]) {
                     playerFound = true;
-                    player.processState(playerState[1], playerState[2], time);
+                    player.updateState(playerState[1], playerState[2], time);
                     return true;
                 }
             });
             if (!playerFound) {
-                var newPlayer = _playerController.addPlayer(playerState[0]);
+                var newPlayer = _playerController.add(playerState[0]);
                 newPlayer.addUpate(playerState[1], playerState[2], time);
             }
         },
@@ -340,7 +340,7 @@ window.GarageServerIO = (function (window, socketio) {
         getPlayerStatesCurrent = function (stateCallback) {
             _playerController.players.forEach(function (player) {
                 if (player.anyUpdates()) {
-                    stateCallback(player.getLatestUpdate().state);
+                    stateCallback(player.latestUpdate().state);
                 }
             });
         },
@@ -349,7 +349,7 @@ window.GarageServerIO = (function (window, socketio) {
             var positions, amount, newState;
             _playerController.players.forEach(function (player) {
                 if (player.anyUpdates()) {
-                    positions = player.getSurroundingPositions(_stateController.renderTime);
+                    positions = player.surroundingPositions(_stateController.renderTime);
                     if (positions.previous && positions.target) {
                         amount = getInterpolatedAmount(positions.previous.time, positions.target.time);
                         newState = _options.onInterpolation(player.id, positions.previous.state, positions.target.state, amount);
