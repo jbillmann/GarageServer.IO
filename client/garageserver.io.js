@@ -81,12 +81,12 @@ window.GarageServerIO = (function (window, socketio) {
         this.time = time;
     }
 
-    function Player(id) {
+    function Entity(id) {
         this.updates = [];
         this.id = id;
         this.currentState = {};
     }
-    Player.prototype = {
+    Entity.prototype = {
         anyUpdates: function () {
             return this.updates.length > 0;
         },
@@ -131,6 +131,13 @@ window.GarageServerIO = (function (window, socketio) {
             return positions;
         }
     };
+
+    function Player(id) {
+        this.updates = [];
+        this.id = id;
+        this.currentState = {};
+    }
+    Player.prototype = Object.create(Entity.prototype);
 
     function PlayerController() {
         this.players = [];
