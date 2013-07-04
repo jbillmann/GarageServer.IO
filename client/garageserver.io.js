@@ -4,6 +4,7 @@ options = {
     onPlayerDisconnect: function (),
     onPlayerReconnect: function (),
     onPlayerUpdate: function (state),
+    onEntityUpdate: function (state),
     onPlayerRemove: function (id),
     onGameState: function (state),
     onPing: function (pingDelay),
@@ -318,7 +319,12 @@ window.GarageServerIO = (function (window, socketio) {
         },
 
         updateEntitiesState = function (data) {
-            
+            data.entityStates.forEach(function (entityState) {
+
+                if (_options.onEntityUpdate) {
+                    _options.onEntityUpdate(entityState[1]);
+                }
+            });
         },
 
         getPlayerStates = function (stateCallback) {
