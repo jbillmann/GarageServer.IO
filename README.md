@@ -1,5 +1,5 @@
 # GarageServer.IO
-A simple, multiplayer game server (and client) for Node.js
+A simple, lightweight, multiplayer game server (and client) for Node.js
 
 How to use
 ----------
