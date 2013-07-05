@@ -47,5 +47,7 @@ sockets.set('log level', 0);
 
 garageServer.createGarageServer(sockets,{
     logging: true,
+    interpolation: true,
+    clientSidePrediction: true,
     onUpdatePlayerPhysics: gamePhysics.onUpdatePlayerPhysics
 });

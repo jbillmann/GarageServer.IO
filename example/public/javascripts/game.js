@@ -6,8 +6,6 @@ $(function () {
 
     GarageServerIO.initializeGarageServer('http://garageserver_io.jbillmann.c9.io', { 
         logging: true,
-        clientSidePrediction: true,
-        interpolation: true,
         onUpdatePlayerPhysics: onUpdatePlayerPhysics,
         onInterpolation: function (id, previousState, targetState, amount) {
             var interpolationState = {};

@@ -11,11 +11,7 @@ options = {
     onUpdatePlayerPhysics: function (id, state, inputs, deltaTime),
     onUpdate: function (),
     onInterpolation: function(id, previousState, targetState, amount)
-    logging: true,
-    clientSidePrediction: true,
-    interpolation: true,
-    interpolationDelay: 100,
-    pingInterval: 2000
+    logging: true
 }
 */
 
@@ -32,6 +28,9 @@ window.GarageServerIO = (function (window, socketio) {
         this.playerId;
         this.pingDelay = 100;
         this.interpolationDelay = 100;
+        this.interpolation = false;
+        this.pingInterval = 2000;
+        this.clientSidePrediction = false;
     }
     StateController.prototype = {
         setTime: function (serverTime) {
@@ -172,13 +171,11 @@ window.GarageServerIO = (function (window, socketio) {
             _options = opts;
             _socket = _io.connect(path + '/garageserver.io');
             registerSocketEvents();
-            registerPinger();
         },
 
         registerSocketEvents = function () {
             _socket.on('connect', function () {
                 _stateController.playerId = _socket.id;
-                _stateController.interpolationDelay = _options.interpolationDelay ? _options.interpolationDelay : 100;
                 if (_options.onPlayerConnect) {
                     _options.onPlayerConnect(); 
                 }
@@ -191,6 +188,13 @@ window.GarageServerIO = (function (window, socketio) {
                     _options.onGameState(data); 
                 }
                 _stateController.physicsDelta = data.physicsDelta;
+                _stateController.interpolation = data.interpolation;
+                _stateController.interpolationDelay = data.interpolationDelay;
+                _stateController.pingInterval = data.pingInterval;
+                _stateController.clientSidePrediction = data.clientSidePrediction;
+                setInterval(function (){
+                    _socket.emit('ping', new Date().getTime());
+                }, _stateController.pingInterval);
             });
             _socket.on('disconnect', function () {
                 if (_options.onPlayerDisconnect) {
@@ -231,16 +235,6 @@ window.GarageServerIO = (function (window, socketio) {
             });
         },
 
-        registerPinger = function () {
-            var interval = 2000;
-            if (_options.pingInterval) {
-                interval = _options.pingInterval;
-            }
-            setInterval(function (){
-                _socket.emit('ping', new Date().getTime());
-            }, interval);
-        },
-
         start = function () {
             var self = this;
             _stateController.currentTime = new Date().getTime();
@@ -272,7 +266,7 @@ window.GarageServerIO = (function (window, socketio) {
 
         addPlayerInput = function (clientInput) {
             _inputController.add(clientInput);
-            if (_options.clientSidePrediction && _options.onUpdatePlayerPhysics) {
+            if (_stateController.clientSidePrediction && _options.onUpdatePlayerPhysics) {
                 _stateController.state = _options.onUpdatePlayerPhysics(_stateController.playerId, _stateController.state, [{ input: clientInput }], _stateController.physicsDelta);
             }
             _socket.emit('input', [ clientInput, _inputController.sequenceNumber, _stateController.renderTime ]);
@@ -303,7 +297,7 @@ window.GarageServerIO = (function (window, socketio) {
             _stateController.state = playerState[1];
             _inputController.remove(playerState[2]);
 
-            if (_options.clientSidePrediction && _inputController.any()) {
+            if (_stateController.clientSidePrediction && _inputController.any()) {
                 _stateController.state = _options.onUpdatePlayerPhysics(_stateController.playerId, _stateController.state, _inputController.inputs, _stateController.physicsDelta);
             }
         },
@@ -347,7 +341,7 @@ window.GarageServerIO = (function (window, socketio) {
         },
 
         getStates = function (controller, stateCallback) {
-            if(_options.interpolation && _options.onInterpolation) {
+            if(_stateController.interpolation && _options.onInterpolation) {
                 getEntityStatesInterpolated(controller, stateCallback);
             }
             else {
