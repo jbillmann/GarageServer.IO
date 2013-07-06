@@ -81,9 +81,9 @@ window.GarageServerIO = (function (window, socketio) {
         this.time = time;
     }
 
-    function Entity() {
+    function Entity(id) {
         this.updates = [];
-        this.id;
+        this.id = id;
         this.currentState = {};
     }
     Entity.prototype = {
@@ -133,8 +133,7 @@ window.GarageServerIO = (function (window, socketio) {
     };
 
     function Player(id) {
-        Entity.call(this);
-        this.id = id;
+        Entity.call(this, id);
     }
     Player.prototype = Object.create(Entity.prototype);
 
