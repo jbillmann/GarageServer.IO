@@ -119,10 +119,10 @@ window.GarageServerIO = (function (window, socketio) {
         surroundingPositions: function (time) {
             var positions = {};
             for (var i = 0; i < this.updates.length; i ++) {
-                var previous = this.updates[i];
-                var target = this.updates[i + 1];
+                var previous = this.updates[i],
+                    target = this.updates[i + 1];
 
-                if(previous && target && time > previous.time && time < target.time) {
+                if (previous && target && time > previous.time && time < target.time) {
                     positions.previous = previous;
                     positions.target = target;
                     break;
@@ -183,7 +183,7 @@ window.GarageServerIO = (function (window, socketio) {
                     console.log('garageserver.io:: socket connect');
                 }
             });
-            _socket.on('state', function(data) {
+            _socket.on('state', function (data) {
                 if (_options.onGameState) {
                     _options.onGameState(data); 
                 }
@@ -212,10 +212,10 @@ window.GarageServerIO = (function (window, socketio) {
                     console.log('garageserver.io:: socket reconnect');
                 }
             });
-            _socket.on('update', function(data) {
+            _socket.on('update', function (data) {
                 updateState(data);
             });
-            _socket.on('ping', function(data) {
+            _socket.on('ping', function (data) {
                 _stateController.pingDelay = new Date().getTime() - data;
                 if (_options.onPing) {
                     _options.onPing(_stateController.pingDelay);
@@ -224,7 +224,7 @@ window.GarageServerIO = (function (window, socketio) {
                     console.log('garageserver.io:: socket ping delay ' + _stateController.pingDelay);
                 }
             });
-            _socket.on('removePlayer', function(id) {
+            _socket.on('removePlayer', function (id) {
                 removePlayer(id);
                 if (_options.onPlayerRemove) {
                     _options.onPlayerRemove(id);
@@ -341,7 +341,7 @@ window.GarageServerIO = (function (window, socketio) {
         },
 
         getStates = function (controller, stateCallback) {
-            if(_stateController.interpolation && _options.onInterpolation) {
+            if (_stateController.interpolation && _options.onInterpolation) {
                 getEntityStatesInterpolated(controller, stateCallback);
             }
             else {
