@@ -49,5 +49,6 @@ garageServer.createGarageServer(sockets,{
     logging: true,
     interpolation: true,
     clientSidePrediction: true,
-    onUpdatePlayerPhysics: gamePhysics.onUpdatePlayerPhysics
+    onUpdatePlayerPhysics: gamePhysics.onUpdatePlayerPhysics,
+    onUpdateEntityPhysics: gamePhysics.onUpdateEntityPhysics
 });

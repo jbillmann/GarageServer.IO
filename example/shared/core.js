@@ -3,7 +3,7 @@
    exports.onUpdatePlayerPhysics = function (id, state, inputs, deltaTime) {
        var i = 0;
 
-       if (!state.x && !state.y) {
+        if (!state.x && !state.y) {
            state.x = 0;
            state.y = 0;
         }
@@ -19,6 +19,14 @@
             }
         }
         return state;
+    };
+    
+    exports.onUpdateEntityPhysics = function (id, state, deltaTime) {
+        if (!state.x && !state.y) {
+           state.x = 0;
+           state.y = 0;
+        }
+        state.x += (10 * deltaTime);
     };
 
 })(typeof exports === 'undefined' ? window : exports);
