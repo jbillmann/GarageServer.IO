@@ -330,33 +330,27 @@ window.GarageServerIO = (function (window, socketio) {
             }
         },
 
-        getPlayerStates = function (stateCallback) {
-            getStates(_playerController, stateCallback);
-            stateCallback(_stateController.state);
-        },
-
-        getEntityStates = function (stateCallback) {
-            getStates(_entityController, stateCallback);
-        },
-
-        getStates = function (controller, stateCallback) {
+        getStates = function (stateCallback) {
             if (_stateController.interpolation && _options.onInterpolation) {
-                getEntityStatesInterpolated(controller, stateCallback);
+                getEntityStatesInterpolated(_entityController);
+                getEntityStatesInterpolated(_playerController);
             }
             else {
-                getEntityStatesCurrent(controller, stateCallback);
+                getEntityStatesCurrent(_entityController);
+                getEntityStatesCurrent(_playerController);
             }
+            stateCallback(_stateController.state, _playerController.entities, _entityController.entities);
         },
 
-        getEntityStatesCurrent = function (entityController, stateCallback) {
+        getEntityStatesCurrent = function (entityController) {
             entityController.entities.forEach(function (entity) {
                 if (entity.anyUpdates()) {
-                    stateCallback(entity.latestUpdate().state);
+                    entity.currentState = entity.latestUpdate().state;
                 }
             });
         },
 
-        getEntityStatesInterpolated = function (entityController, stateCallback) {
+        getEntityStatesInterpolated = function (entityController) {
             var positions, amount, newState;
             entityController.entities.forEach(function (entity) {
                 if (entity.anyUpdates()) {
@@ -365,10 +359,6 @@ window.GarageServerIO = (function (window, socketio) {
                         amount = getInterpolatedAmount(positions.previous.time, positions.target.time);
                         newState = _options.onInterpolation(entity.id, positions.previous.state, positions.target.state, amount);
                         entity.currentState = newState = _options.onInterpolation(entity.id, entity.currentState, newState, _stateController.physicsDelta * 20);
-                        stateCallback(entity.currentState);
-                    }
-                    else {
-                        stateCallback(entity.currentState);
                     }
                 }
             });
@@ -387,8 +377,7 @@ window.GarageServerIO = (function (window, socketio) {
         start: start,
         update: update,
         addPlayerInput: addPlayerInput,
-        getPlayerStates: getPlayerStates,
-        getEntityStates: getEntityStates,
+        getStates: getStates,
         getPlayerId: getPlayerId,
         setPlayerState: setPlayerState
     };

@@ -38,8 +38,17 @@ $(function () {
 
         ctxCanvas.clearRect(0, 0, canvas.width, canvas.height);
 
-        GarageServerIO.getPlayerStates(function (state) {
-            ctxCanvas.fillRect(state.x, state.y, 15, 15);
+        GarageServerIO.getStates(function (selfState, playerStates, entityStates) {
+
+            playerStates.forEach(function (player) {
+                ctxCanvas.fillRect(player.currentState.x, player.currentState.y, 15, 15);
+            });
+
+            entityStates.forEach(function (entity) {
+                ctxCanvas.fillRect(entity.currentState.x, entity.currentState.y, 15, 15);
+            });
+
+            ctxCanvas.fillRect(selfState.x, selfState.y, 15, 15);
         });
     }
 });
