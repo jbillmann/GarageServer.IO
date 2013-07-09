@@ -5,12 +5,10 @@
 
 var express = require('express'),
     routes = require('./routes'),
-    user = require('./routes/user'),
     http = require('http'),
     path = require('path'),
     io = require('socket.io'),
-    garageServer = require('../lib/server/garageserver.io'),
-    gamePhysics = require('./shared/core');
+    Game = require('./game.js');
 
 var app = express();
 
@@ -33,7 +31,6 @@ app.configure('development', function () {
 });
 
 app.get('/', routes.index);
-app.get('/users', user.list);
 
 var server = http.createServer(app);
 
@@ -42,13 +39,7 @@ server.listen(app.get('port'), function () {
 });
 
 var sockets = io.listen(server);
-
 sockets.set('log level', 0);
 
-garageServer.createGarageServer(sockets,{
-    logging: true,
-    interpolation: true,
-    clientSidePrediction: true,
-    onUpdatePlayerPhysics: gamePhysics.onUpdatePlayerPhysics,
-    onUpdateEntityPhysics: gamePhysics.onUpdateEntityPhysics
-});
+var game = new Game(sockets);
+game.start();
