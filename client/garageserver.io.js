@@ -9,7 +9,6 @@ options = {
     onGameState: function (state),
     onPing: function (pingDelay),
     onUpdatePlayerPhysics: function (id, state, inputs, deltaTime),
-    onUpdate: function (),
     onInterpolation: function(id, previousState, targetState, amount)
     logging: true
 }
@@ -22,9 +21,6 @@ window.GarageServerIO = (function (window, socketio) {
         this.clientTime;
         this.renderTime;
         this.physicsDelta;
-        this.physicsIntervalId;
-        this.currentTime;
-        this.accumulator = 0.0;
         this.playerId;
         this.pingDelay = 100;
         this.interpolationDelay = 100;
@@ -37,15 +33,6 @@ window.GarageServerIO = (function (window, socketio) {
         setTime: function (serverTime) {
             this.clientTime = serverTime;
             this.renderTime = this.clientTime - this.interpolationDelay;
-        },
-        accumulate: function () {
-            var newTime = new Date().getTime(),
-                frameTime = newTime - this.currentTime;
-            if (frameTime  > 250) {
-                frameTime = 250;
-            }
-            this.currentTime = newTime;
-            this.accumulator += frameTime;
         }
     };
 
@@ -236,12 +223,6 @@ window.GarageServerIO = (function (window, socketio) {
             });
         },
 
-        start = function () {
-            var self = this;
-            _stateController.currentTime = new Date().getTime();
-            _stateController.physicsIntervalId = setInterval(function () { self.update(); }, this.physicsDelta * 1000);
-        },
-
         getPlayerId = function () {
             return _stateController.playerId;
         },
@@ -252,17 +233,6 @@ window.GarageServerIO = (function (window, socketio) {
 
         removePlayer = function (id) {
             _playerController.remove(id);
-        },
-
-        update = function () {
-            if (_options.onUpdate) {
-                _stateController.accumulate();
-                while (_stateController.accumulator >= (_stateController.physicsDelta * 1000))
-                {
-                    _options.onUpdate();
-                    _stateController.accumulator -= (_stateController.physicsDelta * 1000);
-                }
-            }
         },
 
         addPlayerInput = function (clientInput) {
@@ -376,8 +346,6 @@ window.GarageServerIO = (function (window, socketio) {
 
     return {
         initializeGarageServer: initializeGarageServer,
-        start: start,
-        update: update,
         addPlayerInput: addPlayerInput,
         getStates: getStates,
         getPlayerId: getPlayerId,
