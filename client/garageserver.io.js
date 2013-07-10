@@ -72,13 +72,13 @@ window.GarageServerIO = (function (window, socketio) {
     function Entity(id) {
         this.updates = [];
         this.id = id;
-        this.currentState = {};
+        this.state = {};
     }
     Entity.prototype = {
         addUpate: function (state, seq, time) {
             var newUpdate = new Update(state, seq, time);
             if (this.updates.length === 0) {
-                this.currentState = newUpdate.state;
+                this.state = newUpdate.state;
             }
             this.updates.push(newUpdate);
             if (this.updates.length > 120) {
@@ -317,7 +317,7 @@ window.GarageServerIO = (function (window, socketio) {
         getEntityStatesCurrent = function (entityController) {
             entityController.entities.forEach(function (entity) {
                 if (entity.anyUpdates()) {
-                    entity.currentState = entity.latestUpdate().state;
+                    entity.state = entity.latestUpdate().state;
                 }
             });
         },
@@ -330,7 +330,7 @@ window.GarageServerIO = (function (window, socketio) {
                     if (positions.previous && positions.target) {
                         amount = getInterpolatedAmount(positions.previous.time, positions.target.time);
                         newState = _options.onInterpolation(entity.id, positions.previous.state, positions.target.state, amount);
-                        entity.currentState = newState = _options.onInterpolation(entity.id, entity.currentState, newState, _stateController.smoothingFactor);
+                        entity.state = newState = _options.onInterpolation(entity.id, entity.state, newState, _stateController.smoothingFactor);
                     }
                 }
             });

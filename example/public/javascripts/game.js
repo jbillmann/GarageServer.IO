@@ -20,11 +20,11 @@ $(function () {
 
             GarageServerIO.getStates(function (selfState, playerStates, entityStates) {
                 playerStates.forEach(function (player) {
-                    ctxCanvas.fillRect(player.currentState.x, player.currentState.y, 15, 15);
+                    ctxCanvas.fillRect(player.state.x, player.state.y, 15, 15);
                 });
 
                 entityStates.forEach(function (entity) {
-                    ctxCanvas.fillRect(entity.currentState.x, entity.currentState.y, 15, 15);
+                    ctxCanvas.fillRect(entity.state.x, entity.state.y, 15, 15);
                 });
 
                 ctxCanvas.fillRect(selfState.x, selfState.y, 15, 15);
