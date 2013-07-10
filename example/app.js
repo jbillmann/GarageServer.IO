@@ -1,16 +1,10 @@
-
-/**
- * Module dependencies.
- */
-
 var express = require('express'),
     routes = require('./routes'),
     http = require('http'),
     path = require('path'),
     io = require('socket.io'),
-    Game = require('./game.js');
-
-var app = express();
+    Game = require('./game.js'),
+    app = express();
 
 app.configure(function () {
     app.set('port', process.env.PORT || 2121);
