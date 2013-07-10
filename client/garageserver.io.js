@@ -9,7 +9,7 @@ options = {
     onGameState: function (state),
     onPing: function (pingDelay),
     onUpdatePlayerPhysics: function (state, inputs, deltaTime),
-    onInterpolation: function(id, previousState, targetState, amount)
+    onInterpolation: function(previousState, targetState, amount)
     logging: true
 }
 */
@@ -329,8 +329,8 @@ window.GarageServerIO = (function (window, socketio) {
                     positions = entity.surroundingPositions(_stateController.renderTime);
                     if (positions.previous && positions.target) {
                         amount = getInterpolatedAmount(positions.previous.time, positions.target.time);
-                        newState = _options.onInterpolation(entity.id, positions.previous.state, positions.target.state, amount);
-                        entity.state = newState = _options.onInterpolation(entity.id, entity.state, newState, _stateController.smoothingFactor);
+                        newState = _options.onInterpolation(positions.previous.state, positions.target.state, amount);
+                        entity.state = newState = _options.onInterpolation(entity.state, newState, _stateController.smoothingFactor);
                     }
                 }
             });

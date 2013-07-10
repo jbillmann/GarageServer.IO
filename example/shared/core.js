@@ -1,6 +1,6 @@
 (function(exports){
 
-   exports.getNewPlayerState = function (state, inputs, deltaTime) {
+   exports.getNewState = function (state, inputs, deltaTime) {
        var i = 0;
 
         if (!state.x && !state.y) {
@@ -21,12 +21,11 @@
         return state;
     };
     
-    exports.onUpdateEntityPhysics = function (id, state, deltaTime) {
-        if (!state.x && !state.y) {
-           state.x = 0;
-           state.y = 0;
-        }
-        state.x += (10 * deltaTime);
+    exports.getInterpolatedState = function (previousState, targetState, amount) {
+        var interpolationState = {};
+        interpolationState.x = (previousState.x + amount * (targetState.x - previousState.x));
+        interpolationState.y = (previousState.y + amount * (targetState.y - previousState.y));
+        return interpolationState;
     };
 
-})(typeof exports === 'undefined' ? window : exports);
+})(typeof exports === 'undefined' ? window.GamePhysics = {} : exports);

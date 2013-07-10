@@ -1,6 +1,6 @@
 var garageServer = require('../lib/server/garageserver.io'),
     gamePhysics = require('./shared/core');
-    
+
 exports = module.exports = Game;
 
 function Game (sockets) {
@@ -30,7 +30,7 @@ Game.prototype.update = function () {
         self = this;
     
     players.forEach(function (player) {
-        var newState = gamePhysics.getNewPlayerState(player.state, player.inputs, self.physicsDelta);
+        var newState = gamePhysics.getNewState(player.state, player.inputs, self.physicsDelta);
         self.server.updatePlayerState(player.id, newState);
     });
 };

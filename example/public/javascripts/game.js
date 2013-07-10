@@ -3,13 +3,8 @@ $(function () {
 
     GarageServerIO.initializeGarageServer('http://garageserver_io.jbillmann.c9.io', { 
         logging: true,
-        onUpdatePlayerPhysics: getNewPlayerState,
-        onInterpolation: function (id, previousState, targetState, amount) {
-            var interpolationState = {};
-            interpolationState.x = (previousState.x + amount * (targetState.x - previousState.x));
-            interpolationState.y = (previousState.y + amount * (targetState.y - previousState.y));
-            return interpolationState;
-        }
+        onUpdatePlayerPhysics: GamePhysics.getNewState,
+        onInterpolation: GamePhysics.getInterpolatedState
     });
     GarageServerIO.setPlayerState({ x: 0, y: 0 });
 
