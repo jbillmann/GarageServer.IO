@@ -31,6 +31,7 @@ window.GarageServerIO = (function (window, socketio) {
         this.interpolation = false;
         this.pingInterval = 2000;
         this.clientSidePrediction = false;
+        this.smoothingFactor = 1;
     }
     StateController.prototype = {
         setTime: function (serverTime) {
@@ -191,6 +192,7 @@ window.GarageServerIO = (function (window, socketio) {
                 _stateController.interpolationDelay = data.interpolationDelay;
                 _stateController.pingInterval = data.pingInterval;
                 _stateController.clientSidePrediction = data.clientSidePrediction;
+                _stateController.smoothingFactor = data.smoothingFactor;
                 setInterval(function (){
                     _socket.emit('ping', new Date().getTime());
                 }, _stateController.pingInterval);
@@ -358,7 +360,7 @@ window.GarageServerIO = (function (window, socketio) {
                     if (positions.previous && positions.target) {
                         amount = getInterpolatedAmount(positions.previous.time, positions.target.time);
                         newState = _options.onInterpolation(entity.id, positions.previous.state, positions.target.state, amount);
-                        entity.currentState = newState = _options.onInterpolation(entity.id, entity.currentState, newState, _stateController.physicsDelta * 20);
+                        entity.currentState = newState = _options.onInterpolation(entity.id, entity.currentState, newState, _stateController.smoothingFactor);
                     }
                 }
             });
