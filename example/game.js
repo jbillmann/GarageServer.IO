@@ -13,9 +13,7 @@ function Game (sockets) {
             logging: true,
             interpolation: true,
             clientSidePrediction: true,
-            smoothingFactor: this.physicsDelta * 20,
-            onUpdatePlayerPhysics: gamePhysics.onUpdatePlayerPhysics,
-            onUpdateEntityPhysics: gamePhysics.onUpdateEntityPhysics
+            smoothingFactor: this.physicsDelta * 20
         });
 }
 

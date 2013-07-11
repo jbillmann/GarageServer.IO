@@ -6,7 +6,7 @@ $(function () {
         onUpdatePlayerPhysics: GamePhysics.getNewState,
         onInterpolation: GamePhysics.getInterpolatedState
     });
-    GarageServerIO.setPlayerState({ x: 0, y: 0 });
+    GarageServerIO.setState({ x: 0, y: 0 });
 
     GameLoop.start(
         //Render Loop
@@ -28,16 +28,16 @@ $(function () {
         //Update Loop
         function () {
             if (keyboard.pressed('left')) {
-                GarageServerIO.addPlayerInput('left');
+                GarageServerIO.addInput('left');
             }
             if (keyboard.pressed('right')) {
-                GarageServerIO.addPlayerInput('right');
+                GarageServerIO.addInput('right');
             }
             if (keyboard.pressed('down')) {
-                GarageServerIO.addPlayerInput('down');
+                GarageServerIO.addInput('down');
             }
             if (keyboard.pressed('up')) {
-                GarageServerIO.addPlayerInput('up');
+                GarageServerIO.addInput('up');
             }
         }
     );
