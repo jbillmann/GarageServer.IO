@@ -22,7 +22,7 @@ var GarageServerIO = (function (socketio) {
         this.clientTime = 0;
         this.renderTime = 0;
         this.physicsDelta = 0.0;
-        this.Id = '';
+        this.id = '';
         this.pingDelay = 100;
         this.interpolationDelay = 100;
         this.interpolation = false;
@@ -76,7 +76,7 @@ var GarageServerIO = (function (socketio) {
         this.state = {};
     }
     Entity.prototype = {
-        addUpate: function (state, seq, time) {
+        addUpdate: function (state, seq, time) {
             var newUpdate = new Update(state, seq, time);
             if (this.updates.length === 0) {
                 this.state = newUpdate.state;
@@ -96,7 +96,7 @@ var GarageServerIO = (function (socketio) {
                } 
             });
             if (!updateFound) {
-                this.addUpate(state, seq, time);
+                this.addUpdate(state, seq, time);
             }
         },
         anyUpdates: function () {
@@ -141,8 +141,10 @@ var GarageServerIO = (function (socketio) {
         },
         remove: function (id) {
             for (var i = 0; i < this.entities.length; i ++) {
-                this.entities.splice(i, 1);
-                return;
+                if (this.entities[i].id === id) {
+                    this.entities.splice(i, 1);
+                    return;
+                }
             }
         }
     };
@@ -163,7 +165,7 @@ var GarageServerIO = (function (socketio) {
 
         registerSocketEvents = function () {
             _socket.on('connect', function () {
-                _stateController.Id = _socket.id;
+                _stateController.id = _socket.id;
                 if (_options.onPlayerConnect) {
                     _options.onPlayerConnect(); 
                 }
@@ -225,7 +227,7 @@ var GarageServerIO = (function (socketio) {
         },
 
         getId = function () {
-            return _stateController.Id;
+            return _stateController.id;
         },
 
         setState = function (state) {
@@ -259,16 +261,16 @@ var GarageServerIO = (function (socketio) {
         update = function (data) {
             _stateController.setTime(data.time);
 
-            updatePlayersState(data);
-            updateEntitiesState(data);
+            updatePlayers(data);
+            updateEntities(data);
         },
 
-        updatePlayersState = function (data) {
+        updatePlayers = function (data) {
             data.playerStates.forEach(function (playerState) {
                 if (_socket.socket.sessionid === playerState[0]) {
-                    updateState(playerState);
+                    updateSelf(playerState);
                 } else {
-                    updatePlayerState(playerState, data.time);
+                    updatePlayer(playerState, data.time);
                 }
 
                 if (_options.onPlayerUpdate) {
@@ -277,7 +279,7 @@ var GarageServerIO = (function (socketio) {
             });
         },
 
-        updateState = function (playerState) {
+        updateSelf = function (playerState) {
             _stateController.state = playerState[1];
             _inputController.remove(playerState[2]);
 
@@ -286,13 +288,13 @@ var GarageServerIO = (function (socketio) {
             }
         },
 
-        updatePlayerState = function (playerState, time) {
-            updateEntityState(_playerController, playerState, time);
+        updatePlayer = function (playerState, time) {
+            updateEntity(_playerController, playerState, time);
         },
 
-        updateEntitiesState = function (data) {
+        updateEntities = function (data) {
             data.entityStates.forEach(function (entityState) {
-                updateEntityState(_entityController, entityState, data.time);
+                updateEntity(_entityController, entityState, data.time);
 
                 if (_options.onEntityUpdate) {
                     _options.onEntityUpdate(entityState[1]);
@@ -300,7 +302,7 @@ var GarageServerIO = (function (socketio) {
             });
         },
 
-        updateEntityState = function (entityController, entityState, time) {
+        updateEntity = function (entityController, entityState, time) {
             var entityFound = false;
             entityController.entities.some(function (entity) {
                 if (entity.id === entityState[0]) {
@@ -311,7 +313,7 @@ var GarageServerIO = (function (socketio) {
             });
             if (!entityFound) {
                 var newEntity = entityController.add(entityState[0]);
-                newEntity.addUpate(entityState[1], entityState[2], time);
+                newEntity.addUpdate(entityState[1], entityState[2], time);
             }
         },
 

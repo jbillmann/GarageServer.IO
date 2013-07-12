@@ -26,7 +26,7 @@ Game.prototype.start = function () {
 Game.prototype.update = function () {
     var players = this.server.getPlayers(),
         self = this;
-    
+
     players.forEach(function (player) {
         var newState = gamePhysics.getNewState(player.state, player.inputs, self.physicsDelta);
         self.server.updatePlayerState(player.id, newState);
