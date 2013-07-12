@@ -13,15 +13,16 @@ options = {
     logging: true
 }
 */
+var GarageServerIO = (function (socketio) {
 
-window.GarageServerIO = (function (window, socketio) {
+    "use strict";
 
     function StateController() {
         this.state = {};
-        this.clientTime;
-        this.renderTime;
-        this.physicsDelta;
-        this.Id;
+        this.clientTime = 0;
+        this.renderTime = 0;
+        this.physicsDelta = 0.0;
+        this.Id = '';
         this.pingDelay = 100;
         this.interpolationDelay = 100;
         this.interpolation = false;
@@ -352,4 +353,4 @@ window.GarageServerIO = (function (window, socketio) {
         setState: setState
     };
 
-}) (window, io);
+}) (io);

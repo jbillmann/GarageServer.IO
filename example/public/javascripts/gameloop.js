@@ -1,14 +1,14 @@
-window.GameLoop = (function (window) {
+var GameLoop = (function (window) {
+    "use strict";
+
     var requestAnimFrame = (function () {
             return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function (callback) { window.setTimeout(callback, 1000/60); };
-        })(),
+        }()),
         _currentTime = new Date().getTime(),
         _accumulator = 0.0,
 
         start = function (renderCallback, updateCallback) {
-            loop();
-
-            function loop () {
+            function loop() {
                 requestAnimFrame(loop);
 
                 var newTime = new Date().getTime(), frameTime = newTime - _currentTime;
@@ -25,9 +25,10 @@ window.GameLoop = (function (window) {
 
                 renderCallback();
             }
+            loop();
         };
 
     return {
         start: start
     };
-}) (window);
+}(window));

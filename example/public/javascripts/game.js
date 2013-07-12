@@ -1,7 +1,10 @@
 $(function () {
+
+    "use strict";
+
     var canvas = document.getElementById('gameCanvas'), ctxCanvas = canvas.getContext('2d'), keyboard = new THREEx.KeyboardState();
 
-    GarageServerIO.initializeGarageServer('http://garageserver_io.jbillmann.c9.io', { 
+    GarageServerIO.initializeGarageServer('http://garageserver_io.jbillmann.c9.io', {
         logging: true,
         onUpdatePlayerPhysics: GamePhysics.getNewState,
         onInterpolation: GamePhysics.getInterpolatedState
