@@ -15,8 +15,7 @@ $(function () {
         //Render Loop
         function () {
             ctxCanvas.clearRect(0, 0, canvas.width, canvas.height);
-
-            GarageServerIO.getStates(function (selfState, playerStates, entityStates) {
+            GarageServerIO.getStates(function (playerStates, entityStates) {
                 playerStates.forEach(function (player) {
                     ctxCanvas.fillRect(player.state.x, player.state.y, 15, 15);
                 });
@@ -24,8 +23,6 @@ $(function () {
                 entityStates.forEach(function (entity) {
                     ctxCanvas.fillRect(entity.state.x, entity.state.y, 15, 15);
                 });
-
-                ctxCanvas.fillRect(selfState.x, selfState.y, 15, 15);
             });
         },
         //Update Loop
@@ -41,6 +38,9 @@ $(function () {
             }
             if (keyboard.pressed('up')) {
                 GarageServerIO.addInput('up');
+            }
+            if (keyboard.pressed('space')) {
+                GarageServerIO.addInput('space');
             }
         }
     );

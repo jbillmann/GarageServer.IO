@@ -18,7 +18,6 @@ var GarageServerIO = (function (socketio) {
     "use strict";
 
     function StateController() {
-        this.state = {};
         this.clientTime = 0;
         this.renderTime = 0;
         this.physicsDelta = 0.0;
@@ -29,6 +28,7 @@ var GarageServerIO = (function (socketio) {
         this.pingInterval = 2000;
         this.clientSidePrediction = false;
         this.smoothingFactor = 1;
+        this.worldState = {};
     }
     StateController.prototype = {
         setTime: function (serverTime) {
@@ -74,6 +74,7 @@ var GarageServerIO = (function (socketio) {
         this.updates = [];
         this.id = id;
         this.state = {};
+        this.inputController = new InputController();
     }
     Entity.prototype = {
         addUpdate: function (state, seq, time) {
@@ -153,7 +154,6 @@ var GarageServerIO = (function (socketio) {
         _socket = null,
         _options = null,
         _stateController = new StateController(),
-        _inputController = new InputController(),
         _playerController = new PlayerController(),
         _entityController = new EntityController(),
 
@@ -165,7 +165,8 @@ var GarageServerIO = (function (socketio) {
 
         registerSocketEvents = function () {
             _socket.on('connect', function () {
-                _stateController.id = _socket.id;
+                _stateController.id = _socket.socket.sessionid;
+                _playerController.add(_stateController.id);
                 if (_options.onPlayerConnect) {
                     _options.onPlayerConnect(); 
                 }
@@ -183,6 +184,8 @@ var GarageServerIO = (function (socketio) {
                 _stateController.pingInterval = data.pingInterval;
                 _stateController.clientSidePrediction = data.clientSidePrediction;
                 _stateController.smoothingFactor = data.smoothingFactor;
+                _stateController.worldState = data.worldState;
+
                 setInterval(function (){
                     _socket.emit('ping', new Date().getTime());
                 }, _stateController.pingInterval);
@@ -235,11 +238,15 @@ var GarageServerIO = (function (socketio) {
         },
 
         addInput = function (clientInput) {
-            _inputController.add(clientInput);
-            if (_stateController.clientSidePrediction && _options.onUpdatePlayerPhysics) {
-                _stateController.state = _options.onUpdatePlayerPhysics(_stateController.state, [{ input: clientInput }], _stateController.physicsDelta);
-            }
-            _socket.emit('input', [ clientInput, _inputController.sequenceNumber, _stateController.renderTime ]);
+            _playerController.entities.some(function (player) {
+                if (player.id === _stateController.id) {
+                    if (_stateController.clientSidePrediction && _options.onUpdatePlayerPhysics) {
+                        player.inputController.add(clientInput);
+                        player.state = _options.onUpdatePlayerPhysics(player.state, [{ input: clientInput }], _stateController.physicsDelta);
+                    }
+                    _socket.emit('input', [ clientInput, player.inputController.sequenceNumber, _stateController.renderTime ]);
+                }
+            });
         },
 
         getStates = function (stateCallback) {
@@ -251,7 +258,7 @@ var GarageServerIO = (function (socketio) {
                 processEntityStatesCurrent(_entityController);
                 processEntityStatesCurrent(_playerController);
             }
-            stateCallback(_stateController.state, _playerController.entities, _entityController.entities);
+            stateCallback(_playerController.entities, _entityController.entities);
         },
 
         removePlayer = function (id) {
@@ -267,29 +274,12 @@ var GarageServerIO = (function (socketio) {
 
         updatePlayers = function (data) {
             data.playerStates.forEach(function (playerState) {
-                if (_socket.socket.sessionid === playerState[0]) {
-                    updateSelf(playerState);
-                } else {
-                    updatePlayer(playerState, data.time);
-                }
+                updateEntity(_playerController, playerState, data.time);
 
                 if (_options.onPlayerUpdate) {
                     _options.onPlayerUpdate(playerState[1]);
                 }
             });
-        },
-
-        updateSelf = function (playerState) {
-            _stateController.state = playerState[1];
-            _inputController.remove(playerState[2]);
-
-            if (_stateController.clientSidePrediction && _inputController.any()) {
-                _stateController.state = _options.onUpdatePlayerPhysics(_stateController.state, _inputController.inputs, _stateController.physicsDelta);
-            }
-        },
-
-        updatePlayer = function (playerState, time) {
-            updateEntity(_playerController, playerState, time);
         },
 
         updateEntities = function (data) {
@@ -319,7 +309,7 @@ var GarageServerIO = (function (socketio) {
 
         processEntityStatesCurrent = function (entityController) {
             entityController.entities.forEach(function (entity) {
-                if (entity.anyUpdates()) {
+                if (entity.anyUpdates() && !entity.inputController.any()) {
                     entity.state = entity.latestUpdate().state;
                 }
             });
@@ -328,7 +318,7 @@ var GarageServerIO = (function (socketio) {
         processEntityStatesInterpolated = function (entityController) {
             var positions, amount, newState;
             entityController.entities.forEach(function (entity) {
-                if (entity.anyUpdates()) {
+                if (entity.anyUpdates() && !entity.inputController.any()) {
                     positions = entity.surroundingPositions(_stateController.renderTime);
                     if (positions.previous && positions.target) {
                         amount = getInterpolatedAmount(positions.previous.time, positions.target.time);
