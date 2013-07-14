@@ -9,8 +9,8 @@ $(function () {
         onUpdatePlayerPhysics: GamePhysics.getNewPlayerState,
         onInterpolation: GamePhysics.getInterpolatedState,
         onWorldState: function (state) {
-            document.getElementById('gameCanvas').style.width = state.width;
-            document.getElementById('gameCanvas').style.height = state.height;
+            document.getElementById('gameCanvas').style.width = state.width + 'px';
+            document.getElementById('gameCanvas').style.height = state.height + 'px';
         }
     });
     GarageServerIO.setState({ x: 0, y: 0 });

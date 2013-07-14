@@ -1,6 +1,6 @@
 (function(exports){
 
-    exports.getNewPlayerState = function (state, inputs, deltaTime) {
+    exports.getNewPlayerState = function (state, inputs, deltaTime, garageServer) {
        var i = 0;
 
         if (!state.x && !state.y) {
@@ -17,7 +17,9 @@
             } else if (inputs[i].input === 'up') {
                 state.y -= (50 * deltaTime);
             } else if (inputs[i].input === 'space') {
-
+                if (garageServer) {
+                    //garageServer.addEntity(new guid());
+                }
             }
         }
         return state;

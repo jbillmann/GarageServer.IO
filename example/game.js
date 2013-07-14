@@ -7,6 +7,7 @@ function Game (sockets) {
     this.physicsInterval = 15;
     this.physicsDelta = this.physicsInterval / 1000;
     this.physicsIntervalId = 0;
+    this.worldState = { height: 400, width: 800 };
 
     this.server = garageServer.createGarageServer(sockets, 
         {
@@ -14,7 +15,7 @@ function Game (sockets) {
             interpolation: true,
             clientSidePrediction: true,
             smoothingFactor: this.physicsDelta * 20,
-            worldState: { height: '400px', width: '800px' }
+            worldState: this.worldState
         });
 }
 
@@ -30,12 +31,12 @@ Game.prototype.update = function () {
         self = this;
 
     players.forEach(function (player) {
-        var newState = gamePhysics.getNewPlayerState(player.state, player.inputs, self.physicsDelta);
+        var newState = gamePhysics.getNewPlayerState(player.state, player.inputs, self.physicsDelta, self.server);
         self.server.updatePlayerState(player.id, newState);
     });
 
     entities.forEach(function (entity) {
-        var newState = gamePhysics.getNewPlayerState(entity.state, self.physicsDelta);
+        var newState = gamePhysics.getNewEntityState(entity.state, self.physicsDelta);
         self.server.updateEntityState(entity.id, newState);
     });
 };
