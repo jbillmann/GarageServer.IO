@@ -2,7 +2,8 @@ $(function () {
 
     "use strict";
 
-    var canvas = document.getElementById('gameCanvas'), ctxCanvas = canvas.getContext('2d'), keyboard = new THREEx.KeyboardState();
+    var canvas = document.getElementById('gameCanvas'), ctxCanvas = canvas.getContext('2d'), keyboard = new THREEx.KeyboardState(),
+        playerSize = 0, entitySize = 0;
 
     GarageServerIO.initializeGarageServer('http://garageserver_io.jbillmann.c9.io', {
         logging: true,
@@ -11,6 +12,8 @@ $(function () {
         onWorldState: function (state) {
             document.getElementById('gameCanvas').style.width = state.width + 'px';
             document.getElementById('gameCanvas').style.height = state.height + 'px';
+            playerSize = state.playerSize;
+            entitySize = state.entitySize;
         }
     });
 
@@ -20,11 +23,11 @@ $(function () {
             ctxCanvas.clearRect(0, 0, canvas.width, canvas.height);
             GarageServerIO.getStates(function (playerStates, entityStates) {
                 playerStates.forEach(function (player) {
-                    ctxCanvas.fillRect(player.state.x, player.state.y, 15, 15);
+                    ctxCanvas.fillRect(player.state.x, player.state.y, playerSize, playerSize);
                 });
 
                 entityStates.forEach(function (entity) {
-                    ctxCanvas.fillRect(entity.state.x, entity.state.y, 5, 5);
+                    ctxCanvas.fillRect(entity.state.x, entity.state.y, entitySize, entitySize);
                 });
             });
         },

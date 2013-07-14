@@ -34,13 +34,13 @@
 
     exports.getNewEntityState = function (state, deltaTime) {
         if (state.direction === 'left') {
-            state.x -= (75 * deltaTime);
+            state.x -= (100 * deltaTime);
         } else if (state.direction === 'right') {
-            state.x += (75 * deltaTime);
+            state.x += (100 * deltaTime);
         } else if (state.direction === 'down') {
-            state.y += (75 * deltaTime);
+            state.y += (100 * deltaTime);
         } else if (state.direction === 'up') {
-            state.y -= (75 * deltaTime);
+            state.y -= (100 * deltaTime);
         }
 
         return state;
