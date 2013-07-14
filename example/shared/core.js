@@ -22,16 +22,24 @@
         }
         return state;
     };
-    
+
     exports.getNewEntityState = function (state, deltaTime) {
         
     };
-    
+
     exports.getInterpolatedState = function (previousState, targetState, amount) {
         var interpolationState = {};
         interpolationState.x = (previousState.x + amount * (targetState.x - previousState.x));
         interpolationState.y = (previousState.y + amount * (targetState.y - previousState.y));
         return interpolationState;
     };
+
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+    }
+
+    function guid() {
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+    }
 
 })(typeof exports === 'undefined' ? window.GamePhysics = {} : exports);
