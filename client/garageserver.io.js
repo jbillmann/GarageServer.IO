@@ -6,6 +6,7 @@ options = {
     onPlayerUpdate: function (state),
     onEntityUpdate: function (state),
     onPlayerRemove: function (id),
+    onEntityRemove: function (id),
     onWorldState: function (state),
     onPing: function (pingDelay),
     onUpdatePlayerPhysics: function (state, inputs, deltaTime),
@@ -149,6 +150,7 @@ var GarageServerIO = (function (socketio) {
     function PlayerController() {
         EntityController.call(this);
     }
+    PlayerController.prototype = Object.create(EntityController.prototype);
     PlayerController.prototype.add = function (id) {
         var player = new Player(id);
         this.entities.push(player);
@@ -232,6 +234,15 @@ var GarageServerIO = (function (socketio) {
                     console.log('garageserver.io:: socket removePlayer ' + id);
                 }
             });
+            _socket.on('removeEntity', function (id) {
+                removeEntity(id);
+                if (_options.onEntityRemove) {
+                    _options.onEntityRemove(id);
+                }
+                if (_options.logging) {
+                    console.log('garageserver.io:: socket removeEntity ' + id);
+                }
+            });
         },
 
         getId = function () {
@@ -264,6 +275,10 @@ var GarageServerIO = (function (socketio) {
 
         removePlayer = function (id) {
             _playerController.remove(id);
+        },
+
+        removeEntity = function (id) {
+            _entityController.remove(id);
         },
 
         update = function (data) {

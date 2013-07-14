@@ -122,6 +122,7 @@ GarageServer.prototype.addEntity = function (id) {
 };
 
 GarageServer.prototype.removeEntity = function (id) {
+    this.io.sockets.emit('removeEntity', id);
     this.game.removeEntity(id);
 };
 
