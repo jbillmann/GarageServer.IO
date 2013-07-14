@@ -7,7 +7,11 @@ $(function () {
     GarageServerIO.initializeGarageServer('http://garageserver_io.jbillmann.c9.io', {
         logging: true,
         onUpdatePlayerPhysics: GamePhysics.getNewState,
-        onInterpolation: GamePhysics.getInterpolatedState
+        onInterpolation: GamePhysics.getInterpolatedState,
+        onWorldState: function (state) {
+            document.getElementById('gameCanvas').style.width = state.width;
+            document.getElementById('gameCanvas').style.height = state.height;
+        }
     });
     GarageServerIO.setState({ x: 0, y: 0 });
 

@@ -13,7 +13,8 @@ function Game (sockets) {
             logging: true,
             interpolation: true,
             clientSidePrediction: true,
-            smoothingFactor: this.physicsDelta * 20
+            smoothingFactor: this.physicsDelta * 20,
+            worldState: { height: '400px', width: '800px' }
         });
 }
 

@@ -6,7 +6,7 @@ options = {
     onPlayerUpdate: function (state),
     onEntityUpdate: function (state),
     onPlayerRemove: function (id),
-    onGameState: function (state),
+    onWorldState: function (state),
     onPing: function (pingDelay),
     onUpdatePlayerPhysics: function (state, inputs, deltaTime),
     onInterpolation: function(previousState, targetState, amount)
@@ -175,8 +175,8 @@ var GarageServerIO = (function (socketio) {
                 }
             });
             _socket.on('state', function (data) {
-                if (_options.onGameState) {
-                    _options.onGameState(data); 
+                if (_options.onWorldState) {
+                    _options.onWorldState(data.worldState); 
                 }
                 _stateController.physicsDelta = data.physicsDelta;
                 _stateController.interpolation = data.interpolation;
