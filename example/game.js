@@ -35,13 +35,15 @@ Game.prototype.update = function () {
         self.server.updatePlayerState(player.id, newState);
     });
 
-    entities.forEach(function (entity) {
-        var newState = gamePhysics.getNewEntityState(entity.state, self.physicsDelta);
+    for (var i = entities.length - 1; i >= 0; i--) {
+        var entity = entities[i],
+            newState = gamePhysics.getNewEntityState(entity.state, self.physicsDelta);
+
         if (newState.x < 0 - self.worldState.playerSize || newState.y < 0 - self.worldState.playerSize || newState.x > self.worldState.width || newState.y > self.worldState.height) {
             self.server.removeEntity(entity.id);
         }
         else {
             self.server.updateEntityState(entity.id, newState);
         }
-    });
+    }
 };

@@ -18,6 +18,7 @@ options = {
 */
 
 function GarageServer(socketio, options) {
+    this.socketPath = '/garageserver.io';
     this.io = socketio;
     this.game = new garageServerGame(options);
     this.registerSocketEvents(options);
@@ -26,7 +27,7 @@ function GarageServer(socketio, options) {
 GarageServer.prototype.registerSocketEvents = function (options) {
     var self = this;
 
-    self.io.of('/garageserver.io').on('connection', function (socket) {
+    self.io.of(self.socketPath).on('connection', function (socket) {
         if (options.logging) {
             console.log('garageserver.io:: socket ' + socket.id + ' connection');
         }
@@ -122,7 +123,7 @@ GarageServer.prototype.addEntity = function (id) {
 };
 
 GarageServer.prototype.removeEntity = function (id) {
-    this.io.sockets.emit('removeEntity', id);
+    this.io.of(this.socketPath).emit('removeEntity', id);
     this.game.removeEntity(id);
 };
 
