@@ -24,7 +24,7 @@ $(function () {
                 });
 
                 entityStates.forEach(function (entity) {
-                    ctxCanvas.fillRect(entity.state.x, entity.state.y, 15, 15);
+                    ctxCanvas.fillRect(entity.state.x, entity.state.y, 5, 5);
                 });
             });
         },

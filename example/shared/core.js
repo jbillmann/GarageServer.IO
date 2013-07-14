@@ -6,19 +6,26 @@
         if (!state.x && !state.y) {
            state.x = 0;
            state.y = 0;
+           state.direction = 'right';
         }
         for (i = 0; i < inputs.length; i ++) {
             if (inputs[i].input === 'left') {
                 state.x -= (50 * deltaTime);
+                state.direction = 'left';
             } else if (inputs[i].input === 'right') {
                 state.x += (50 * deltaTime);
+                state.direction = 'right';
             } else if (inputs[i].input === 'down') {
                 state.y += (50 * deltaTime);
+                state.direction = 'down';
             } else if (inputs[i].input === 'up') {
                 state.y -= (50 * deltaTime);
+                state.direction = 'up';
             } else if (inputs[i].input === 'space') {
                 if (garageServer) {
-                    garageServer.addEntity(new guid(), { x: state.x, y: state.y, direction: '' });
+                    var newId = guid();
+                    garageServer.addEntity(newId);
+                    garageServer.updateEntityState(newId, { x: state.x, y: state.y, direction: state.direction } );
                 }
             }
         }
@@ -26,7 +33,17 @@
     };
 
     exports.getNewEntityState = function (state, deltaTime) {
-        
+        if (state.direction === 'left') {
+            state.x -= (75 * deltaTime);
+        } else if (state.direction === 'right') {
+            state.x += (75 * deltaTime);
+        } else if (state.direction === 'down') {
+            state.y += (75 * deltaTime);
+        } else if (state.direction === 'up') {
+            state.y -= (75 * deltaTime);
+        }
+
+        return state;
     };
 
     exports.getInterpolatedState = function (previousState, targetState, amount) {

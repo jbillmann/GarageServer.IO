@@ -130,15 +130,11 @@ var GarageServerIO = (function (socketio) {
     function EntityController() {
         this.entities = [];
     }
-
-    function PlayerController() {
-        EntityController.call(this);
-    }
-    PlayerController.prototype = {
+    EntityController.prototype = {
         add: function (id) {
-            var player = new Player(id);
-            this.entities.push(player);
-            return player;
+            var entity = new Entity(id);
+            this.entities.push(entity);
+            return entity;
         },
         remove: function (id) {
             for (var i = 0; i < this.entities.length; i ++) {
@@ -148,6 +144,15 @@ var GarageServerIO = (function (socketio) {
                 }
             }
         }
+    };
+
+    function PlayerController() {
+        EntityController.call(this);
+    }
+    PlayerController.prototype.add = function (id) {
+        var player = new Player(id);
+        this.entities.push(player);
+        return player;
     };
 
     var _io = socketio,
