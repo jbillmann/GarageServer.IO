@@ -26,10 +26,16 @@ Game.prototype.start = function () {
 
 Game.prototype.update = function () {
     var players = this.server.getPlayers(),
+        entities = this.server.getEntities(),
         self = this;
 
     players.forEach(function (player) {
-        var newState = gamePhysics.getNewState(player.state, player.inputs, self.physicsDelta);
+        var newState = gamePhysics.getNewPlayerState(player.state, player.inputs, self.physicsDelta);
         self.server.updatePlayerState(player.id, newState);
+    });
+
+    entities.forEach(function (entity) {
+        var newState = gamePhysics.getNewPlayerState(entity.state, self.physicsDelta);
+        self.server.updateEntityState(entity.id, newState);
     });
 };

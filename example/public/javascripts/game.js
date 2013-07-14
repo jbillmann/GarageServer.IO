@@ -6,7 +6,7 @@ $(function () {
 
     GarageServerIO.initializeGarageServer('http://garageserver_io.jbillmann.c9.io', {
         logging: true,
-        onUpdatePlayerPhysics: GamePhysics.getNewState,
+        onUpdatePlayerPhysics: GamePhysics.getNewPlayerState,
         onInterpolation: GamePhysics.getInterpolatedState,
         onWorldState: function (state) {
             document.getElementById('gameCanvas').style.width = state.width;

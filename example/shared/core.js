@@ -1,6 +1,6 @@
 (function(exports){
 
-   exports.getNewState = function (state, inputs, deltaTime) {
+    exports.getNewPlayerState = function (state, inputs, deltaTime) {
        var i = 0;
 
         if (!state.x && !state.y) {
@@ -16,9 +16,15 @@
                 state.y += (50 * deltaTime);
             } else if (inputs[i].input === 'up') {
                 state.y -= (50 * deltaTime);
+            } else if (inputs[i].input === 'space') {
+
             }
         }
         return state;
+    };
+    
+    exports.getNewEntityState = function (state, deltaTime) {
+        
     };
     
     exports.getInterpolatedState = function (previousState, targetState, amount) {
