@@ -18,7 +18,7 @@
                 state.y -= (50 * deltaTime);
             } else if (inputs[i].input === 'space') {
                 if (garageServer) {
-                    //garageServer.addEntity(new guid());
+                    garageServer.addEntity(new guid(), { x: state.x, y: state.y, direction: '' });
                 }
             }
         }

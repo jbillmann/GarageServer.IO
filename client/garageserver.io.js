@@ -233,10 +233,6 @@ var GarageServerIO = (function (socketio) {
             return _stateController.id;
         },
 
-        setState = function (state) {
-            _socket.emit('playerState', state);
-        },
-
         addInput = function (clientInput) {
             _playerController.entities.some(function (player) {
                 if (player.id === _stateController.id) {
@@ -341,8 +337,7 @@ var GarageServerIO = (function (socketio) {
         initializeGarageServer: initializeGarageServer,
         addInput: addInput,
         getStates: getStates,
-        getId: getId,
-        setState: setState
+        getId: getId
     };
 
 }) (io);

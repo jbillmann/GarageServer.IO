@@ -13,7 +13,6 @@ $(function () {
             document.getElementById('gameCanvas').style.height = state.height + 'px';
         }
     });
-    GarageServerIO.setState({ x: 0, y: 0 });
 
     GameLoop.start(
         //Render Loop
