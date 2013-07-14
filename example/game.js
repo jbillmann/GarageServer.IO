@@ -1,4 +1,4 @@
-var garageServer = require('../lib/server/garageserver.io'),
+var garageServer = require('../src/server/garageserver.io'),
     gamePhysics = require('./shared/core');
 
 exports = module.exports = Game;
