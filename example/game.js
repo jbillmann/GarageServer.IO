@@ -37,6 +37,11 @@ Game.prototype.update = function () {
 
     entities.forEach(function (entity) {
         var newState = gamePhysics.getNewEntityState(entity.state, self.physicsDelta);
-        self.server.updateEntityState(entity.id, newState);
+        if (newState.x < 0 || newState.y < 0 || newState.x > self.worldState.width || newState.y > self.worldState.height) {
+            self.server.removeEntity(entity.id);
+        }
+        else {
+            self.server.updateEntityState(entity.id, newState);
+        }
     });
 };

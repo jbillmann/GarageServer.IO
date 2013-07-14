@@ -25,7 +25,7 @@
                 if (garageServer) {
                     var newId = guid();
                     garageServer.addEntity(newId);
-                    garageServer.updateEntityState(newId, { x: state.x, y: state.y, direction: state.direction } );
+                    garageServer.updateEntityState(newId, { x: state.x + 5, y: state.y + 5, direction: state.direction } );
                 }
             }
         }
