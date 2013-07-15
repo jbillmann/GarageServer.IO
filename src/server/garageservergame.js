@@ -20,7 +20,7 @@ GarageServerGame.prototype.start = function () {
 };
 
 GarageServerGame.prototype.stop = function () {
-     clearInterval(this.stateIntervalId);
+    clearInterval(this.stateIntervalId);
 };
 
 GarageServerGame.prototype.broadcastState = function () {
@@ -100,4 +100,13 @@ GarageServerGame.prototype.removeEntity = function (id) {
 
 GarageServerGame.prototype.addPlayerInput = function (id, input, sequence, time) {
     this.playerController.addInput(id, input, sequence, time);
+};
+
+GarageServerGame.prototype.sendPlayerEvent = function (id, data) {
+    this.playerController.entities.some(function (player) {
+        if (player.id === id) {
+            player.client.emit('event', data);
+            return true;
+        }
+    });
 };

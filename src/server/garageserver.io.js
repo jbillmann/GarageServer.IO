@@ -15,8 +15,19 @@ options = {
     onPlayerDisconnect: function (socket),
     onPing: function (socket, data)
 }
+api methods
+    createGarageServer(io, options)
+    start()
+    stop()
+    getPlayers() : [player] : { id: '', state: {}, inputs: [{}], stateHistory: [{ state, executionTime }] }
+    getEntities() : [entity] : { id: '', state: {}, stateHistory: [{ state, executionTime }] }
+    updatePlayerState(id, state)
+    updateEntityState(id, state)
+    addEntity(id)
+    removeEntity(id)
+    sendPlayerEvent(id, data)
+    sendPlayersEvent(data)
 */
-
 function GarageServer(socketio, options) {
     this.socketPath = '/garageserver.io';
     this.io = socketio;
@@ -125,6 +136,14 @@ GarageServer.prototype.addEntity = function (id) {
 GarageServer.prototype.removeEntity = function (id) {
     this.io.of(this.socketPath).emit('removeEntity', id);
     this.game.removeEntity(id);
+};
+
+GarageServer.prototype.sendPlayerEvent = function (id, data) {
+    this.game.sendPlayerEvent(id, data);
+};
+
+GarageServer.prototype.sendPlayersEvent = function (data) {
+    this.io.of(this.socketPath).emit('event', data);
 };
 
 exports.createGarageServer = function (io, options) {
