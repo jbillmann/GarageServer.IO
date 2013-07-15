@@ -44,11 +44,19 @@ GarageServerGame.prototype.getState = function (controller) {
 };
 
 GarageServerGame.prototype.getPlayers = function () {
-    return this.playerController.entities;
+    var list = [];
+    this.playerController.entities.forEach(function (player) {
+        list.push({ id: player.id, state: player.state, inputs: player.inputs, stateHistory: player.stateHistory });
+    });
+    return list;
 };
 
 GarageServerGame.prototype.getEntities = function () {
-    return this.entityController.entities;
+    var list = [];
+    this.entityController.entities.forEach(function (entity) {
+        list.push({ id: entity.id, state: entity.state, stateHistory: entity.stateHistory });
+    });
+    return list;
 };
 
 GarageServerGame.prototype.getPlayer = function (id) {

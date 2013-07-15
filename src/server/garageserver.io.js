@@ -19,8 +19,8 @@ api methods
     createGarageServer(io, options)
     start()
     stop()
-    getPlayers() : [player] : { id: '', state: {}, inputs: [{}], stateHistory: [{ state, executionTime }] }
-    getEntities() : [entity] : { id: '', state: {}, stateHistory: [{ state, executionTime }] }
+    getPlayers() : [{ id: '', state: {}, inputs: [{}], stateHistory: [{ state, executionTime }] }]
+    getEntities() : [{ id: '', state: {}, stateHistory: [{ state, executionTime }] }]
     updatePlayerState(id, state)
     updateEntityState(id, state)
     addEntity(id)
