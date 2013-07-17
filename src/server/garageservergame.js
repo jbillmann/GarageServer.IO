@@ -3,13 +3,14 @@ var playerController = require('./controllers/playercontroller'),
 
 exports = module.exports = GarageServerGame;
 
-function GarageServerGame(options) {
+function GarageServerGame(options, broadcastCallback) {
     this.playerController = new playerController();
     this.entityController = new entityController();
     this.options = options;
     this.startTime = 0;
     this.stateInterval = options.stateInterval ? options.stateInterval : 45;
     this.stateIntervalId = 0;
+    this.broadcastCallback = broadcastCallback;
 }
 
 GarageServerGame.prototype.start = function () {
@@ -29,10 +30,8 @@ GarageServerGame.prototype.broadcastState = function () {
 
     state.playerStates = this.getState(this.playerController);
     state.entityStates = this.getState(this.entityController);
-
-    this.playerController.entities.forEach(function (player) {
-        player.client.emit('update', state);
-    });
+    
+    this.broadcastCallback(state);
 };
 
 GarageServerGame.prototype.getState = function (controller) {

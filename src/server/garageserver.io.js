@@ -29,10 +29,14 @@ api methods
     sendPlayersEvent(data)
 */
 function GarageServer(socketio, options) {
-    this.socketPath = '/garageserver.io';
+    var namespace = '/garageserver.io';
+
+    this.socketPath = namespace;
     this.io = socketio;
-    this.game = new garageServerGame(options);
     this.registerSocketEvents(options);
+    this.game = new garageServerGame(options, function (state) {
+        socketio.of(namespace).emit('update' ,state);
+    });
 }
 
 GarageServer.prototype.registerSocketEvents = function (options) {
