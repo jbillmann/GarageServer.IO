@@ -9,6 +9,8 @@ options = {
     interpolationDelay: 100,
     smoothingFactor: 0.3,
     pingInterval: 2000,
+    maxUpdateBuffer: 120,
+    maxHistorySecondBuffer: 1000,
     worldState: {},
     onPlayerConnect: function (socket),
     onPlayerInput: function (socket, input),
@@ -53,6 +55,7 @@ GarageServer.prototype.registerSocketEvents = function (options) {
             interpolationDelay: options.interpolationDelay ? options.interpolationDelay : 100,
             pingInterval: options.pingInterval ? options.pingInterval : 2000,
             clientSidePrediction: options.clientSidePrediction ? options.clientSidePrediction : false,
+            maxUpdateBuffer: options.maxUpdateBuffer ? options.maxUpdateBuffer : 120,
             worldState: options.worldState ? options.worldState : {}
         });
         self.onPlayerConnect(socket, options);

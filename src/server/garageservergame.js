@@ -4,12 +4,12 @@ var playerController = require('./controllers/playercontroller'),
 exports = module.exports = GarageServerGame;
 
 function GarageServerGame(options, broadcastCallback) {
-    this.playerController = new playerController();
-    this.entityController = new entityController();
     this.options = options;
     this.startTime = 0;
     this.stateInterval = options.stateInterval ? options.stateInterval : 45;
     this.stateIntervalId = 0;
+    this.playerController = new playerController(this.options.maxHistorySecondBuffer ? this.options.maxHistorySecondBuffer : 1000);
+    this.entityController = new entityController(this.options.maxHistorySecondBuffer ? this.options.maxHistorySecondBuffer : 1000);
     this.broadcastCallback = broadcastCallback;
 }
 

@@ -2,8 +2,8 @@ var entity = require('./entity');
 
 exports = module.exports = Player;
 
-function Player (client) {
-    entity.call(this, client.id);
+function Player (client, maxHistorySecondBuffer) {
+    entity.call(this, client.id, maxHistorySecondBuffer);
     this.client = client;
     this.inputs = [];
 }

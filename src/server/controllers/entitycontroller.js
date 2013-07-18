@@ -2,8 +2,9 @@ var entity = require('../entities/entity');
 
 exports = module.exports = EntityController;
 
-function EntityController () {
+function EntityController (maxHistorySecondBuffer) {
     this.entities = [];
+    this.maxHistorySecondBuffer = maxHistorySecondBuffer;
 }
 
 EntityController.prototype = {
@@ -19,7 +20,7 @@ EntityController.prototype = {
         });
 
         if (!entityFound) {
-            newEntity = new entity(id);
+            newEntity = new entity(id, this.maxHistorySecondBuffer);
             this.entities.push(newEntity);
         }
         return newEntity;

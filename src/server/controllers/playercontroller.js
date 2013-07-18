@@ -3,8 +3,8 @@ var entityController = require('./entitycontroller'),
 
 exports = module.exports = PlayerController;
 
-function PlayerController () {
-    entityController.call(this);
+function PlayerController (maxHistorySecondBuffer) {
+    entityController.call(this, maxHistorySecondBuffer);
 }
 
 PlayerController.prototype = Object.create(entityController.prototype);
@@ -21,7 +21,7 @@ PlayerController.prototype.add = function (client) {
     });
 
     if (!playerFound) {
-        newPlayer = new player(client);
+        newPlayer = new player(client, this.maxHistorySecondBuffer);
         this.entities.push(newPlayer);
     }
     return newPlayer;
