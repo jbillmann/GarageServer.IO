@@ -17,7 +17,7 @@ options = {
 api methods
     initializeGarageServer(path, options)
     addInput({})
-    getStates(function ([playerStates], [entityStates]))
+    getStates(function (playerStates: [{state}], entityStates: [{state})])
     getId() : 'playerid'
 */
 var GarageServerIO = (function (socketio) {
