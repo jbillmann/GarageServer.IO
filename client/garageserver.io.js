@@ -281,8 +281,7 @@ var GarageServerIO = (function (socketio) {
             if (_stateController.interpolation && _options.onInterpolation) {
                 processEntityStatesInterpolated(_entityController);
                 processEntityStatesInterpolated(_playerController);
-            }
-            else {
+            } else {
                 processEntityStatesCurrent(_entityController);
                 processEntityStatesCurrent(_playerController);
             }

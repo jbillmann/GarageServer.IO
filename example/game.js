@@ -41,8 +41,7 @@ Game.prototype.update = function () {
 
         if (newState.x < 0 - self.worldState.playerSize || newState.y < 0 - self.worldState.playerSize || newState.x > self.worldState.width || newState.y > self.worldState.height) {
             self.server.removeEntity(entity.id);
-        }
-        else {
+        } else {
             self.server.updateEntityState(entity.id, newState);
         }
     }
