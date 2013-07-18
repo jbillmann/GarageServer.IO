@@ -17,8 +17,8 @@ options = {
 api methods
     initializeGarageServer(path, options)
     addInput({})
-    getStates(function (playerStates, entityStates))
-    getId() : 0
+    getStates(function ([playerStates], [entityStates]))
+    getId() : 'playerid'
 */
 var GarageServerIO = (function (socketio) {
 
@@ -276,6 +276,8 @@ var GarageServerIO = (function (socketio) {
         },
 
         getStates = function (stateCallback) {
+            var playerStates = [], entityStates = [];
+
             if (_stateController.interpolation && _options.onInterpolation) {
                 processEntityStatesInterpolated(_entityController);
                 processEntityStatesInterpolated(_playerController);
@@ -284,7 +286,15 @@ var GarageServerIO = (function (socketio) {
                 processEntityStatesCurrent(_entityController);
                 processEntityStatesCurrent(_playerController);
             }
-            stateCallback(_playerController.entities, _entityController.entities);
+
+            _playerController.entities.forEach(function(player) {
+               playerStates.push({ state: player.state }); 
+            });
+            _entityController.entities.forEach(function(entity) {
+               entityStates.push({ state: entity.state }); 
+            });
+
+            stateCallback(playerStates, entityStates);
         },
 
         removePlayer = function (id) {
