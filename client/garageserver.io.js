@@ -34,7 +34,7 @@ var GarageServerIO = (function (socketio) {
         this.interpolation = false;
         this.pingInterval = 2000;
         this.clientSidePrediction = false;
-        this.smoothingFactor = 1;
+        this.smoothingFactor = 0.3;
         this.worldState = {};
     }
     StateController.prototype = {
