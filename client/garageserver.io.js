@@ -12,6 +12,7 @@ options = {
     onPing: function (pingDelay),
     onUpdatePlayerPhysics: function (state, inputs, deltaTime),
     onInterpolation: function(previousState, targetState, amount)
+    onReady: function (),
     logging: true
 }
 api methods
@@ -198,6 +199,10 @@ var GarageServerIO = (function (socketio) {
                 _stateController.clientSidePrediction = data.clientSidePrediction;
                 _stateController.smoothingFactor = data.smoothingFactor;
                 _stateController.worldState = data.worldState;
+
+                if(_options.onReady) {
+                    _options.onReady();
+                }
 
                 setInterval(function (){
                     _socket.emit('ping', new Date().getTime());
