@@ -78,8 +78,9 @@ var GarageServerIO = (function (socketio) {
         this.time = time;
     }
 
-    function Entity(id) {
+    function Entity(id, maxUpdateBuffer) {
         this.updates = [];
+        this.maxUpdateBuffer = maxUpdateBuffer;
         this.id = id;
         this.state = {};
         this.inputController = new InputController();
@@ -91,7 +92,7 @@ var GarageServerIO = (function (socketio) {
                 this.state = newUpdate.state;
             }
             this.updates.push(newUpdate);
-            if (this.updates.length > 120) {
+            if (this.updates.length > this.maxUpdateBuffer) {
                 this.updates.splice(0, 1);
             }
         },
@@ -130,17 +131,18 @@ var GarageServerIO = (function (socketio) {
         }
     };
 
-    function Player(id) {
-        Entity.call(this, id);
+    function Player(id, maxUpdateBuffer) {
+        Entity.call(this, id, maxUpdateBuffer);
     }
     Player.prototype = Object.create(Entity.prototype);
 
-    function EntityController() {
+    function EntityController(maxUpdateBuffer) {
         this.entities = [];
+        this.maxUpdateBuffer = maxUpdateBuffer;
     }
     EntityController.prototype = {
         add: function (id) {
-            var entity = new Entity(id);
+            var entity = new Entity(id, this.maxUpdateBuffer);
             this.entities.push(entity);
             return entity;
         },
@@ -154,12 +156,12 @@ var GarageServerIO = (function (socketio) {
         }
     };
 
-    function PlayerController() {
-        EntityController.call(this);
+    function PlayerController(maxUpdateBuffer) {
+        EntityController.call(this, maxUpdateBuffer);
     }
     PlayerController.prototype = Object.create(EntityController.prototype);
     PlayerController.prototype.add = function (id) {
-        var player = new Player(id);
+        var player = new Player(id, this.maxUpdateBuffer);
         this.entities.push(player);
         return player;
     };
@@ -168,8 +170,8 @@ var GarageServerIO = (function (socketio) {
         _socket = null,
         _options = null,
         _stateController = new StateController(),
-        _playerController = new PlayerController(),
-        _entityController = new EntityController(),
+        _playerController = null,
+        _entityController = null,
 
         initializeGarageServer = function (path, options) {
             _options = options;
@@ -180,7 +182,7 @@ var GarageServerIO = (function (socketio) {
         registerSocketEvents = function () {
             _socket.on('connect', function () {
                 _stateController.id = _socket.socket.sessionid;
-                _playerController.add(_stateController.id);
+
                 if (_options.onPlayerConnect) {
                     _options.onPlayerConnect(); 
                 }
@@ -192,6 +194,12 @@ var GarageServerIO = (function (socketio) {
                 if (_options.onWorldState) {
                     _options.onWorldState(data.worldState); 
                 }
+                _stateController.maxUpdateBuffer = data.maxUpdateBuffer;
+
+                _playerController = new PlayerController(_stateController.maxUpdateBuffer);
+                _entityController = new EntityController(_stateController.maxUpdateBuffer);
+                _playerController.add(_stateController.id);
+
                 _stateController.physicsDelta = data.physicsDelta;
                 _stateController.interpolation = data.interpolation;
                 _stateController.interpolationDelay = data.interpolationDelay;
