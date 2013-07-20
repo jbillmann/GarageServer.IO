@@ -14,7 +14,6 @@ function Game (sockets) {
             logging: true,
             interpolation: true,
             clientSidePrediction: true,
-            smoothingFactor: this.physicsDelta * 20,
             worldState: this.worldState
         });
 }

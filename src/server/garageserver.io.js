@@ -50,7 +50,7 @@ GarageServer.prototype.registerSocketEvents = function (options) {
         }
         socket.emit('state', {
             physicsDelta: (options.physicsInterval ? options.physicsInterval : 15) / 1000,
-            smoothingFactor: options.smoothingFactor ? options.smoothingFactor : 1,
+            smoothingFactor: options.smoothingFactor ? options.smoothingFactor : 0.3,
             interpolation: options.interpolation ? options.interpolation : false,
             interpolationDelay: options.interpolationDelay ? options.interpolationDelay : 100,
             pingInterval: options.pingInterval ? options.pingInterval : 2000,
