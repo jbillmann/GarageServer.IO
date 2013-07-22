@@ -1,10 +1,17 @@
 # GarageServer.IO
-A simple, lightweight, multiplayer game server (and client) for Node.js
+A simple, lightweight, HTML multiplayer game server (and client) for Node.js
+
+Features
+--------
+
 
 How to use
 ----------
 
-Coming soon!
+
+Resources
+---------
+
 
 License
 -------
