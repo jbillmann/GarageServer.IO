@@ -47,7 +47,7 @@ GarageServerIO.addInput(input)
 ```
 
 ```js
-GarageServerIO.getStates(callback(playerStates: [player1State, player2State, ...], entityStates: [entity1State, entity2State, ...]))
+GarageServerIO.getStates(callback([player1State, player2State, ...], [entity1State, entity2State, ...]))
 ```
 
 ```js
@@ -60,6 +60,49 @@ GarageServerIO.sendServerEvent(data)
 
 ### Server
 
+```js
+createGarageServer(io, options)
+```
+
+```js
+start()
+```
+
+```js
+stop()
+```
+
+```js
+getPlayers() : [{ id, state, [input1, input2,...], [{ state1, executionTime1 }, { state2, executionTime2 }, ...] }]
+```
+
+```js
+getEntities() : [{ id, state, [{ state1, executionTime1 }, { state2, executionTime2 }, ...] }]
+```
+
+```js
+updatePlayerState(id, state)
+```
+
+```js
+updateEntityState(id, state)
+```
+
+```js
+addEntity(id)
+```
+
+```js
+removeEntity(id)
+```
+
+```js
+sendPlayerEvent(id, data)
+```
+
+```js
+sendPlayersEvent(data)
+```
 
 ## Resources
 
