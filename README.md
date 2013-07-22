@@ -51,7 +51,7 @@ GarageServerIO.getStates(callback([player1State, player2State, ...], [entity1Sta
 ```
 
 ```js
-GarageServerIO.getId() : 'playerid'
+GarageServerIO.getId() : playerid
 ```
 
 ```js
@@ -61,47 +61,65 @@ GarageServerIO.sendServerEvent(data)
 ### Server
 
 ```js
-createGarageServer(io, options)
+require('.garageserver.io').createGarageServer(io, options) : GarageServerIO
+
+options = {
+    stateInterval: 45,
+    logging: true,
+    clientSidePrediction: true,
+    interpolation: true,
+    interpolationDelay: 100,
+    smoothingFactor: 0.3,
+    pingInterval: 2000,
+    maxUpdateBuffer: 120,
+    maxHistorySecondBuffer: 1000,
+    worldState: {},
+    onPlayerConnect: function (socket),
+    onPlayerInput: function (socket, input),
+    onPlayerDisconnect: function (socket),
+    onPing: function (socket, data),
+    onEvent: function (data)
+}
 ```
 
 ```js
-start()
+GarageServerIO.start()
 ```
 
 ```js
-stop()
+GarageServerIO.stop()
 ```
 
 ```js
-getPlayers() : [{ id, state, [input1, input2,...], [{ state1, executionTime1 }, { state2, executionTime2 }, ...] }]
+GarageServerIO.getPlayers() : [{ id, state, [input1, input2,...], [{ state1, executionTime1 }, { state2, executionTime2 }, ...] }]
 ```
 
 ```js
-getEntities() : [{ id, state, [{ state1, executionTime1 }, { state2, executionTime2 }, ...] }]
+GarageServerIO.getEntities() : [{ id, state, [{ state1, executionTime1 }, { state2, executionTime2 }, ...] }]
 ```
 
 ```js
-updatePlayerState(id, state)
+GarageServerIO.updatePlayerState(id, state)
 ```
 
 ```js
-updateEntityState(id, state)
+GarageServerIO.updateEntityState(id, state)
 ```
 
 ```js
-addEntity(id)
+GarageServerIO.addEntity(id)
 ```
 
 ```js
-removeEntity(id)
+GarageServerIO.removeEntity(id)
 ```
 
 ```js
-sendPlayerEvent(id, data)
+GarageServerIO.sendPlayerEvent(id, data)
 ```
 
 ```js
-sendPlayersEvent(data)
+GarageServerIO.sendPlayersEvent(data)
 ```
 
 ## Resources
