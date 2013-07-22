@@ -1,19 +1,15 @@
 # GarageServer.IO
 A simple, lightweight, HTML multiplayer game server (and client) for Node.js
 
-Features
---------
+## Features
 
 
-How to use
-----------
+## How to use
 
 
-Resources
----------
+## Resources
 
 
-License
--------
+## License
 
 [MIT License](https://github.com/jbillmann/GarageServer.IO/blob/master/LICENSE.md)
