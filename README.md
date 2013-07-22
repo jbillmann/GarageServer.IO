@@ -10,7 +10,19 @@ A simple, lightweight, HTML multiplayer game server (and client) for Node.js
 - Server and Client Messaging
 
 
-## How to use
+## Quick Start
+
+### Client
+
+
+### Server
+
+## API
+
+### Client
+
+
+### Server
 
 
 ## Resources
