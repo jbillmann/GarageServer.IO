@@ -20,6 +20,7 @@ api methods
     addInput({})
     getStates(function (playerStates: [{state}], entityStates: [{state})])
     getId() : 'playerid'
+    sendServerEvent(data)
 */
 var GarageServerIO = (function (socketio) {
 
@@ -190,6 +191,7 @@ var GarageServerIO = (function (socketio) {
                     console.log('garageserver.io:: socket connect');
                 }
             });
+
             _socket.on('state', function (data) {
                 if (_options.onWorldState) {
                     _options.onWorldState(data.worldState); 
@@ -216,6 +218,7 @@ var GarageServerIO = (function (socketio) {
                     _socket.emit('ping', new Date().getTime());
                 }, _stateController.pingInterval);
             });
+
             _socket.on('disconnect', function () {
                 if (_options.onPlayerDisconnect) {
                     _options.onPlayerDisconnect();
@@ -224,6 +227,7 @@ var GarageServerIO = (function (socketio) {
                     console.log('garageserver.io:: socket disconnect');
                 }
             });
+
             _socket.on('reconnect', function () {
                 if (_options.onPlayerReconnect) {
                     _options.onPlayerReconnect();
@@ -232,9 +236,11 @@ var GarageServerIO = (function (socketio) {
                     console.log('garageserver.io:: socket reconnect');
                 }
             });
+
             _socket.on('update', function (data) {
                 update(data);
             });
+
             _socket.on('ping', function (data) {
                 _stateController.pingDelay = new Date().getTime() - data;
                 if (_options.onPing) {
@@ -244,6 +250,7 @@ var GarageServerIO = (function (socketio) {
                     console.log('garageserver.io:: socket ping delay ' + _stateController.pingDelay);
                 }
             });
+
             _socket.on('removePlayer', function (id) {
                 removePlayer(id);
                 if (_options.onPlayerRemove) {
@@ -253,6 +260,7 @@ var GarageServerIO = (function (socketio) {
                     console.log('garageserver.io:: socket removePlayer ' + id);
                 }
             });
+
             _socket.on('removeEntity', function (id) {
                 removeEntity(id);
                 if (_options.onEntityRemove) {
@@ -262,6 +270,7 @@ var GarageServerIO = (function (socketio) {
                     console.log('garageserver.io:: socket removeEntity ' + id);
                 }
             });
+
             _socket.on('event', function(data) {
                 if (_options.onEvent) {
                     _options.onEvent(data);
@@ -274,6 +283,10 @@ var GarageServerIO = (function (socketio) {
 
         getId = function () {
             return _stateController.id;
+        },
+
+        sendServerEvent = function (data) {
+            _socket.emit('event', data);
         },
 
         addInput = function (clientInput) {
@@ -393,7 +406,8 @@ var GarageServerIO = (function (socketio) {
         initializeGarageServer: initializeGarageServer,
         addInput: addInput,
         getStates: getStates,
-        getId: getId
+        getId: getId,
+        sendServerEvent: sendServerEvent
     };
 
 }) (io);

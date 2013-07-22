@@ -15,7 +15,8 @@ options = {
     onPlayerConnect: function (socket),
     onPlayerInput: function (socket, input),
     onPlayerDisconnect: function (socket),
-    onPing: function (socket, data)
+    onPing: function (socket, data),
+    onEvent: function (data)
 }
 api methods
     createGarageServer(io, options)
@@ -79,6 +80,12 @@ GarageServer.prototype.registerSocketEvents = function (options) {
                 console.log('garageserver.io:: socket ping ' + data);
             }
             self.onPing(socket, data, options);
+        });
+
+        socket.on('event', function (data) {
+            if (options.OnEvent) {
+                options.OnEvent(data);
+            }
         });
     });
 };
