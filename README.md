@@ -12,10 +12,41 @@ A simple, lightweight, HTML multiplayer game server (and client) for Node.js
 
 ## Quick Start
 
+### Server
+
 ### Client
 
+```js
+// Initialize GarageServer.IO
+GarageServerIO.initializeGarageServer('http://insertmygameurlhere.com', {
+    onReady: function () {
+        // Call your game loop
+    },
+    onUpdatePlayerPrediction: function (state, inputs, deltaTime) {
+        // If using client, process over inputs using current state and return new state
+    },
+    onInterpolation: function (previousState, targetState, amount) {
+        // If interpolating, return new state
+   },
+    onWorldState: function (state) {
+        // Extract world state sent from server
+    }
+};
 
-### Server
+// Inside render loop, extract states
+GarageServerIO.getStates(function (playerStates, entityStates) {
+    playerStates.forEach(function (player) {
+        ctxCanvas.fillRect(player.state.x, player.state.y, 5, 5);
+    });
+
+    entityStates.forEach(function (entity) {
+        ctxCanvas.fillRect(entity.state.x, entity.state.y, 5, 5);
+    });
+});
+
+// Inside physics loop, capture and send input
+GarageServerIO.addInput(myInput);
+```
 
 ## API
 
@@ -35,8 +66,8 @@ options = {
     onEvent(callback(data)),
     onWorldState(callback(state)),
     onPing(callback(pingDelay)),
-    onUpdatePlayerPrediction(callback(state, inputs, deltaTime)),
-    onInterpolation(callback(previousState, targetState, amount)) : newState,
+    onUpdatePlayerPrediction(callback(state, inputs, deltaTime) : newState),
+    onInterpolation(callback(previousState, targetState, amount) : newState),
     onReady(callback),
     logging: true
 }
