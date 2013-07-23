@@ -74,11 +74,11 @@ options = {
     maxUpdateBuffer: 120,
     maxHistorySecondBuffer: 1000,
     worldState: {},
-    onPlayerConnect: function (socket),
-    onPlayerInput: function (socket, input),
-    onPlayerDisconnect: function (socket),
-    onPing: function (socket, data),
-    onEvent: function (data)
+    onPlayerConnect(callback(socket)),
+    onPlayerInput(callback(socket, input)),
+    onPlayerDisconnect(callback(socket)),
+    onPing(callback(socket, data)),
+    onEvent(callback(data))
 }
 ```
 
