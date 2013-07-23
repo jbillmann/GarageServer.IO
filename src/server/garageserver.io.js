@@ -12,18 +12,18 @@ options = {
     maxUpdateBuffer: 120,
     maxHistorySecondBuffer: 1000,
     worldState: {},
-    onPlayerConnect: function (socket),
-    onPlayerInput: function (socket, input),
-    onPlayerDisconnect: function (socket),
-    onPing: function (socket, data),
-    onEvent: function (data)
+    onPlayerConnect(callback(socket)),
+    onPlayerInput(callback(socket, input)),
+    onPlayerDisconnect(callback(socket)),
+    onPing(callback(socket, data)),
+    onEvent(callback(data))
 }
 api methods
     createGarageServer(io, options)
     start()
     stop()
-    getPlayers() : [{ id: '', state: {}, inputs: [{}], stateHistory: [{ state, executionTime }] }]
-    getEntities() : [{ id: '', state: {}, stateHistory: [{ state, executionTime }] }]
+    getPlayers() : [{ id, state, [input1, input2,...], [{ state1, executionTime1 }, { state2, executionTime2 }, ...] }]
+    getEntities() : [{ id, state, [{ state1, executionTime1 }, { state2, executionTime2 }, ...] }]
     updatePlayerState(id, state)
     updateEntityState(id, state)
     addEntity(id)

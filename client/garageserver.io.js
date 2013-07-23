@@ -1,25 +1,25 @@
 /*
 options = {
-    onPlayerConnect: function()
-    onPlayerDisconnect: function (),
-    onPlayerReconnect: function (),
-    onPlayerUpdate: function (state),
-    onEntityUpdate: function (state),
-    onPlayerRemove: function (id),
-    onEntityRemove: function (id),
-    onEvent: function (data),
-    onWorldState: function (state),
-    onPing: function (pingDelay),
-    onUpdatePlayerPhysics: function (state, inputs, deltaTime),
-    onInterpolation: function(previousState, targetState, amount)
-    onReady: function (),
+    onPlayerConnect(callback),
+    onPlayerDisconnect(callback),
+    onPlayerReconnect(callback),
+    onPlayerUpdate(callback(state)),
+    onEntityUpdate(callback(state)),
+    onPlayerRemove(callback(id)),
+    onEntityRemove(callback(id)),
+    onEvent(callback(data)),
+    onWorldState(callback(state)),
+    onPing(callback(pingDelay)),
+    onUpdatePlayerPhysics(callback(state, inputs, deltaTime)),
+    onInterpolation(callback(previousState, targetState, amount)),
+    onReady(callback,
     logging: true
 }
 api methods
     initializeGarageServer(path, options)
-    addInput({})
-    getStates(function (playerStates: [{state}], entityStates: [{state})])
-    getId() : 'playerid'
+    addInput(input)
+    getStates(callback([player1State, player2State, ...], [entity1State, entity2State, ...]))
+    getId() : playerid
     sendServerEvent(data)
 */
 var GarageServerIO = (function (socketio) {
