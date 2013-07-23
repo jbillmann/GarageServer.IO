@@ -10,7 +10,7 @@ options = {
     onEvent(callback(data)),
     onWorldState(callback(state)),
     onPing(callback(pingDelay)),
-    onUpdatePlayerPhysics(callback(state, inputs, deltaTime)),
+    onUpdatePlayerPrediction(callback(state, inputs, deltaTime)),
     onInterpolation(callback(previousState, targetState, amount)) : newState,
     onReady(callback),
     logging: true
@@ -292,9 +292,9 @@ var GarageServerIO = (function (socketio) {
         addInput = function (clientInput) {
             _playerController.entities.some(function (player) {
                 if (player.id === _stateController.id) {
-                    if (_stateController.clientSidePrediction && _options.onUpdatePlayerPhysics) {
+                    if (_stateController.clientSidePrediction && _options.onUpdatePlayerPrediction) {
                         player.inputController.add(clientInput);
-                        player.state = _options.onUpdatePlayerPhysics(player.state, [{ input: clientInput }], _stateController.physicsDelta);
+                        player.state = _options.onUpdatePlayerPrediction(player.state, [{ input: clientInput }], _stateController.physicsDelta);
                     }
                     _socket.emit('input', [ clientInput, player.inputController.sequenceNumber, _stateController.renderTime ]);
                 }
