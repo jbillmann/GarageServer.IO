@@ -12,7 +12,7 @@ options = {
     onPing(callback(pingDelay)),
     onUpdatePlayerPhysics(callback(state, inputs, deltaTime)),
     onInterpolation(callback(previousState, targetState, amount)),
-    onReady(callback,
+    onReady(callback),
     logging: true
 }
 api methods
