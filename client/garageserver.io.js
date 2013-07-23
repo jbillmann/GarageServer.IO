@@ -11,7 +11,7 @@ options = {
     onWorldState(callback(state)),
     onPing(callback(pingDelay)),
     onUpdatePlayerPhysics(callback(state, inputs, deltaTime)),
-    onInterpolation(callback(previousState, targetState, amount)),
+    onInterpolation(callback(previousState, targetState, amount)) : newState,
     onReady(callback),
     logging: true
 }
