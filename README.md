@@ -29,8 +29,8 @@ var server = garageServer.createGarageServer(sockets,
 server.start();
 
 // Inside physics loop, process inputs for players, process entites and update state
- var players = server.getPlayers(),
-        entities = server.getEntities(),
+var players = server.getPlayers(),
+    entities = server.getEntities(),
 
 players.forEach(function (player) {
     // Calculate new state from player.state and player.inputs
@@ -55,7 +55,7 @@ GarageServerIO.initializeGarageServer('http://insertmygameurlhere.com', {
     },
     onInterpolation: function (previousState, targetState, amount) {
         // If interpolating, return new state
-   },
+    },
     onWorldState: function (state) {
         // Extract world state sent from server
     }
@@ -82,7 +82,7 @@ GarageServerIO.addInput(myInput);
 
 ```js
 GarageServerIO.initializeGarageServer(path, options)
-
+/*
 options = {
     onPlayerConnect(callback),
     onPlayerDisconnect(callback),
@@ -99,6 +99,7 @@ options = {
     onReady(callback),
     logging: true
 }
+*/
 ```
 
 ```js
@@ -121,7 +122,7 @@ GarageServerIO.sendServerEvent(data)
 
 ```js
 require('garageserver.io').createGarageServer(io, options) : GarageServerIO
-
+/*
 options = {
     stateInterval: 45,
     logging: true,
@@ -139,6 +140,7 @@ options = {
     onPing(callback(socket, data)),
     onEvent(callback(data))
 }
+*/
 ```
 
 ```js
