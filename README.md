@@ -30,7 +30,7 @@ server.start();
 
 // Inside physics loop, process inputs for players, process entites and update state
 var players = server.getPlayers(),
-    entities = server.getEntities(),
+    entities = server.getEntities();
 
 players.forEach(function (player) {
     // Calculate new state from player.state and player.inputs
