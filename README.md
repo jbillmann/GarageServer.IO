@@ -28,16 +28,16 @@ var server = garageServer.createGarageServer(sockets,
 // Start GarageServer.IO instance prior to starting physics loop
 server.start();
 
-// Inside physics loop, process inputs for players, process entites and update state
+// Inside physics loop, process inputs for players, process entites and update states
 var players = server.getPlayers(),
     entities = server.getEntities();
 
 players.forEach(function (player) {
-    // Calculate new state from player.state and player.inputs
+    // Calculate new state from player.state, player.inputs and send GarageServer.IO new state
     server.updatePlayerState(player.id, newState);
 });
 entities.forEach(function (entity) {
-    // Calculate new state from entity.state
+    // Calculate new state from entity.state and send GarageServer.IO new state
     server.updateEntityState(entity.id, newState);
 });
 ```
@@ -51,17 +51,17 @@ GarageServerIO.initializeGarageServer('http://insertmygameurlhere.com', {
         // Call your game loop
     },
     onUpdatePlayerPrediction: function (state, inputs, deltaTime) {
-        // If using client, process over inputs using current state and return new state
+        // If using client prediction, process over inputs using current state and deltaTime and return new state
     },
     onInterpolation: function (previousState, targetState, amount) {
-        // If interpolating, return new state
+        // If interpolating, return new state using the previous state, target state, and the amount of progress towards the latter
     },
     onWorldState: function (state) {
         // Extract world state sent from server
     }
 };
 
-// Inside render loop, extract states
+// Inside render loop, extract player and entity states
 GarageServerIO.getStates(function (playerStates, entityStates) {
     playerStates.forEach(function (player) {
         ctxCanvas.fillRect(player.state.x, player.state.y, 5, 5);
