@@ -17,7 +17,7 @@ A simple, lightweight, HTML multiplayer game server (and client) for Node.js
 ```js
 var garageServer = require('garageserver.io'),
 
-// Create instance of GarageServer.IO - pass in Socket.IO and GarageServer.IO options
+// Create instance of GarageServer.IO - pass in a Socket.IO instance and GarageServer.IO options
 var server = garageServer.createGarageServer(sockets, 
     {
         interpolation: true,
