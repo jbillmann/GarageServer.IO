@@ -132,17 +132,20 @@ GarageServerIO.addInput(input)
 **input**  
 Type: object literal
 
-#### getStates
+#### getPlayerStates
 ---
 ```js
-GarageServerIO.getStates(callback([, playerState], [, entityState]))
+GarageServerIO.getPlayerStates() : [, playerState]
 ```
-
-**callback**  
-Type: function(playerStates, entityStates)
 
 **playerStates**  
 Type: array of object literals
+
+#### getEntityStates
+---
+```js
+GarageServerIO.getEntityStates() : [, entityState]
+```
 
 **entityStates**  
 Type: array of object literals

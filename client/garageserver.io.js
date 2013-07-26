@@ -18,7 +18,8 @@ options = {
 api methods
     initializeGarageServer(path, options)
     addInput(input)
-    getStates(callback([, playerState], [, entityState]))
+    getPlayerStates : [, playerState]
+    getEntityStates : [, entityState]
     getId() : playerid
     sendServerEvent(data)
 */
@@ -300,26 +301,37 @@ var GarageServerIO = (function (socketio) {
                 }
             });
         },
-
-        getStates = function (stateCallback) {
-            var playerStates = [], entityStates = [];
+        
+        getPlayerStates = function () {
+            var playerStates = [];
 
             if (_stateController.interpolation && _options.onInterpolation) {
-                processEntityStatesInterpolated(_entityController);
                 processEntityStatesInterpolated(_playerController);
             } else {
-                processEntityStatesCurrent(_entityController);
                 processEntityStatesCurrent(_playerController);
             }
 
             _playerController.entities.forEach(function(player) {
                playerStates.push({ state: player.state }); 
             });
+
+            return playerStates;
+        },
+
+        getEntityStates = function () {
+            var entityStates = [];
+            
+            if (_stateController.interpolation && _options.onInterpolation) {
+                processEntityStatesInterpolated(_entityController);
+            } else {
+                processEntityStatesCurrent(_entityController);
+            }
+
             _entityController.entities.forEach(function(entity) {
                entityStates.push({ state: entity.state }); 
             });
 
-            stateCallback(playerStates, entityStates);
+            return entityStates;
         },
 
         removePlayer = function (id) {
@@ -405,7 +417,8 @@ var GarageServerIO = (function (socketio) {
     return {
         initializeGarageServer: initializeGarageServer,
         addInput: addInput,
-        getStates: getStates,
+        getPlayerStates: getPlayerStates,
+        getEntityStates: getEntityStates,
         getId: getId,
         sendServerEvent: sendServerEvent
     };
