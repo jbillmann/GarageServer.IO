@@ -35,7 +35,17 @@ var players = server.getPlayers(),
     entities = server.getEntities();
 
 players.forEach(function (player) {
-    // Calculate new state from player.state, player.inputs and send GarageServer.IO new state
+    var newState = {};
+    if (!player.state.x) {
+           player.state.x = 0;
+    }
+    for (i = 0; i < player.inputs.length; i ++) {
+        if (player.inputs[i].input === 'left') {
+            newState.x -= (50 * deltaTime);
+        } else if (inputs[i].input === 'right') {
+            newState.x += (50 * deltaTime);
+        }
+    }
     server.updatePlayerState(player.id, newState);
 });
 entities.forEach(function (entity) {
