@@ -207,7 +207,7 @@ Type: object literal
 **inputs**  
 Type: array of object literals
 
-**states**  
+**stateHistory**  
 Type: array of object literals
 
 ---
@@ -222,7 +222,7 @@ Type: string
 **state**  
 Type: object literal
 
-**states**  
+**stateHistory**  
 Type: array of object literals
 
 ---
