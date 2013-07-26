@@ -46,8 +46,8 @@ entities.forEach(function (entity) {
 
 ### Client
 
+**1.** Initialize GarageServer.IO
 ```js
-// Initialize GarageServer.IO
 GarageServerIO.initializeGarageServer('http://insertmygameurlhere.com', {
     onReady: function () {
         // Call your game loop
@@ -62,8 +62,13 @@ GarageServerIO.initializeGarageServer('http://insertmygameurlhere.com', {
         // Extract world state sent from server
     }
 };
-
-// Inside render loop, extract player and entity states
+```
+**2.** Inside physics loop, capture and send input via GarageServer.IO
+```js
+GarageServerIO.addInput(myInput);
+```
+**3.** Inside render loop, extract player and entity states
+```js
 GarageServerIO.getStates(function (playerStates, entityStates) {
     playerStates.forEach(function (player) {
         ctxCanvas.fillRect(player.state.x, player.state.y, 5, 5);
@@ -73,9 +78,6 @@ GarageServerIO.getStates(function (playerStates, entityStates) {
         ctxCanvas.fillRect(entity.state.x, entity.state.y, 5, 5);
     });
 });
-
-// Inside physics loop, capture and send input
-GarageServerIO.addInput(myInput);
 ```
 
 ## API
