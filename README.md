@@ -81,7 +81,7 @@ GarageServerIO.addInput(myInput);
 ### Client
 
 #### initializeGarageServer
-
+---
 ```js
 GarageServerIO.initializeGarageServer(path, options)
 /*
@@ -110,7 +110,7 @@ Type: string
 Type: object literal
 
 #### addInput
-
+---
 ```js
 GarageServerIO.addInput(input)
 ```
@@ -119,7 +119,7 @@ GarageServerIO.addInput(input)
 Type: object literal
 
 #### getStates
-
+---
 ```js
 GarageServerIO.getStates(callback([, playerState], [, entityState]))
 ```
@@ -134,7 +134,7 @@ Type: array of object literals
 Type: array of object literals
 
 #### getId
-
+---
 ```js
 GarageServerIO.getId() : playerid
 ```
@@ -143,7 +143,7 @@ GarageServerIO.getId() : playerid
 Type: number
 
 #### sendServerEvent
-
+---
 ```js
 GarageServerIO.sendServerEvent(data)
 ```
@@ -154,7 +154,7 @@ Type: object literal
 ### Server
 
 #### createGarageServer
-
+---
 ```js
 require('garageserver.io').createGarageServer(io, options) : GarageServerIO
 /*
@@ -185,19 +185,19 @@ Type: Socket.IO instance
 Type: object literal
 
 #### start
-
+---
 ```js
 GarageServerIO.start()
 ```
 
 #### stop
-
+---
 ```js
 GarageServerIO.stop()
 ```
 
 #### getPlayers
-
+---
 ```js
 GarageServerIO.getPlayers() : [,{ id, state, [,inputs], [,{ states, executionTimes }] }]
 ```
@@ -215,7 +215,7 @@ Type: array of object literals
 Type: array of object literals
 
 #### getEntities
-
+---
 ```js
 GarageServerIO.getEntities() : [,{ id, state, [,{ state, executionTime }] }]
 ```
@@ -230,7 +230,7 @@ Type: object literal
 Type: array of object literals
 
 #### updatePlayerState
-
+---
 ```js
 GarageServerIO.updatePlayerState(id, state)
 ```
@@ -241,7 +241,7 @@ Type: string
 Type: object literal
 
 #### updateEntityState
-
+---
 ```js
 GarageServerIO.updateEntityState(id, state)
 ```
@@ -252,7 +252,7 @@ Type: string
 Type: object literal
 
 #### addEntity
-
+---
 ```js
 GarageServerIO.addEntity(id)
 ```
@@ -260,7 +260,7 @@ GarageServerIO.addEntity(id)
 Type: string
 
 #### removeEntity
-
+---
 ```js
 GarageServerIO.removeEntity(id)
 ```
@@ -268,7 +268,7 @@ GarageServerIO.removeEntity(id)
 Type: string
 
 #### sendPlayerEvent
-
+---
 ```js
 GarageServerIO.sendPlayerEvent(id, data)
 ```
@@ -279,7 +279,7 @@ Type: string
 Type: object literal
 
 #### sendPlayersEvent
-
+---
 ```js
 GarageServerIO.sendPlayersEvent(data)
 ```
