@@ -81,11 +81,11 @@ GarageServerIO.addInput(myInput);
 ```js
 GarageServerIO.getStates(function (playerStates, entityStates) {
     playerStates.forEach(function (player) {
-        ctxCanvas.fillRect(player.state.x, player.state.y, 5, 5);
+        ctxCanvas.fillRect(player.state.x, 0, 5, 5);
     });
 
     entityStates.forEach(function (entity) {
-        ctxCanvas.fillRect(entity.state.x, entity.state.y, 5, 5);
+        ctxCanvas.fillRect(entity.state.x, 0, 5, 5);
     });
 });
 ```
