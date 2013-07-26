@@ -107,12 +107,16 @@ Type: string
 **options**  
 Type: object literal
 
+---
+
 ```js
 GarageServerIO.addInput(input)
 ```
 
 **input**  
 Type: object literal
+
+---
 
 ```js
 GarageServerIO.getStates(callback([, playerState], [, entityState]))
@@ -127,12 +131,16 @@ Type: array of object literals
 **entityStates**  
 Type: array of object literals
 
+---
+
 ```js
 GarageServerIO.getId() : playerid
 ```
 
 **playerid**  
 Type: number
+
+---
 
 ```js
 GarageServerIO.sendServerEvent(data)
@@ -166,13 +174,25 @@ options = {
 */
 ```
 
+**io**  
+Type: Socket.IO instance
+
+**options**  
+Type: object literal
+
+---
+
 ```js
 GarageServerIO.start()
 ```
 
+---
+
 ```js
 GarageServerIO.stop()
 ```
+
+---
 
 ```js
 GarageServerIO.getPlayers() : [,{ id, state, [,inputs], [,{ states, executionTimes }] }]
@@ -190,6 +210,8 @@ Type: array of object literals
 **states**  
 Type: array of object literals
 
+---
+
 ```js
 GarageServerIO.getEntities() : [,{ id, state, [,{ state, executionTime }] }]
 ```
@@ -203,6 +225,8 @@ Type: object literal
 **states**  
 Type: array of object literals
 
+---
+
 ```js
 GarageServerIO.updatePlayerState(id, state)
 ```
@@ -211,6 +235,8 @@ Type: string
 
 **state**  
 Type: object literal
+
+---
 
 ```js
 GarageServerIO.updateEntityState(id, state)
@@ -221,17 +247,23 @@ Type: string
 **state**  
 Type: object literal
 
+---
+
 ```js
 GarageServerIO.addEntity(id)
 ```
 **id**  
 Type: string
 
+---
+
 ```js
 GarageServerIO.removeEntity(id)
 ```
 **id**  
 Type: string
+
+---
 
 ```js
 GarageServerIO.sendPlayerEvent(id, data)
@@ -241,6 +273,8 @@ Type: string
 
 **data**  
 Type: object literal
+
+---
 
 ```js
 GarageServerIO.sendPlayersEvent(data)
