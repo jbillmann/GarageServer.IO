@@ -18,7 +18,7 @@ options = {
 api methods
     initializeGarageServer(path, options)
     addInput(input)
-    getStates(callback([player1State, player2State, ...], [entity1State, entity2State, ...]))
+    getStates(callback([, playerState], [, entityState]))
     getId() : playerid
     sendServerEvent(data)
 */

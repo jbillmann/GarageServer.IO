@@ -118,10 +118,13 @@ Type: object literal
 GarageServerIO.getStates(callback([, playerState], [, entityState]))
 ```
 
-**playerState**  
+**callback**  
+Type: function(playerStates, entityStates)
+
+**playerStates**  
 Type: array of object literals
 
-**entityState**  
+**entityStates**  
 Type: array of object literals
 
 ```js
@@ -172,12 +175,33 @@ GarageServerIO.stop()
 ```
 
 ```js
-GarageServerIO.getPlayers() : [,{ id, state, [,input1], [,{ state, executionTime }] }]
+GarageServerIO.getPlayers() : [,{ id, state, [,inputs], [,{ states, executionTimes }] }]
 ```
+
+**id**  
+Type: string
+
+**state**  
+Type: object literal
+
+**inputs**  
+Type: array of object literals
+
+**states**  
+Type: array of object literals
 
 ```js
 GarageServerIO.getEntities() : [,{ id, state, [,{ state, executionTime }] }]
 ```
+
+**id**  
+Type: string
+
+**state**  
+Type: object literal
+
+**states**  
+Type: array of object literals
 
 ```js
 GarageServerIO.updatePlayerState(id, state)
