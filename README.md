@@ -109,8 +109,6 @@ Type: string
 **options**  
 Type: object literal
 
----
-
 #### addInput
 
 ```js
@@ -119,8 +117,6 @@ GarageServerIO.addInput(input)
 
 **input**  
 Type: object literal
-
----
 
 #### getStates
 
@@ -137,8 +133,6 @@ Type: array of object literals
 **entityStates**  
 Type: array of object literals
 
----
-
 #### getId
 
 ```js
@@ -147,8 +141,6 @@ GarageServerIO.getId() : playerid
 
 **playerid**  
 Type: number
-
----
 
 #### sendServerEvent
 
@@ -160,6 +152,8 @@ GarageServerIO.sendServerEvent(data)
 Type: object literal
 
 ### Server
+
+#### createGarageServer
 
 ```js
 require('garageserver.io').createGarageServer(io, options) : GarageServerIO
@@ -190,19 +184,19 @@ Type: Socket.IO instance
 **options**  
 Type: object literal
 
----
+#### start
 
 ```js
 GarageServerIO.start()
 ```
 
----
+#### stop
 
 ```js
 GarageServerIO.stop()
 ```
 
----
+#### getPlayers
 
 ```js
 GarageServerIO.getPlayers() : [,{ id, state, [,inputs], [,{ states, executionTimes }] }]
@@ -220,7 +214,7 @@ Type: array of object literals
 **stateHistory**  
 Type: array of object literals
 
----
+#### getEntities
 
 ```js
 GarageServerIO.getEntities() : [,{ id, state, [,{ state, executionTime }] }]
@@ -235,7 +229,7 @@ Type: object literal
 **stateHistory**  
 Type: array of object literals
 
----
+#### updatePlayerState
 
 ```js
 GarageServerIO.updatePlayerState(id, state)
@@ -246,7 +240,7 @@ Type: string
 **state**  
 Type: object literal
 
----
+#### updateEntityState
 
 ```js
 GarageServerIO.updateEntityState(id, state)
@@ -257,7 +251,7 @@ Type: string
 **state**  
 Type: object literal
 
----
+#### addEntity
 
 ```js
 GarageServerIO.addEntity(id)
@@ -265,7 +259,7 @@ GarageServerIO.addEntity(id)
 **id**  
 Type: string
 
----
+#### removeEntity
 
 ```js
 GarageServerIO.removeEntity(id)
@@ -273,7 +267,7 @@ GarageServerIO.removeEntity(id)
 **id**  
 Type: string
 
----
+#### sendPlayerEvent
 
 ```js
 GarageServerIO.sendPlayerEvent(id, data)
@@ -284,7 +278,7 @@ Type: string
 **data**  
 Type: object literal
 
----
+#### sendPlayersEvent
 
 ```js
 GarageServerIO.sendPlayersEvent(data)
