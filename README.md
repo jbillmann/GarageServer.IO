@@ -287,9 +287,6 @@ GarageServerIO.sendPlayersEvent(data)
 Type: object literal
 
 
-## Resources
-
-
 ## License
 
 [MIT License](https://github.com/jbillmann/GarageServer.IO/blob/master/LICENSE.md)
