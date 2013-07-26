@@ -101,42 +101,41 @@ options = {
 }
 */
 ```
-**path**
-
+**path**  
 Type: string
 
-**options**
+**options**  
 Type: object literal
 
 ```js
 GarageServerIO.addInput(input)
 ```
 
-**input**
+**input**  
 Type: object literal
 
 ```js
 GarageServerIO.getStates(callback([, playerState], [, entityState]))
 ```
 
-**playerState**
+**playerState**  
 Type: array of object literals
 
-**entityState**
+**entityState**  
 Type: array of object literals
 
 ```js
 GarageServerIO.getId() : playerid
 ```
 
-**playerid**
+**playerid**  
 Type: number
 
 ```js
 GarageServerIO.sendServerEvent(data)
 ```
 
-**data**
+**data**  
 Type: object literal
 
 ### Server
@@ -183,46 +182,46 @@ GarageServerIO.getEntities() : [,{ id, state, [,{ state, executionTime }] }]
 ```js
 GarageServerIO.updatePlayerState(id, state)
 ```
-**id**
+**id**  
 Type: string
 
-**state**
+**state**  
 Type: object literal
 
 ```js
 GarageServerIO.updateEntityState(id, state)
 ```
-**id**
+**id**  
 Type: string
 
-**state**
+**state**  
 Type: object literal
 
 ```js
 GarageServerIO.addEntity(id)
 ```
-**id**
+**id**  
 Type: string
 
 ```js
 GarageServerIO.removeEntity(id)
 ```
-**id**
+**id**  
 Type: string
 
 ```js
 GarageServerIO.sendPlayerEvent(id, data)
 ```
-**id**
+**id**  
 Type: string
 
-**data**
+**data**  
 Type: object literal
 
 ```js
 GarageServerIO.sendPlayersEvent(data)
 ```
-**data**
+**data**  
 Type: object literal
 
 
