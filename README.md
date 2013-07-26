@@ -14,21 +14,23 @@ A simple, lightweight, HTML multiplayer game server (and client) for Node.js
 
 ### Server
 
+**1.** Create instance of GarageServer.IO - pass in a Socket.IO instance and GarageServer.IO options
 ```js
 var garageServer = require('garageserver.io'),
 
-// Create instance of GarageServer.IO - pass in a Socket.IO instance and GarageServer.IO options
 var server = garageServer.createGarageServer(sockets, 
     {
         interpolation: true,
         clientSidePrediction: true,
         worldState: { width: '400px', height: '400px'; }
     });
-
-// Start GarageServer.IO instance prior to starting physics loop
+```
+**2.** Start GarageServer.IO instance prior to starting physics loop
+```js
 server.start();
-
-// Inside physics loop, process inputs for players, process entites and update states
+```
+**3.** Inside physics loop, process inputs for players, process entites and update states
+```js
 var players = server.getPlayers(),
     entities = server.getEntities();
 
