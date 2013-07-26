@@ -80,6 +80,8 @@ GarageServerIO.addInput(myInput);
 
 ### Client
 
+#### initializeGarageServer
+
 ```js
 GarageServerIO.initializeGarageServer(path, options)
 /*
@@ -109,6 +111,8 @@ Type: object literal
 
 ---
 
+#### addInput
+
 ```js
 GarageServerIO.addInput(input)
 ```
@@ -117,6 +121,8 @@ GarageServerIO.addInput(input)
 Type: object literal
 
 ---
+
+#### getStates
 
 ```js
 GarageServerIO.getStates(callback([, playerState], [, entityState]))
@@ -133,6 +139,8 @@ Type: array of object literals
 
 ---
 
+#### getId
+
 ```js
 GarageServerIO.getId() : playerid
 ```
@@ -141,6 +149,8 @@ GarageServerIO.getId() : playerid
 Type: number
 
 ---
+
+#### sendServerEvent
 
 ```js
 GarageServerIO.sendServerEvent(data)
