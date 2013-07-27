@@ -37,13 +37,13 @@ var players = server.getPlayers(),
 players.forEach(function (player) {
     var newState = {};
     if (!player.state.x) {
-           player.state.x = 0;
+       player.state.x = 0;
     }
     for (i = 0; i < player.inputs.length; i ++) {
         if (player.inputs[i].input === 'left') {
-            newState.x -= (50 * deltaTime);
+            newState.x = player.state.x - (50 * deltaTime);
         } else if (inputs[i].input === 'right') {
-            newState.x += (50 * deltaTime);
+            newState.x = player.state.x + (50 * deltaTime);
         }
     }
     server.updatePlayerState(player.id, newState);
@@ -65,15 +65,16 @@ GarageServerIO.initializeGarageServer('http://insertmygameurlhere.com', {
     onUpdatePlayerPrediction: function (state, inputs, deltaTime) {
         var newState = {};
         if (!player.state.x) {
-           player.state.x = 0;
+        player.state.x = 0;
         }
         for (i = 0; i < player.inputs.length; i ++) {
             if (player.inputs[i].input === 'left') {
-                newState.x -= (50 * deltaTime);
+                newState.x = player.state.x - (50 * deltaTime);
             } else if (inputs[i].input === 'right') {
-                newState.x += (50 * deltaTime);
+                newState.x = player.state.x + (50 * deltaTime);
             }
         }
+        return newState;
     },
     onInterpolation: function (previousState, targetState, amount) {
         return { x: (previousState.x + amount * (targetState.x - previousState.x)) };
