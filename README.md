@@ -93,10 +93,10 @@ GarageServerIO.addInput(myInput);
 var playerStates = GarageServerIO.getPlayerStates(),
     entityStates = GarageServerIO.getEntityStates();  
     playerStates.forEach(function (player) {
-        ctxCanvas.fillRect(player.state.x, player.state.y, playerSize, playerSize);
+        ctxCanvas.fillRect(player.state.x, 0, playerSize, playerSize);
     });
     entityStates.forEach(function (entity) {
-        ctxCanvas.fillRect(entity.state.x, entity.state.y, entitySize, entitySize);
+        ctxCanvas.fillRect(entity.state.x, 0, entitySize, entitySize);
     });
 ```
 
