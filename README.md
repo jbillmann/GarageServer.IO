@@ -90,15 +90,14 @@ GarageServerIO.addInput(myInput);
 ```
 **3.** Inside render loop, extract player and entity states
 ```js
-GarageServerIO.getStates(function (playerStates, entityStates) {
+var playerStates = GarageServerIO.getPlayerStates(),
+    entityStates = GarageServerIO.getEntityStates();
     playerStates.forEach(function (player) {
-        ctxCanvas.fillRect(player.state.x, 0, 5, 5);
+        ctxCanvas.fillRect(player.state.x, player.state.y, playerSize, playerSize);
     });
-
     entityStates.forEach(function (entity) {
-        ctxCanvas.fillRect(entity.state.x, 0, 5, 5);
+        ctxCanvas.fillRect(entity.state.x, entity.state.y, entitySize, entitySize);
     });
-});
 ```
 
 ## API
