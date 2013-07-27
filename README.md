@@ -76,9 +76,7 @@ GarageServerIO.initializeGarageServer('http://insertmygameurlhere.com', {
         }
     },
     onInterpolation: function (previousState, targetState, amount) {
-        var interpolationState = {};
-        interpolationState.x = (previousState.x + amount * (targetState.x - previousState.x));
-        return interpolationState;
+        return { x: (previousState.x + amount * (targetState.x - previousState.x)) };
     },
     onWorldState: function (state) {
         document.getElementById('gameCanvas').style.width = state.width;
