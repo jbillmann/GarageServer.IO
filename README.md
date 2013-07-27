@@ -94,10 +94,10 @@ GarageServerIO.addInput(myInput);
 var playerStates = GarageServerIO.getPlayerStates(),
     entityStates = GarageServerIO.getEntityStates();  
     playerStates.forEach(function (player) {
-        ctxCanvas.fillRect(player.state.x, 0, playerSize, playerSize);
+        ctxCanvas.fillRect(player.state.x, 0, 5, 5);
     });
     entityStates.forEach(function (entity) {
-        ctxCanvas.fillRect(entity.state.x, 0, entitySize, entitySize);
+        ctxCanvas.fillRect(entity.state.x, 0, 5, 5);
     });
 ```
 
@@ -146,20 +146,26 @@ Type: object literal
 #### getPlayerStates
 ---
 ```js
-GarageServerIO.getPlayerStates() : [, playerState]
+GarageServerIO.getPlayerStates() : [, {id, state}]
 ```
 
-**playerStates**  
-Type: array of object literals
+**id**  
+Type: string
+
+**state**  
+Type: object literal
 
 #### getEntityStates
 ---
 ```js
-GarageServerIO.getEntityStates() : [, entityState]
+GarageServerIO.getEntityStates() : [, {id, state}]
 ```
 
-**entityStates**  
-Type: array of object literals
+**id**  
+Type: string
+
+**state**  
+Type: object literal
 
 #### getId
 ---
@@ -227,7 +233,7 @@ GarageServerIO.stop()
 #### getPlayers
 ---
 ```js
-GarageServerIO.getPlayers() : [,{ id, state, [,inputs], [,{ states, executionTimes }] }]
+GarageServerIO.getPlayers() : [, {id, state, [, inputs], [, {states, executionTimes}]}]
 ```
 
 **id**  
@@ -245,7 +251,7 @@ Type: array of object literals
 #### getEntities
 ---
 ```js
-GarageServerIO.getEntities() : [,{ id, state, [,{ state, executionTime }] }]
+GarageServerIO.getEntities() : [,{id, state, [, {state, executionTime }]}]
 ```
 
 **id**  

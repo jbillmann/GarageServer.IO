@@ -312,7 +312,7 @@ var GarageServerIO = (function (socketio) {
             }
 
             _playerController.entities.forEach(function(player) {
-               playerStates.push({ state: player.state }); 
+               playerStates.push({ id: player.id, state: player.state }); 
             });
 
             return playerStates;
@@ -328,7 +328,7 @@ var GarageServerIO = (function (socketio) {
             }
 
             _entityController.entities.forEach(function(entity) {
-               entityStates.push({ state: entity.state }); 
+               entityStates.push({ id: entity.id, state: entity.state }); 
             });
 
             return entityStates;
