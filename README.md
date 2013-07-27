@@ -63,13 +63,26 @@ GarageServerIO.initializeGarageServer('http://insertmygameurlhere.com', {
         // Call your game loop
     },
     onUpdatePlayerPrediction: function (state, inputs, deltaTime) {
-        // If using client prediction, process over inputs using current state and deltaTime and return new state
+        var newState = {};
+        if (!player.state.x) {
+           player.state.x = 0;
+        }
+        for (i = 0; i < player.inputs.length; i ++) {
+            if (player.inputs[i].input === 'left') {
+                newState.x -= (50 * deltaTime);
+            } else if (inputs[i].input === 'right') {
+                newState.x += (50 * deltaTime);
+            }
+        }
     },
     onInterpolation: function (previousState, targetState, amount) {
-        // If interpolating, return new state using the previous state, target state, and the amount of progress towards the latter
+        var interpolationState = {};
+        interpolationState.x = (previousState.x + amount * (targetState.x - previousState.x));
+        return interpolationState;
     },
     onWorldState: function (state) {
-        // Extract world state sent from server
+        document.getElementById('gameCanvas').style.width = state.width;
+        document.getElementById('gameCanvas').style.height = state.height;
     }
 };
 ```
