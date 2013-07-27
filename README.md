@@ -12,6 +12,8 @@ A simple, lightweight, HTML multiplayer game server (and client) for Node.js
 
 ## Quick Start
 
+Create a quick game whereby players simply move squares along the x-axis.  (I know, it's boring, but it keeps things simple.)
+
 ### Server
 
 **1.** Create instance of GarageServer.IO - pass in a Socket.IO instance and GarageServer.IO options
