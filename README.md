@@ -27,11 +27,11 @@ var server = garageServer.createGarageServer(sockets,
         worldState: { width: '400px', height: '400px'; }
     });
 ```
-**2.** Start GarageServer.IO instance prior to starting physics loop
+**2.** Start GarageServer.IO instance prior to starting physics loop.  This starts the clock that is used for broadcasting state.
 ```js
 server.start();
 ```
-**3.** Inside physics loop, process inputs for players, process entites and update states
+**3.** Inside physics loop, process inputs for players, process entites and update states.  Note that state is an object literal effectively offering up any grab bag of properties that pertain to your game's state.
 ```js
 var players = server.getPlayers(),
     entities = server.getEntities();
@@ -58,7 +58,7 @@ entities.forEach(function (entity) {
 
 ### Client
 
-**1.** Initialize GarageServer.IO
+**1.** Initialize GarageServer.IO.
 ```js
 GarageServerIO.initializeGarageServer('http://insertmygameurlhere.com', {
     onReady: function () {
@@ -87,11 +87,11 @@ GarageServerIO.initializeGarageServer('http://insertmygameurlhere.com', {
     }
 };
 ```
-**2.** Inside physics loop, capture and send input via GarageServer.IO
+**2.** Inside physics loop, capture and send input via GarageServer.IO.
 ```js
 GarageServerIO.addInput(myInput);
 ```
-**3.** Inside render loop, extract player and entity states
+**3.** Inside render loop, extract player and entity states.
 ```js
 var playerStates = GarageServerIO.getPlayerStates(),
     entityStates = GarageServerIO.getEntityStates();  
