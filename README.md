@@ -16,7 +16,7 @@ Create a quick game whereby players simply move squares along the x-axis.  (I kn
 
 ### Server
 
-**1.** Create instance of GarageServer.IO - pass in a Socket.IO instance and GarageServer.IO options
+**1.** Create instance of GarageServer.IO - pass in a Socket.IO instance and GarageServer.IO options.
 ```js
 var garageServer = require('garageserver.io'),
 
@@ -27,7 +27,7 @@ var server = garageServer.createGarageServer(sockets,
         worldState: { width: '400px', height: '400px'; }
     });
 ```
-**2.** Start GarageServer.IO instance prior to starting physics loop.  This starts the clock that is used for broadcasting state.
+**2.** Start GarageServer.IO instance prior to starting physics loop.  This starts the clock that is used for broadcasting state and storing state history.
 ```js
 server.start();
 ```
