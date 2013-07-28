@@ -151,6 +151,8 @@ Type: object literal
 GarageServerIO.getPlayerStates() : [, {id, state}]
 ```
 
+**_Returns_** array
+
 **id**  
 Type: string
 
@@ -162,6 +164,8 @@ Type: object literal
 ```js
 GarageServerIO.getEntityStates() : [, {id, state}]
 ```
+
+**_Returns_** array
 
 **id**  
 Type: string
@@ -175,8 +179,10 @@ Type: object literal
 GarageServerIO.getId() : playerid
 ```
 
+**_Returns_** string
+
 **playerid**  
-Type: number
+Type: string
 
 #### sendServerEvent
 ---
@@ -238,6 +244,8 @@ GarageServerIO.stop()
 GarageServerIO.getPlayers() : [, {id, state, [, inputs], [, {states, executionTimes}]}]
 ```
 
+**_Returns_** array
+
 **id**  
 Type: string
 
@@ -255,6 +263,8 @@ Type: array of object literals
 ```js
 GarageServerIO.getEntities() : [,{id, state, [, {state, executionTime }]}]
 ```
+
+**_Returns_** array
 
 **id**  
 Type: string
