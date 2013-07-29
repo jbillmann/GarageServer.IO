@@ -117,35 +117,35 @@ Establish connection to GarageServer.IO on the server via Socket.IO and register
 The URL that points to where GarageServer.IO is running at on the server.  
 `options` **object literal**  
 Configure the different options, events, callbacks that you would like to consume on the client.  
----
+
 ```js
 options.onPlayerConnect(callback)  
 ```
 Once the client has made a connection to the server, this event will fire.  
 `callback` **function**  
 Function to be invoked upon event firing.  
----
+
 ```js
 options.onPlayerDisconnect(callback)  
 ```
 If client has has disconnected from the server, this event will fire.  
 `callback` **function**  
 Function to be invoked upon event firing.  
----
+
 ```js
 options.onPlayerReconnect(callback)  
 ```
 If client has has disconnects and reconnects to the server, this event will fire.  
 `callback` **function**  
 Function to be invoked upon event firing.  
----
+
 ```js
 options.onPlayerUpdate(callback(state))  
 ```
 `callback` **function**  
 Function to be invoked upon event firing.  
 `state` **object literal**  
----
+
 ```js
 options.onEntityUpdate(callback(state))  
 ```
@@ -153,42 +153,42 @@ options.onEntityUpdate(callback(state))
 Function to be invoked upon event firing.  
 
 `state` **object literal**  
----
+
 ```js
 options.onPlayerRemove(callback(id))  
 ```
 `callback` **function**  
 
 `id` **string**  
----
+
 ```js
 options.onEntityRemove(callback(id))  
 ```
 `callback` **function**  
 
 `id` **string**  
----
+
 ```js
 options.onEvent(callback(data))  
 ```
 `callback` **function**  
 
 `data` **object literal**  
----
+
 ```js
 options.onWorldState(callback(state))  
 ```
 `callback` **function**  
 
 `state` **object literal**  
----
+
 ```js
 options.onPing(callback(pingDelay))  
 ```
 `callback` **function**  
 
 `pingDelay` **number**  
----
+
 ```js
 options.onUpdatePlayerPrediction(callback(state, inputs, deltaTime) : newState)  
 ```
@@ -201,7 +201,7 @@ options.onUpdatePlayerPrediction(callback(state, inputs, deltaTime) : newState)
 `inputs` **array**  
 
 `deltaTime` **number**  
----
+
 ```js
 options.onInterpolation(callback(previousState, targetState, amount) : newState)  
 ```
@@ -214,12 +214,12 @@ options.onInterpolation(callback(previousState, targetState, amount) : newState)
 `targetState` **object literal**  
 
 `amount` **number**  
----
+
 ```js
 options.onReady(callback)  
 ```
 `callback` **function**  
----
+
 ```js
 options.logging: true  
 ```
@@ -280,64 +280,64 @@ require('garageserver.io').createGarageServer(io, options) : GarageServerIO
 `io` **Socket.IO instance**  
 
 `options` **object literal**
----
+
 ```js
 options.stateInterval
 ```
 **number**  
----
+
 ```js
 options.logging
 ```
 **boolean**  
----
+
 ```js
 options.clientSidePrediction
 ```
 **boolean**  
----
+
 ```js
 options.interpolation
 ```
 **boolean**  
----
+
 ```js
 options.interpolationDelay
 ```
 **number**  
----
+
 ```js
 options.smoothingFactor
 ```
 **number**  
----
+
 ```js
 options.pingInterval
 ```
 **number**  
----
+
 ```js
 options.maxUpdateBuffer
 ```
 **number**  
----
+
 ```js
 options.maxHistorySecondBuffer
 ```
 **number**  
----
+
 ```js
 options.worldState
 ```
 **object literal**  
----
+
 ```js
 options.onPlayerConnect(callback(socket))
 ```
 `callback` **function**  
 
 `socket` **Socket**
----
+
 ```js
 options.onPlayerInput(callback(socket, input))
 ```
@@ -346,14 +346,14 @@ options.onPlayerInput(callback(socket, input))
 `socket` **Socket**  
 
 `input` **object literal**  
----
+
 ```js
 options.onPlayerDisconnect(callback(socket))
 ```
 `callback` **function**  
 
 `socket` **Socket**  
----
+
 ```js
 options.onPing(callback(socket, data))
 ```
@@ -362,7 +362,7 @@ options.onPing(callback(socket, data))
 `socket` **Socket**  
 
 `data` **object literal**  
----
+
 ```js
 options.onEvent(callback(data))
 ```
