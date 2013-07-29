@@ -113,11 +113,9 @@ var playerStates = GarageServerIO.getPlayerStates(),
 GarageServerIO.initializeGarageServer(path, options)
 ```
 Establish connection to GarageServer.IO on the server via Socket.IO and register events.  
-`path`  
-**Type:** string
+`path` string  
 The URL that points to where GarageServer.IO is running at on the server.  
-`options`  
-**Type:** object literal
+`options`  object literal  
 Configure the different options, events, callbacks that you would like to consume on the client.  
 ```js
 options.onPlayerConnect(callback)  
