@@ -117,7 +117,8 @@ Establish connection to GarageServer.IO on the server via Socket.IO and register
 The URL that points to where GarageServer.IO is running at on the server.  
 `options` **object literal**  
 Configure the different options, events, callbacks that you would like to consume on the client.  
-
+#### options
+---
 ```js
 options.onPlayerConnect(callback)  
 ```
