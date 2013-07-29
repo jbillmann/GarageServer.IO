@@ -118,20 +118,48 @@ Type: string
 **options**  
 Type: object literal
 
-**onPlayerConnect(callback)**  
-**onPlayerDisconnect(callback)**  
-**onPlayerReconnect(callback)**  
-**onPlayerUpdate(callback(state))**  
-**onEntityUpdate(callback(state))**  
-**onPlayerRemove(callback(id))**  
-**onEntityRemove(callback(id))**  
-**onEvent(callback(data))**  
-**onWorldState(callback(state))**  
-**onPing(callback(pingDelay))**  
-**onUpdatePlayerPrediction(callback(state, inputs, deltaTime) : newState)**  
-**onInterpolation(callback(previousState, targetState, amount) : newState)**  
-**onReady(callback)**  
-**logging: true**  
+```js
+**options.onPlayerConnect(callback)**  
+```
+```js
+**options.onPlayerDisconnect(callback)**  
+```
+```js
+**options.onPlayerReconnect(callback)**  
+```
+```js
+**options.onPlayerUpdate(callback(state))**  
+```
+```js
+**options.onEntityUpdate(callback(state))**  
+```
+```js
+**options.onPlayerRemove(callback(id))**  
+```
+```js
+**options.onEntityRemove(callback(id))**  
+```
+```js
+**options.onEvent(callback(data))**  
+```
+```js
+**options.onWorldState(callback(state))**  
+```
+```js
+**options.onPing(callback(pingDelay))**  
+```
+```js
+**options.onUpdatePlayerPrediction(callback(state, inputs, deltaTime) : newState)**  
+```
+```js
+**options.onInterpolation(callback(previousState, targetState, amount) : newState)**  
+```
+```js
+**options.onReady(callback)**  
+```
+```js
+**options.logging: true**  
+```
 
 #### addInput
 ---
