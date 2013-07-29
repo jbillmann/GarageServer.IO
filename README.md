@@ -119,46 +119,46 @@ Type: string
 Type: object literal
 
 ```js
-**options.onPlayerConnect(callback)**  
+options.onPlayerConnect(callback)  
 ```
 ```js
-**options.onPlayerDisconnect(callback)**  
+options.onPlayerDisconnect(callback)  
 ```
 ```js
-**options.onPlayerReconnect(callback)**  
+options.onPlayerReconnect(callback)  
 ```
 ```js
-**options.onPlayerUpdate(callback(state))**  
+options.onPlayerUpdate(callback(state))  
 ```
 ```js
-**options.onEntityUpdate(callback(state))**  
+options.onEntityUpdate(callback(state))  
 ```
 ```js
-**options.onPlayerRemove(callback(id))**  
+options.onPlayerRemove(callback(id))  
 ```
 ```js
-**options.onEntityRemove(callback(id))**  
+options.onEntityRemove(callback(id))  
 ```
 ```js
-**options.onEvent(callback(data))**  
+options.onEvent(callback(data))  
 ```
 ```js
-**options.onWorldState(callback(state))**  
+options.onWorldState(callback(state))  
 ```
 ```js
-**options.onPing(callback(pingDelay))**  
+options.onPing(callback(pingDelay))  
 ```
 ```js
-**options.onUpdatePlayerPrediction(callback(state, inputs, deltaTime) : newState)**  
+options.onUpdatePlayerPrediction(callback(state, inputs, deltaTime) : newState)  
 ```
 ```js
-**options.onInterpolation(callback(previousState, targetState, amount) : newState)**  
+options.onInterpolation(callback(previousState, targetState, amount) : newState)  
 ```
 ```js
-**options.onReady(callback)**  
+options.onReady(callback)  
 ```
 ```js
-**options.logging: true**  
+options.logging: true  
 ```
 
 #### addInput
@@ -224,25 +224,6 @@ Type: object literal
 ---
 ```js
 require('garageserver.io').createGarageServer(io, options) : GarageServerIO
-/*
-options = {
-    stateInterval: 45,
-    logging: true,
-    clientSidePrediction: true,
-    interpolation: true,
-    interpolationDelay: 100,
-    smoothingFactor: 0.3,
-    pingInterval: 2000,
-    maxUpdateBuffer: 120,
-    maxHistorySecondBuffer: 1000,
-    worldState: {},
-    onPlayerConnect(callback(socket)),
-    onPlayerInput(callback(socket, input)),
-    onPlayerDisconnect(callback(socket)),
-    onPing(callback(socket, data)),
-    onEvent(callback(data))
-}
-*/
 ```
 
 **io**  
@@ -251,6 +232,51 @@ Type: Socket.IO instance
 **options**  
 Type: object literal
 
+```js
+options.stateInterval: 45
+```
+```js
+options.logging: true
+```
+```js
+options.clientSidePrediction: true
+```
+```js
+options.interpolation: true
+```
+```js
+options.interpolationDelay: 100
+```
+```js
+options.smoothingFactor: 0.3
+```
+```js
+options.pingInterval: 2000
+```
+```js
+options.maxUpdateBuffer: 120
+```
+```js
+options.maxHistorySecondBuffer: 1000
+```
+```js
+options.worldState: {}
+```
+```js
+options.onPlayerConnect(callback(socket))
+```
+```js
+options.onPlayerInput(callback(socket, input))
+```
+```js
+options.onPlayerDisconnect(callback(socket))
+```
+```js
+options.onPing(callback(socket, data))
+```
+```js
+options.onEvent(callback(data))
+```
 #### start
 ---
 ```js
