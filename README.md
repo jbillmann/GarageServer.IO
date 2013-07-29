@@ -111,30 +111,27 @@ var playerStates = GarageServerIO.getPlayerStates(),
 ---
 ```js
 GarageServerIO.initializeGarageServer(path, options)
-/*
-options = {
-    onPlayerConnect(callback),
-    onPlayerDisconnect(callback),
-    onPlayerReconnect(callback),
-    onPlayerUpdate(callback(state)),
-    onEntityUpdate(callback(state)),
-    onPlayerRemove(callback(id)),
-    onEntityRemove(callback(id)),
-    onEvent(callback(data)),
-    onWorldState(callback(state)),
-    onPing(callback(pingDelay)),
-    onUpdatePlayerPrediction(callback(state, inputs, deltaTime) : newState),
-    onInterpolation(callback(previousState, targetState, amount) : newState),
-    onReady(callback),
-    logging: true
-}
-*/
 ```
 **path**  
 Type: string
 
 **options**  
 Type: object literal
+
+**onPlayerConnect(callback)**  
+**onPlayerDisconnect(callback)**  
+**onPlayerReconnect(callback)**  
+**onPlayerUpdate(callback(state))**  
+**onEntityUpdate(callback(state))**  
+**onPlayerRemove(callback(id))**  
+**onEntityRemove(callback(id))**  
+**onEvent(callback(data))**  
+**onWorldState(callback(state))**  
+**onPing(callback(pingDelay))**  
+**onUpdatePlayerPrediction(callback(state, inputs, deltaTime) : newState)**  
+**onInterpolation(callback(previousState, targetState, amount) : newState)**  
+**onReady(callback)**  
+**logging: true**  
 
 #### addInput
 ---
