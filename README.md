@@ -117,201 +117,158 @@ Establish connection to GarageServer.IO on the server via Socket.IO and register
 The URL that points to where GarageServer.IO is running at on the server.  
 `options` **object literal**  
 Configure the different options, events, callbacks that you would like to consume on the client.  
+
 ```js
 options.onPlayerConnect(callback)  
 ```
 Once the client has made a connection to the server, this event will fire.  
-`callback`  function
+`callback` **function**  
 Function to be invoked upon event firing.  
+
 ```js
 options.onPlayerDisconnect(callback)  
 ```
 If client has has disconnected from the server, this event will fire.  
-`callback`  function
+`callback` **function**  
 Function to be invoked upon event firing.  
+
 ```js
 options.onPlayerReconnect(callback)  
 ```
 If client has has disconnects and reconnects to the server, this event will fire.  
-`callback`  function
+`callback` **function**  
 Function to be invoked upon event firing.  
+
 ```js
 options.onPlayerUpdate(callback(state))  
 ```
-
-**callback**  
-Type: function
+`callback` **function**  
 Function to be invoked upon event firing.  
-**state**  
-Type: object literal
+`state` **object literal**  
 
 ```js
 options.onEntityUpdate(callback(state))  
 ```
-
-**callback**  
-Type: function
+`callbac` **function**  
 Function to be invoked upon event firing.  
 
-**state**  
-Type: object literal
+`state` **object literal**  
 
 ```js
 options.onPlayerRemove(callback(id))  
 ```
+`callback` **function**  
 
-**callback**  
-Type: function
-
-**id**  
-Type: string
+`id` **string**  
 
 ```js
 options.onEntityRemove(callback(id))  
 ```
+`callback` **function**  
 
-**callback**  
-Type: function
-
-**id**  
-Type: string
+`id` **string**  
 
 ```js
 options.onEvent(callback(data))  
 ```
+`callback` **function**  
 
-**callback**  
-Type: function
-
-**data**  
-Type: object literal
+`data` **object literal**  
 
 ```js
 options.onWorldState(callback(state))  
 ```
+`callback` **function**  
 
-**callback**  
-Type: function
-
-**state**  
-Type: object literal
+`state` **object literal**  
 
 ```js
 options.onPing(callback(pingDelay))  
 ```
+`callback` **function**  
 
-**callback**  
-Type: function
-
-**pingDelay**  
-Type: number
+`pingDelay` **number**  
 
 ```js
 options.onUpdatePlayerPrediction(callback(state, inputs, deltaTime) : newState)  
 ```
+**_Returns:_ object literal**  
 
-**_Returns:_** object literal
+`callback` **function**  
 
-**callback**  
-Type: function
+`state` **object literal**  
 
-**state**  
-Type: object literal
+`inputs` **array**  
 
-**inputs**  
-Type: array
-
-**deltaTime**  
-Type: number
+`deltaTime` **number**  
 
 ```js
 options.onInterpolation(callback(previousState, targetState, amount) : newState)  
 ```
+**_Returns:_ object literal**  
 
-**_Returns:_** object literal
+`callback` **function**  
 
-**callback**  
-Type: function
+`previousState` **object literal**  
 
-**previousState**  
-Type: object literal
+`targetState` **object literal**  
 
-**targetState**  
-Type: object literal
-
-**amount**  
-Type: number
+`amount` **number**  
 
 ```js
 options.onReady(callback)  
 ```
-
-**callback**  
-Type: function
+`callback` **function**  
 
 ```js
 options.logging: true  
 ```
-
-**logging**  
-Type: boolean
+`logging` **boolean**  
 
 #### addInput
 ---
 ```js
 GarageServerIO.addInput(input)
 ```
-
-**input**  
-Type: object literal
+`input` **object literal**  
 
 #### getPlayerStates
 ---
 ```js
 GarageServerIO.getPlayerStates() : [, {id, state}]
 ```
+**_Returns:_ array**  
 
-**_Returns:_** array
+`id` **string**  
 
-**id**  
-Type: string
-
-**state**  
-Type: object literal
+`state` **object literal**  
 
 #### getEntityStates
 ---
 ```js
 GarageServerIO.getEntityStates() : [, {id, state}]
 ```
+**_Returns:_ array**  
 
-**_Returns:_** array
+`id` **string**  
 
-**id**  
-Type: string
-
-**state**  
-Type: object literal
+`state` **object literal**  
 
 #### getId
 ---
 ```js
 GarageServerIO.getId() : playerid
 ```
+**_Returns:_ string**  
 
-**_Returns:_** string
-
-**playerid**  
-Type: string
+`playerid` **string**  
 
 #### sendServerEvent
 ---
 ```js
 GarageServerIO.sendServerEvent(data)
 ```
-
-**data**  
-Type: object literal
+`data` **object literal**  
 
 ### Server
 
@@ -320,128 +277,98 @@ Type: object literal
 ```js
 require('garageserver.io').createGarageServer(io, options) : GarageServerIO
 ```
+`io` **Socket.IO instance**  
 
-**io**  
-Type: Socket.IO instance
-
-**options**  
-Type: object literal
+`options` **object literal**
 
 ```js
 options.stateInterval
 ```
-
-Type: number
+**number**  
 
 ```js
 options.logging
 ```
-
-Type: boolean
+**boolean**  
 
 ```js
 options.clientSidePrediction
 ```
-
-Type: boolean
+**boolean**  
 
 ```js
 options.interpolation
 ```
-
-Type: boolean
+**boolean**  
 
 ```js
 options.interpolationDelay
 ```
-
-Type: number
+**number**  
 
 ```js
 options.smoothingFactor
 ```
-
-Type: number
+**number**  
 
 ```js
 options.pingInterval
 ```
-
-Type: number
+**number**  
 
 ```js
 options.maxUpdateBuffer
 ```
-
-Type: number
+**number**  
 
 ```js
 options.maxHistorySecondBuffer
 ```
-
-Type: number
+**number**  
 
 ```js
 options.worldState
 ```
-
-Type: object literal
+**object literal**  
 
 ```js
 options.onPlayerConnect(callback(socket))
 ```
+`callback` **function**  
 
-**callback**  
-Type: function
-
-**socket**  
-Type: Socket
+`socket` **Socket**
 
 ```js
 options.onPlayerInput(callback(socket, input))
 ```
+`callback` **function**  
 
-**callback**  
-Type: function
+`socket` **Socket**  
 
-**socket**  
-Type: Socket
-
-**input**  
-Type: object literal
+`input` **object literal**  
 
 ```js
 options.onPlayerDisconnect(callback(socket))
 ```
+`callback` **function**  
 
-**callback**  
-Type: function
-
-**socket**  
-Type: Socket
+`socket` **Socket**  
 
 ```js
 options.onPing(callback(socket, data))
 ```
+`callback` **function**  
 
-**callback**  
-Type: function
+`socket` **Socket**  
 
-**socket**  
-Type: Socket
-
-**data**  
-Type: object literal
+`data` **object literal**  
 
 ```js
 options.onEvent(callback(data))
 ```
+`callback` **function**  
 
-**callback**  
-Type: function
-
-**data**  
-Type: object literal
+`data` **object literal**  
 
 #### start
 ---
@@ -460,94 +387,76 @@ GarageServerIO.stop()
 ```js
 GarageServerIO.getPlayers() : [, {id, state, [, inputs], [, {states, executionTimes}]}]
 ```
+**_Returns:_ array**  
 
-**_Returns:_** array
+`id` **string**  
 
-**id**  
-Type: string
+`state` **object literal**  
 
-**state**  
-Type: object literal
+`inputs` **array of object literals**  
 
-**inputs**  
-Type: array of object literals
-
-**stateHistory**  
-Type: array of object literals
+`stateHistory` **array of object literals**  
 
 #### getEntities
 ---
 ```js
 GarageServerIO.getEntities() : [,{id, state, [, {state, executionTime }]}]
 ```
+**_Returns:_ array**
 
-**_Returns:_** array
+`id` **string**  
 
-**id**  
-Type: string
+`state` **object literal**  
 
-**state**  
-Type: object literal
-
-**stateHistory**  
-Type: array of object literals
+`stateHistory` **array of object literals**  
 
 #### updatePlayerState
 ---
 ```js
 GarageServerIO.updatePlayerState(id, state)
 ```
-**id**  
-Type: string
+`id` **string**  
 
-**state**  
-Type: object literal
+`state` **object literal**  
 
 #### updateEntityState
 ---
 ```js
 GarageServerIO.updateEntityState(id, state)
 ```
-**id**  
-Type: string
+`id` **string**  
 
-**state**  
-Type: object literal
+`state` **object literal**  
 
 #### addEntity
 ---
 ```js
 GarageServerIO.addEntity(id)
 ```
-**id**  
-Type: string
+`id` **string**  
 
 #### removeEntity
 ---
 ```js
 GarageServerIO.removeEntity(id)
 ```
-**id**  
-Type: string
+`id` **string**  
 
 #### sendPlayerEvent
 ---
 ```js
 GarageServerIO.sendPlayerEvent(id, data)
 ```
-**id**  
-Type: string
+`id` **string**  
 
-**data**  
-Type: object literal
+`data` **object literal**  
 
 #### sendPlayersEvent
 ---
 ```js
 GarageServerIO.sendPlayersEvent(data)
 ```
-**data**  
-Type: object literal
+`data` **object literal**  
 
 
 ## License
