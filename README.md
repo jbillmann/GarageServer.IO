@@ -121,45 +121,137 @@ Type: object literal
 ```js
 options.onPlayerConnect(callback)  
 ```
+**callback**  
+Type: function
 ```js
 options.onPlayerDisconnect(callback)  
 ```
+**callback**  
+Type: function
 ```js
 options.onPlayerReconnect(callback)  
 ```
+**callback**  
+Type: function
 ```js
 options.onPlayerUpdate(callback(state))  
 ```
+
+**callback**  
+Type: function
+
+**state**  
+Type: object literal
+
 ```js
 options.onEntityUpdate(callback(state))  
 ```
+
+**callback**  
+Type: function
+
+**state**  
+Type: object literal
+
 ```js
 options.onPlayerRemove(callback(id))  
 ```
+
+**callback**  
+Type: function
+
+**id**  
+Type: string
+
 ```js
 options.onEntityRemove(callback(id))  
 ```
+
+**callback**  
+Type: function
+
+**id**  
+Type: string
+
 ```js
 options.onEvent(callback(data))  
 ```
+
+**callback**  
+Type: function
+
+**data**  
+Type: object literal
+
 ```js
 options.onWorldState(callback(state))  
 ```
+
+**callback**  
+Type: function
+
+**state**  
+Type: object literal
+
 ```js
 options.onPing(callback(pingDelay))  
 ```
+
+**callback**  
+Type: function
+
+**pingDelay**  
+Type: number
+
 ```js
 options.onUpdatePlayerPrediction(callback(state, inputs, deltaTime) : newState)  
 ```
+
+**_Returns:_** object literal
+
+**callback**  
+Type: function
+
+**state**  
+Type: object literal
+
+**inputs**  
+Type: array
+
+**deltaTime**  
+Type: number
+
 ```js
 options.onInterpolation(callback(previousState, targetState, amount) : newState)  
 ```
+
+**_Returns:_** object literal
+
+**callback**  
+Type: function
+
+**previousState**  
+Type: object literal
+
+**targetState**  
+Type: object literal
+
+**amount**  
+Type: number
+
 ```js
 options.onReady(callback)  
 ```
+
+**callback**  
+Type: function
+
 ```js
 options.logging: true  
 ```
+
+**logging**  
+Type: boolean
 
 #### addInput
 ---
