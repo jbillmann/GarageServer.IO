@@ -281,7 +281,8 @@ require('garageserver.io').createGarageServer(io, options) : GarageServerIO
 `io` **Socket.IO instance**  
 
 `options` **object literal**
-
+#### options
+---
 ```js
 options.stateInterval
 ```
