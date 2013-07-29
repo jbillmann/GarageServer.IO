@@ -325,50 +325,121 @@ Type: Socket.IO instance
 Type: object literal
 
 ```js
-options.stateInterval: 45
+options.stateInterval
 ```
+
+Type: number
+
 ```js
-options.logging: true
+options.logging
 ```
+
+Type: boolean
+
 ```js
-options.clientSidePrediction: true
+options.clientSidePrediction
 ```
+
+Type: boolean
+
 ```js
-options.interpolation: true
+options.interpolation
 ```
+
+Type: boolean
+
 ```js
-options.interpolationDelay: 100
+options.interpolationDelay
 ```
+
+Type: number
+
 ```js
-options.smoothingFactor: 0.3
+options.smoothingFactor
 ```
+
+Type: number
+
 ```js
-options.pingInterval: 2000
+options.pingInterval
 ```
+
+Type: number
+
 ```js
-options.maxUpdateBuffer: 120
+options.maxUpdateBuffer
 ```
+
+Type: number
+
 ```js
-options.maxHistorySecondBuffer: 1000
+options.maxHistorySecondBuffer
 ```
+
+Type: number
+
 ```js
-options.worldState: {}
+options.worldState
 ```
+
+Type: object literal
+
 ```js
 options.onPlayerConnect(callback(socket))
 ```
+
+**callback**
+Type: function
+
+**socket**
+Type: Socket
+
 ```js
 options.onPlayerInput(callback(socket, input))
 ```
+
+**callback**
+Type: function
+
+**socket**
+Type: Socket
+
+**input**
+Type: object literal
+
 ```js
 options.onPlayerDisconnect(callback(socket))
 ```
+
+**callback**
+Type: function
+
+**socket**
+Type: Socket
+
 ```js
 options.onPing(callback(socket, data))
 ```
+
+**callback**
+Type: function
+
+**socket**
+Type: Socket
+
+**data**
+Type: object literal
+
 ```js
 options.onEvent(callback(data))
 ```
+
+**callback**
+Type: function
+
+**data**
+Type: object literal
+
 #### start
 ---
 ```js
