@@ -388,56 +388,56 @@ Type: object literal
 options.onPlayerConnect(callback(socket))
 ```
 
-**callback**
+**callback**  
 Type: function
 
-**socket**
+**socket**  
 Type: Socket
 
 ```js
 options.onPlayerInput(callback(socket, input))
 ```
 
-**callback**
+**callback**  
 Type: function
 
-**socket**
+**socket**  
 Type: Socket
 
-**input**
+**input**  
 Type: object literal
 
 ```js
 options.onPlayerDisconnect(callback(socket))
 ```
 
-**callback**
+**callback**  
 Type: function
 
-**socket**
+**socket**  
 Type: Socket
 
 ```js
 options.onPing(callback(socket, data))
 ```
 
-**callback**
+**callback**  
 Type: function
 
-**socket**
+**socket**  
 Type: Socket
 
-**data**
+**data**  
 Type: object literal
 
 ```js
 options.onEvent(callback(data))
 ```
 
-**callback**
+**callback**  
 Type: function
 
-**data**
+**data**  
 Type: object literal
 
 #### start
