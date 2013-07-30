@@ -161,8 +161,8 @@ Object containing all of the properties pertaining to an entity for your game - 
 
 ```js
 options.onPlayerRemove(callback(id))  
-Event fired when a player has been removed from GarageServer.IO.  
 ```
+Event fired when a player has been removed from GarageServer.IO.  
 `callback` **function**  
 Function to be invoked upon event firing.  
 
@@ -181,8 +181,8 @@ Id of the entity who has been removed from GarageServer.IO.
 
 ```js
 options.onEvent(callback(data))  
-Event fired for custom event calling.  
 ```
+Event fired for custom event calling.  
 `callback` **function**  
 Function to be invoked upon event firing.  
 
@@ -192,6 +192,7 @@ Object containing all of the properties pertaining to a custom event for your ga
 ```js
 options.onWorldState(callback(state))  
 ```
+Event fired once world state has been received to the client from the server.  
 `callback` **function**  
 Function to be invoked upon event firing.  
 
@@ -201,6 +202,7 @@ Object containing all of the properties pertaining to world state for your game 
 ```js
 options.onPing(callback(pingDelay))  
 ```
+Event fired upon receiving ping delay on the client - determined by the 'pingInterval' option from the server.  
 `callback` **function**  
 Function to be invoked upon event firing.  
 
@@ -245,6 +247,7 @@ The "rough" percentage between frames to be used in conjuction with interpolatio
 ```js
 options.onReady(callback)  
 ```
+Event fired once client has succesfully connected to the server and received the world state.  
 `callback` **function**  
 Function to be invoked upon event firing.  
 
