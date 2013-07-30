@@ -143,36 +143,48 @@ Function to be invoked upon event firing.
 ```js
 options.onPlayerUpdate(callback(state))  
 ```
+Event fired each time state is received for a player.  
 `callback` **function**  
 Function to be invoked upon event firing.  
 `state` **object literal**  
+Object containing all of the properties pertaining to a player for your game - x, y, z, time, whatever you want to add to it.  
 
 ```js
 options.onEntityUpdate(callback(state))  
 ```
+Event fired each time state is received for an entity.  
 `callback` **function**  
 Function to be invoked upon event firing.  
 
 `state` **object literal**  
+Object containing all of the properties pertaining to an entity for your game - x, y, z, time, whatever you want to add to it.  
 
 ```js
 options.onPlayerRemove(callback(id))  
+Event fired when a player has been removed from GarageServer.IO.  
 ```
 `callback` **function**  
+Function to be invoked upon event firing.  
 
 `id` **string**  
+Id of the player who has been removed from GarageServer.IO  
 
 ```js
 options.onEntityRemove(callback(id))  
 ```
+Event fired when an entity has been removed from GarageServer.IO.  
 `callback` **function**  
+Function to be invoked upon event firing.  
 
 `id` **string**  
+Id of the entity who has been removed from GarageServer.IO
 
 ```js
 options.onEvent(callback(data))  
+
 ```
 `callback` **function**  
+Function to be invoked upon event firing.  
 
 `data` **object literal**  
 
@@ -180,6 +192,7 @@ options.onEvent(callback(data))
 options.onWorldState(callback(state))  
 ```
 `callback` **function**  
+Function to be invoked upon event firing.  
 
 `state` **object literal**  
 
@@ -187,6 +200,7 @@ options.onWorldState(callback(state))
 options.onPing(callback(pingDelay))  
 ```
 `callback` **function**  
+Function to be invoked upon event firing.  
 
 `pingDelay` **number**  
 
@@ -196,6 +210,7 @@ options.onUpdatePlayerPrediction(callback(state, inputs, deltaTime) : newState)
 **_Returns:_ object literal**  
 
 `callback` **function**  
+Function to be invoked upon event firing.  
 
 `state` **object literal**  
 
@@ -209,6 +224,7 @@ options.onInterpolation(callback(previousState, targetState, amount) : newState)
 **_Returns:_ object literal**  
 
 `callback` **function**  
+Function to be invoked upon event firing.  
 
 `previousState` **object literal**  
 
@@ -220,6 +236,7 @@ options.onInterpolation(callback(previousState, targetState, amount) : newState)
 options.onReady(callback)  
 ```
 `callback` **function**  
+Function to be invoked upon event firing.  
 
 ```js
 options.logging: true  
