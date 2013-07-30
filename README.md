@@ -276,46 +276,51 @@ This will enabling console logging of all the events occuring within the GarageS
 ```js
 GarageServerIO.addInput(input)
 ```
+Use this method to notify the server of client inputs.  These will be used to determine state from the physics processing.
 `input` **object literal**  
-
+This can be anything as it pertains to your game - 1, 'left', 'right', etc., whatever you want to make it.
 #### getPlayerStates
 ---
 ```js
 GarageServerIO.getPlayerStates() : [, {id, state}]
 ```
+Returns a list of current player states from the most recent broadcast depending on interpolation settings.  
 **_Returns:_ array**  
 
 `id` **string**  
-
+The id of the player.  
 `state` **object literal**  
-
+Object containing all properties pertaining to an entity state in your game.  
 #### getEntityStates
 ---
 ```js
 GarageServerIO.getEntityStates() : [, {id, state}]
 ```
+Returns a list of current entity states from the most recent broadcast depending on interpolation settings.  
 **_Returns:_ array**  
 
 `id` **string**  
-
+The id of the entity.  
 `state` **object literal**  
-
+Object containing all properties pertaining to an entity state in your game.  
 #### getId
 ---
 ```js
 GarageServerIO.getId() : playerid
 ```
+Gets the id of the client's player.  
 **_Returns:_ string**  
 
 `playerid` **string**  
-
+Id of the client's player.  
 #### sendServerEvent
 ---
 ```js
 GarageServerIO.sendServerEvent(data)
 ```
+Send a custom event to the server.
 `data` **object literal**  
-
+Object containing all properties pertaining to the custom event.  
 ### Server
 
 #### createGarageServer
