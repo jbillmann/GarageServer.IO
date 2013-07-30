@@ -129,14 +129,14 @@ Function to be invoked upon event firing.
 ```js
 options.onPlayerDisconnect(callback)  
 ```
-If client has has disconnected from the server, this event will fire.  
+If client disconnects from the server, this event will fire.  
 `callback` **function**  
 Function to be invoked upon event firing.  
 
 ```js
 options.onPlayerReconnect(callback)  
 ```
-If client has has disconnects and reconnects to the server, this event will fire.  
+If client disconnects and reconnects to the server, this event will fire.  
 `callback` **function**  
 Function to be invoked upon event firing.  
 
@@ -167,7 +167,7 @@ Event fired when a player has been removed from GarageServer.IO.
 Function to be invoked upon event firing.  
 
 `id` **string**  
-Id of the player who has been removed from GarageServer.IO  
+Id of the player who has been removed from GarageServer.IO.  
 
 ```js
 options.onEntityRemove(callback(id))  
@@ -177,7 +177,7 @@ Event fired when an entity has been removed from GarageServer.IO.
 Function to be invoked upon event firing.  
 
 `id` **string**  
-Id of the entity who has been removed from GarageServer.IO  
+Id of the entity who has been removed from GarageServer.IO.  
 
 ```js
 options.onEvent(callback(data))  
@@ -235,11 +235,13 @@ If using interpolation, this callback should return the new state, based on the 
 Function to be invoked upon event firing.  
 
 `previousState` **object literal**  
+Object containing all of the properties pertaining to a player for your game - x, y, z, time, etc., whatever you want to add to it.  
 
 `targetState` **object literal**  
+Object containing all of the properties pertaining to a player for your game - x, y, z, time, etc., whatever you want to add to it.  
 
 `amount` **number**  
-
+The "rough" percentage between frames to be used in conjuction with interpolation - client side smoothing is considered during the calculation of this number.  
 ```js
 options.onReady(callback)  
 ```
@@ -249,6 +251,7 @@ Function to be invoked upon event firing.
 ```js
 options.logging: true  
 ```
+This will enabling console logging of all the events occuring within the GarageServer.IO client.
 `logging` **boolean**  
 
 #### addInput
