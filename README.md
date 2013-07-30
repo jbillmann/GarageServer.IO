@@ -126,6 +126,7 @@ Once the client has made a connection to the server, this event will fire.
 `callback` **function**  
 Function to be invoked upon event firing.  
 
+---
 ```js
 options.onPlayerDisconnect(callback)  
 ```
@@ -133,6 +134,7 @@ If client disconnects from the server, this event will fire.
 `callback` **function**  
 Function to be invoked upon event firing.  
 
+---
 ```js
 options.onPlayerReconnect(callback)  
 ```
@@ -140,6 +142,7 @@ If client disconnects and reconnects to the server, this event will fire.
 `callback` **function**  
 Function to be invoked upon event firing.  
 
+---
 ```js
 options.onPlayerUpdate(callback(state))  
 ```
@@ -149,6 +152,7 @@ Function to be invoked upon event firing.
 `state` **object literal**  
 Object containing all of the properties pertaining to a player for your game - x, y, z, time, etc., whatever you want to add to it.  
 
+---
 ```js
 options.onEntityUpdate(callback(state))  
 ```
@@ -159,6 +163,7 @@ Function to be invoked upon event firing.
 `state` **object literal**  
 Object containing all of the properties pertaining to an entity for your game - x, y, z, time, etc., whatever you want to add to it.  
 
+---
 ```js
 options.onPlayerRemove(callback(id))  
 ```
@@ -169,6 +174,7 @@ Function to be invoked upon event firing.
 `id` **string**  
 Id of the player who has been removed from GarageServer.IO.  
 
+---
 ```js
 options.onEntityRemove(callback(id))  
 ```
@@ -179,6 +185,7 @@ Function to be invoked upon event firing.
 `id` **string**  
 Id of the entity who has been removed from GarageServer.IO.  
 
+---
 ```js
 options.onEvent(callback(data))  
 ```
@@ -189,6 +196,7 @@ Function to be invoked upon event firing.
 `data` **object literal**  
 Object containing all of the properties pertaining to a custom event for your game - a, b, c, etc., whatever you want to add to it.  
 
+---
 ```js
 options.onWorldState(callback(state))  
 ```
@@ -199,6 +207,7 @@ Function to be invoked upon event firing.
 `state` **object literal**  
 Object containing all of the properties pertaining to world state for your game - f, u, n, etc., whatever you want to add to it.  
 
+---
 ```js
 options.onPing(callback(pingDelay))  
 ```
@@ -209,6 +218,7 @@ Function to be invoked upon event firing.
 `pingDelay` **number**  
 The current ping in milliseconds.  
 
+---
 ```js
 options.onUpdatePlayerPrediction(callback(state, inputs, deltaTime) : newState)  
 ```
@@ -227,6 +237,7 @@ List of all the inputs to be processed.
 `deltaTime` **number**  
 The amount, in milliseconds, between physics processing.  
 
+---
 ```js
 options.onInterpolation(callback(previousState, targetState, amount) : newState)  
 ```
@@ -244,6 +255,8 @@ Object containing all of the properties pertaining to a player for your game - x
 
 `amount` **number**  
 The "rough" percentage between frames to be used in conjuction with interpolation - client side smoothing is considered during the calculation of this number.  
+
+---
 ```js
 options.onReady(callback)  
 ```
@@ -251,6 +264,7 @@ Event fired once client has succesfully connected to the server and received the
 `callback` **function**  
 Function to be invoked upon event firing.  
 
+---
 ```js
 options.logging: true  
 ```
