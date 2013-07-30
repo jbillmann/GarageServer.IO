@@ -268,7 +268,7 @@ Function to be invoked upon event firing.
 ```js
 options.logging: true  
 ```
-This will enabling console logging of all the events occuring within the GarageServer.IO client.
+This will enabling console logging of all the events occuring within the GarageServer.IO client.  
 `logging` **boolean**  
 
 #### addInput
@@ -333,51 +333,61 @@ options.stateInterval
 ```
 **number**  
 
+---
 ```js
 options.logging
 ```
 **boolean**  
 
+---
 ```js
 options.clientSidePrediction
 ```
 **boolean**  
 
+---
 ```js
 options.interpolation
 ```
 **boolean**  
 
+---
 ```js
 options.interpolationDelay
 ```
 **number**  
 
+---
 ```js
 options.smoothingFactor
 ```
 **number**  
 
+---
 ```js
 options.pingInterval
 ```
 **number**  
 
+---
 ```js
 options.maxUpdateBuffer
 ```
 **number**  
 
+---
 ```js
 options.maxHistorySecondBuffer
 ```
 **number**  
 
+---
 ```js
 options.worldState
 ```
 **object literal**  
 
+---
 ```js
 options.onPlayerConnect(callback(socket))
 ```
@@ -385,6 +395,7 @@ options.onPlayerConnect(callback(socket))
 
 `socket` **Socket**
 
+---
 ```js
 options.onPlayerInput(callback(socket, input))
 ```
@@ -394,6 +405,7 @@ options.onPlayerInput(callback(socket, input))
 
 `input` **object literal**  
 
+---
 ```js
 options.onPlayerDisconnect(callback(socket))
 ```
@@ -401,6 +413,7 @@ options.onPlayerDisconnect(callback(socket))
 
 `socket` **Socket**  
 
+---
 ```js
 options.onPing(callback(socket, data))
 ```
@@ -410,6 +423,7 @@ options.onPing(callback(socket, data))
 
 `data` **object literal**  
 
+---
 ```js
 options.onEvent(callback(data))
 ```
