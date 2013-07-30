@@ -330,6 +330,7 @@ require('garageserver.io').createGarageServer(io, options) : GarageServerIO
 ---
 ```js
 options.stateInterval
+
 ```
 **number**  
 
