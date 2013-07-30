@@ -146,7 +146,7 @@ Function to be invoked upon event firing.
 ```js
 options.onPlayerUpdate(callback(state))  
 ```
-Event fired each time state has been received to the client for a player.  
+Event fired each time `state` has been received to the client for a player.  
 `callback` **function**  
 Function to be invoked upon event firing.  
 `state` **object literal**  
@@ -156,7 +156,7 @@ Object containing all of the properties pertaining to a player for your game - x
 ```js
 options.onEntityUpdate(callback(state))  
 ```
-Event fired each time state has been received to the client for an entity.  
+Event fired each time `state` has been received to the client for an entity.  
 `callback` **function**  
 Function to be invoked upon event firing.  
 
