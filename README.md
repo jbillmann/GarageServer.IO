@@ -276,7 +276,7 @@ This will enabling console logging of all the events occuring within the GarageS
 ```js
 GarageServerIO.addInput(input)
 ```
-Use this method to notify the server of client inputs.  These will be used to determine state from the physics processing.
+Notify the server of client inputs.  These will be used to determine state from the physics processing.  
 `input` **object literal**  
 This can be anything as it pertains to your game - 1, 'left', 'right', etc., whatever you want to make it.
 #### getPlayerStates
@@ -318,7 +318,7 @@ Id of the client's player.
 ```js
 GarageServerIO.sendServerEvent(data)
 ```
-Send a custom event to the server.
+Send a custom event to the server.  
 `data` **object literal**  
 Object containing all properties pertaining to the custom event.  
 ### Server
