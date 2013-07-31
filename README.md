@@ -258,7 +258,7 @@ The "rough" percentage between frames to be used in conjuction with interpolatio
 
 ---
 ```js
-options.onReady(callback)  
+options.onReady(callback)
 ```
 Event fired once client has succesfully connected to the server and received the world state.  
 `callback` **function**  
@@ -266,9 +266,9 @@ Function to be invoked upon event firing.
 
 ---
 ```js
-options.logging: true  
+options.logging
 ```
-This will enabling console logging of all the events occuring within the GarageServer.IO client.  
+Enables console logging of all the events occuring within the GarageServer.IO client.  
 `logging` **boolean**  
 
 #### addInput
@@ -328,14 +328,16 @@ Object containing all properties pertaining to the custom event.
 ```js
 require('garageserver.io').createGarageServer(io, options) : GarageServerIO
 ```
+Returns a new instance of GarageServer.IO, registers Socket.IO events and instantiates an instance of a game that handles the broadcasting of state.  
 `io` **Socket.IO instance**  
 
-`options` **object literal**
+`options` **object literal**  
+Configure the different options, events, callbacks that you would like to consume on the server.  
 #### Server Options
 ---
 ```js
-options.stateInterval
-
+options.stateInterval  
+The amount, in milliseconds, that state is broadcasted to clients.  
 ```
 **number**  
 
@@ -343,24 +345,28 @@ options.stateInterval
 ```js
 options.logging
 ```
+Enable console logging of all the events occuring within the GarageServer.IO server.  
 **boolean**  
 
 ---
 ```js
 options.clientSidePrediction
 ```
+Enables client side prediction and callback on the client.  
 **boolean**  
 
 ---
 ```js
 options.interpolation
 ```
+Enables interpolation and callback on the client.  
 **boolean**  
 
 ---
 ```js
 options.interpolationDelay
 ```
+The amount, in milliseconds, that state is rendered to the client behind actual server time.  
 **number**  
 
 ---
@@ -373,24 +379,28 @@ options.smoothingFactor
 ```js
 options.pingInterval
 ```
+The amount, in milliseconds, that a ping is made to the server to test for latency.  
 **number**  
 
 ---
 ```js
 options.maxUpdateBuffer
 ```
+The maximum amount of broadcasted state updates to store on the client for each player and entity.  
 **number**  
 
 ---
 ```js
 options.maxHistorySecondBuffer
 ```
+The amount, in milliseconds, that a ping is made to the server to test for latency.  
 **number**  
 
 ---
 ```js
 options.worldState
 ```
+Object containing all of the properties pertaining to world state for your game - f, u, n, etc., whatever you want to add to it.  
 **object literal**  
 
 ---
