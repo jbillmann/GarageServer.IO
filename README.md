@@ -402,6 +402,7 @@ options.worldState
 ```
 **object literal**  
 Object containing all of the properties pertaining to world state for your game - f, u, n, etc., whatever you want to add to it.  
+
 ---
 ```js
 options.onPlayerConnect(callback(socket))
