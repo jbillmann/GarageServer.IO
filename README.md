@@ -16,9 +16,9 @@ A simple, lightweight, HTML multiplayer game server (and client) for Node.js
 
 ## GarageServer.IO API
 
-[Client API](https://github.com/jbillmann/GarageServer.IO/blob/master/documentation/QuickStart.md)
+[Client API Documentation](https://github.com/jbillmann/GarageServer.IO/blob/master/documentation/ClientAPI.md)
 
-[Server API](https://github.com/jbillmann/GarageServer.IO/blob/master/documentation/QuickStart.md)
+[Server API Documentation](https://github.com/jbillmann/GarageServer.IO/blob/master/documentation/ServerAPI.md)
 
 ## License
 
