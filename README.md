@@ -337,38 +337,33 @@ Configure the different options, events, callbacks that you would like to consum
 ---
 ```js
 options.stateInterval  
-The amount, in milliseconds, that state is broadcasted to clients.  
 ```
 **number**  
-
+The amount, in milliseconds, that state is broadcasted to clients.  
 ---
 ```js
 options.logging
 ```
-Enable console logging of all the events occuring within the GarageServer.IO server.  
 **boolean**  
-
+Enable console logging of all the events occuring within the GarageServer.IO server.  
 ---
 ```js
 options.clientSidePrediction
 ```
-Enables client side prediction and callback on the client.  
 **boolean**  
-
+Enables client side prediction and callback on the client.  
 ---
 ```js
 options.interpolation
 ```
-Enables interpolation and callback on the client.  
 **boolean**  
-
+Enables interpolation and callback on the client.  
 ---
 ```js
 options.interpolationDelay
 ```
-The amount, in milliseconds, that state is rendered to the client behind actual server time.  
 **number**  
-
+The amount, in milliseconds, that state is rendered to the client behind actual server time.  
 ---
 ```js
 options.smoothingFactor
@@ -379,30 +374,26 @@ options.smoothingFactor
 ```js
 options.pingInterval
 ```
-The amount, in milliseconds, that a ping is made to the server to test for latency.  
 **number**  
-
+The amount, in milliseconds, that a ping is made to the server to test for latency.  
 ---
 ```js
 options.maxUpdateBuffer
 ```
-The maximum amount of broadcasted state updates to store on the client for each player and entity.  
 **number**  
-
+The maximum amount of broadcasted state updates to store on the client for each player and entity.  
 ---
 ```js
 options.maxHistorySecondBuffer
 ```
-The amount, in milliseconds, that a ping is made to the server to test for latency.  
 **number**  
-
+The amount, in milliseconds, that a ping is made to the server to test for latency.  
 ---
 ```js
 options.worldState
 ```
-Object containing all of the properties pertaining to world state for your game - f, u, n, etc., whatever you want to add to it.  
 **object literal**  
-
+Object containing all of the properties pertaining to world state for your game - f, u, n, etc., whatever you want to add to it.  
 ---
 ```js
 options.onPlayerConnect(callback(socket))
