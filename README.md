@@ -379,6 +379,7 @@ options.smoothingFactor
 ```
 **number**  
 Defaults to `0.3`.  
+
 ---
 ```js
 options.pingInterval
