@@ -10,7 +10,7 @@ options = {
     onEvent(callback(data)),
     onWorldState(callback(state)),
     onPing(callback(pingDelay)),
-    onUpdatePlayerPrediction(callback(state, inputs, deltaTime) : newState),
+    onUpdatePlayerPrediction(callback(currentState, inputs, deltaTime) : newState),
     onInterpolation(callback(previousState, targetState, amount) : newState),
     onReady(callback),
     logging: true
