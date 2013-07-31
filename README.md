@@ -31,7 +31,7 @@ var server = garageServer.createGarageServer(sockets,
 ```js
 server.start();
 ```
-**3.** Inside physics loop, process inputs for players, process entites and update states.  Note that state is an object literal effectively offering up any grab bag of properties that are specific to your game's state.
+**3.** Inside physics loop, process inputs for players, process entites and update their states.  Note that state is an object literal effectively offering up any grab bag of properties that are specific to your game's state.
 ```js
 var players = server.getPlayers(),
     entities = server.getEntities();
@@ -103,9 +103,9 @@ var playerStates = GarageServerIO.getPlayerStates(),
     });
 ```
 
-## API
+## GarageServer.IO API
 
-### Client
+### GarageServer.IO Client
 
 #### initializeGarageServer
 ---
@@ -325,7 +325,7 @@ GarageServerIO.sendServerEvent(data)
 Send a custom event to the server.  Use this to make custom calls to GarageServer.IO for your game.  
 `data` **object literal**  
 Object containing all properties specific to the custom event.  
-### Server
+### GarageServer.IO Server
 
 #### createGarageServer
 ---
