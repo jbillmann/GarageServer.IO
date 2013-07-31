@@ -440,6 +440,7 @@ Function to be invoked upon event firing.
 
 `data` **number**  
 The client start time when the ping was initiated.  
+
 ---
 ```js
 options.onEvent(callback(data))
@@ -468,13 +469,13 @@ GarageServerIO.getPlayers() : [, {id, state, [, inputs], [, {states, executionTi
 **_Returns:_ array**  
 
 `id` **string**  
-
+Id of the player.  
 `state` **object literal**  
-
+Current state of the player.  
 `inputs` **array of object literals**  
-
+List of all the inputs received for this player that need to be processed.  
 `stateHistory` **array of object literals**  
-
+List of all previous states up to `options.maxHistorySecondBuffer`.
 #### getEntities
 ---
 ```js
@@ -483,59 +484,61 @@ GarageServerIO.getEntities() : [,{id, state, [, {state, executionTime }]}]
 **_Returns:_ array**
 
 `id` **string**  
-
+Id of the entity.  
 `state` **object literal**  
-
+Current state of the entity.  
 `stateHistory` **array of object literals**  
-
+List of all previous states up to `options.maxHistorySecondBuffer`.
 #### updatePlayerState
 ---
 ```js
 GarageServerIO.updatePlayerState(id, state)
 ```
 `id` **string**  
-
+Id of the player whose state should be updated.  
 `state` **object literal**  
-
+New state of the entity containing all of the properties pertaining to a player for your game - x, y, z, time, etc., whatever you want to add to it.  
 #### updateEntityState
 ---
 ```js
 GarageServerIO.updateEntityState(id, state)
 ```
 `id` **string**  
-
+Id of the entity whose state should be updated.  
 `state` **object literal**  
-
+New state of the entity containing all of the properties pertaining to an entity for your game - x, y, z, time, etc., whatever you want to add to it.  
 #### addEntity
 ---
 ```js
 GarageServerIO.addEntity(id)
 ```
 `id` **string**  
-
+Id of the entity to be added.  
 #### removeEntity
 ---
 ```js
 GarageServerIO.removeEntity(id)
 ```
 `id` **string**  
-
+Id of the entity to be removed.  
 #### sendPlayerEvent
 ---
 ```js
 GarageServerIO.sendPlayerEvent(id, data)
 ```
+Allows server to broadcast events to a specific player.  
 `id` **string**  
-
+Id of the player to receive event.  
 `data` **object literal**  
-
+Object containing all properties pertaining to the custom event.  
 #### sendPlayersEvent
 ---
 ```js
 GarageServerIO.sendPlayersEvent(data)
 ```
+Allows server to broadcast events to a all players.  
 `data` **object literal**  
-
+Object containing all properties pertaining to the custom event.  
 
 ## License
 
