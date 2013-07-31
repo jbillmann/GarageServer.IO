@@ -79,7 +79,7 @@ GarageServerIO.initializeGarageServer('http://insertmygameurlhere.com', {
 ```js
 GarageServerIO.addInput(myInput);
 ```
-**3.** Inside render loop, extract player and entity states - this will retrieve the current states based on your interpolation, prediction and smoothing settings.  Players are effectively clients whereas entities are determined by players inputs and controlled by the server.  
+**3.** Inside render loop, extract player and entity states - this will retrieve the current states based on your interpolation, prediction and smoothing settings.  Players are effectively clients connected to GarageServer.IO whereas entities are determined by players inputs and controlled by the server.  
 ```js
 var playerStates = GarageServerIO.getPlayerStates(),
     entityStates = GarageServerIO.getEntityStates();  
