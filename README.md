@@ -12,13 +12,13 @@ A simple, lightweight, HTML multiplayer game server (and client) for Node.js
 
 ## Quick Start
 
-[Quick Start Documentation](https://github.com/jbillmann/GarageServer.IO/blob/master/documentation/QuickStart.md)
+[Client & Server Quick Start](https://github.com/jbillmann/GarageServer.IO/blob/master/documentation/QuickStart.md)
 
 ## GarageServer.IO API
 
-[Client](https://github.com/jbillmann/GarageServer.IO/blob/master/documentation/QuickStart.md)
+[Client API](https://github.com/jbillmann/GarageServer.IO/blob/master/documentation/QuickStart.md)
 
-[Server](https://github.com/jbillmann/GarageServer.IO/blob/master/documentation/QuickStart.md)
+[Server API](https://github.com/jbillmann/GarageServer.IO/blob/master/documentation/QuickStart.md)
 
 ## License
 
