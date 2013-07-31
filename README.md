@@ -407,8 +407,9 @@ Object containing all of the properties pertaining to world state for your game 
 ```js
 options.onPlayerConnect(callback(socket))
 ```
+Event fired when a player connects to the server.  
 `callback` **function**  
-
+Function to be invoked upon event firing.  
 `socket` **Socket**
 
 ---
@@ -416,7 +417,7 @@ options.onPlayerConnect(callback(socket))
 options.onPlayerInput(callback(socket, input))
 ```
 `callback` **function**  
-
+Function to be invoked upon event firing.  
 `socket` **Socket**  
 
 `input` **object literal**  
@@ -426,7 +427,7 @@ options.onPlayerInput(callback(socket, input))
 options.onPlayerDisconnect(callback(socket))
 ```
 `callback` **function**  
-
+Function to be invoked upon event firing.  
 `socket` **Socket**  
 
 ---
@@ -434,31 +435,31 @@ options.onPlayerDisconnect(callback(socket))
 options.onPing(callback(socket, data))
 ```
 `callback` **function**  
-
+Function to be invoked upon event firing.  
 `socket` **Socket**  
 
-`data` **object literal**  
-
+`data` **number**  
+The client start time when the ping was initiated.  
 ---
 ```js
 options.onEvent(callback(data))
 ```
 `callback` **function**  
-
+Function to be invoked upon event firing.  
 `data` **object literal**  
-
+Object containing all properties pertaining to the custom event.  
 #### start
 ---
 ```js
 GarageServerIO.start()
 ```
-
+Starts the server time and broadcast loop.
 #### stop
 ---
 ```js
 GarageServerIO.stop()
 ```
-
+Stops the server time and broadcast loop.
 #### getPlayers
 ---
 ```js
