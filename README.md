@@ -340,30 +340,35 @@ options.stateInterval
 ```
 **number**  
 The amount, in milliseconds, that state is broadcasted to clients.  
+
 ---
 ```js
 options.logging
 ```
 **boolean**  
 Enable console logging of all the events occuring within the GarageServer.IO server.  
+
 ---
 ```js
 options.clientSidePrediction
 ```
 **boolean**  
 Enables client side prediction and callback on the client.  
+
 ---
 ```js
 options.interpolation
 ```
 **boolean**  
 Enables interpolation and callback on the client.  
+
 ---
 ```js
 options.interpolationDelay
 ```
 **number**  
 The amount, in milliseconds, that state is rendered to the client behind actual server time.  
+
 ---
 ```js
 options.smoothingFactor
@@ -376,18 +381,21 @@ options.pingInterval
 ```
 **number**  
 The amount, in milliseconds, that a ping is made to the server to test for latency.  
+
 ---
 ```js
 options.maxUpdateBuffer
 ```
 **number**  
 The maximum amount of broadcasted state updates to store on the client for each player and entity.  
+
 ---
 ```js
 options.maxHistorySecondBuffer
 ```
 **number**  
 The amount, in milliseconds, that a ping is made to the server to test for latency.  
+
 ---
 ```js
 options.worldState
