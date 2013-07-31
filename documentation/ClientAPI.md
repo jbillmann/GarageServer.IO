@@ -1,4 +1,4 @@
-### GarageServer.IO Client API
+## GarageServer.IO Client API
 
 #### initializeGarageServer
 ---
