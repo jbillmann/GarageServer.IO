@@ -1,5 +1,5 @@
 {
-  "name": "GarageServer.IO",
+  "name": "garageserver.io",
   "description": "A simple, lightweight, HTML multiplayer game server (and client) for Node.js",
   "author": {
     "name": "Jeremiah Billmann",
