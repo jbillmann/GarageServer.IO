@@ -1,4 +1,5 @@
 .c9revisions
-.client
-.example
-.node_modules
+.idea
+client
+example
+node_modules
