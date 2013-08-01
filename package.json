@@ -1,7 +1,10 @@
 {
   "name": "GarageServer.IO",
   "description": "A simple, lightweight, HTML multiplayer game server (and client) for Node.js",
-  "author": "Jeremiah Billmann",
+  "author": {
+    "name": "Jeremiah Billmann",
+    "email": "jcbillmann@yahoo.com"
+  },
   "version": "0.5.0",
   "homepage": "https://github.com/jbillmann/GarageServer.IO",
   "license" : "MIT",
