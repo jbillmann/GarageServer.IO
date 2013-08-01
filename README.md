@@ -9,6 +9,15 @@ A simple, lightweight, HTML multiplayer game server (and client) for Node.js
 - Server State History
 - Server and Client Messaging
 
+## Install
+
+### Server
+
+`npm install garageserver.io'
+
+### Client
+
+Copy the [GarageServer.IO JavaScript Client](https://github.com/jbillmann/GarageServer.IO/blob/master/client/garageserver.io.js) locally.
 
 ## Quick Start
 
