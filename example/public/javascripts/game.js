@@ -16,6 +16,7 @@ $(function () {
         onUpdatePlayerPrediction: GamePhysics.getNewPlayerState,
         onInterpolation: GamePhysics.getInterpolatedState,
         onWorldState: function (state) {
+            //CHANGE THIS FOR DEMO AND DOCUMENTATION
             playerSize = state.playerSize;
             entitySize = state.entitySize;
         }
