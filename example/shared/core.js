@@ -10,16 +10,16 @@
         }
         for (i = 0; i < inputs.length; i ++) {
             if (inputs[i].input === 'left') {
-                state.x -= (50 * deltaTime);
+                state.x -= (125 * deltaTime);
                 state.direction = 'left';
             } else if (inputs[i].input === 'right') {
-                state.x += (50 * deltaTime);
+                state.x += (125 * deltaTime);
                 state.direction = 'right';
             } else if (inputs[i].input === 'down') {
-                state.y += (50 * deltaTime);
+                state.y += (125 * deltaTime);
                 state.direction = 'down';
             } else if (inputs[i].input === 'up') {
-                state.y -= (50 * deltaTime);
+                state.y -= (125 * deltaTime);
                 state.direction = 'up';
             } else if (inputs[i].input === 'space') {
                 if (garageServer) {
@@ -34,13 +34,13 @@
 
     exports.getNewEntityState = function (state, deltaTime) {
         if (state.direction === 'left') {
-            state.x -= (100 * deltaTime);
+            state.x -= (300 * deltaTime);
         } else if (state.direction === 'right') {
-            state.x += (100 * deltaTime);
+            state.x += (300 * deltaTime);
         } else if (state.direction === 'down') {
-            state.y += (100 * deltaTime);
+            state.y += (300 * deltaTime);
         } else if (state.direction === 'up') {
-            state.y -= (100 * deltaTime);
+            state.y -= (300 * deltaTime);
         }
 
         return state;

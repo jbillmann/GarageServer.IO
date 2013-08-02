@@ -7,14 +7,15 @@ function Game (sockets) {
     this.physicsInterval = 15;
     this.physicsDelta = this.physicsInterval / 1000;
     this.physicsIntervalId = 0;
-    this.worldState = { height: 400, width: 800, playerSize: 15, entitySize: 5 };
+    this.worldState = { playerSize: 40, entitySize: 15 };
 
     this.server = garageServer.createGarageServer(sockets, 
         {
             logging: true,
             interpolation: true,
             clientSidePrediction: true,
-            worldState: this.worldState
+            worldState: this.worldState,
+            smoothingFactor: 0.2
         });
 }
 
