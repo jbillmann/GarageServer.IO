@@ -1,26 +1,22 @@
 (function(exports){
 
     exports.getNewPlayerState = function (state, inputs, deltaTime, garageServer) {
-       var i = 0;
+        var i = 0,
+            distance = 0;
 
-        if (!state.x && !state.y) {
+        if (!state.ang && state.ang !== 0) {
+           state.ang = 0;
            state.x = 0;
            state.y = 0;
-           state.direction = 'right';
         }
+
         for (i = 0; i < inputs.length; i ++) {
             if (inputs[i].input === 'left') {
-                state.x -= (125 * deltaTime);
-                state.direction = 'left';
+                state.ang -= (125 * deltaTime);
             } else if (inputs[i].input === 'right') {
-                state.x += (125 * deltaTime);
-                state.direction = 'right';
-            } else if (inputs[i].input === 'down') {
-                state.y += (125 * deltaTime);
-                state.direction = 'down';
+                state.ang += (125 * deltaTime);
             } else if (inputs[i].input === 'up') {
-                state.y -= (125 * deltaTime);
-                state.direction = 'up';
+                distance += (125 * deltaTime);
             } else if (inputs[i].input === 'space') {
                 if (garageServer) {
                     var newId = guid();
@@ -29,8 +25,20 @@
                 }
             }
         }
+        var newPoint = getPoint(state.ang, distance, state.x, state.y);
+        state.x = newPoint.x;
+        state.y = newPoint.y;
+
         return state;
     };
+    
+    function getPoint(angle, distance, oldX, oldY) {
+        var radians = angle * (Math.PI / 180);
+        return {
+            x: oldX + distance * Math.cos(radians),
+            y: oldY + distance * Math.sin(radians)
+        };
+    }
 
     exports.getNewEntityState = function (state, deltaTime) {
         if (state.direction === 'left') {
@@ -50,6 +58,7 @@
         var interpolationState = {};
         interpolationState.x = (previousState.x + amount * (targetState.x - previousState.x));
         interpolationState.y = (previousState.y + amount * (targetState.y - previousState.y));
+        interpolationState.ang = (previousState.ang + amount * (targetState.ang - previousState.ang));
         return interpolationState;
     };
 
