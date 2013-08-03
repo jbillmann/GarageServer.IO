@@ -10,10 +10,7 @@ $(function () {
         logging: true,
         onReady: startGame,
         onUpdatePlayerPrediction: GamePhysics.getNewPlayerState,
-        onInterpolation: GamePhysics.getInterpolatedState,
-        onWorldState: function (state) {
-            //TODO THIS FOR DEMO AND DOCUMENTATION
-        }
+        onInterpolation: GamePhysics.getInterpolatedState
     });
 
     function resizeCanvas() {
