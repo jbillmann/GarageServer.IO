@@ -7,14 +7,12 @@ function Game (sockets) {
     this.physicsInterval = 15;
     this.physicsDelta = this.physicsInterval / 1000;
     this.physicsIntervalId = 0;
-    this.worldState = { playerSize: 40, entitySize: 15 };
 
     this.server = garageServer.createGarageServer(sockets, 
         {
             logging: true,
             interpolation: true,
             clientSidePrediction: true,
-            worldState: this.worldState,
             smoothingFactor: 0.2
         });
 }
@@ -39,7 +37,7 @@ Game.prototype.update = function () {
         var entity = entities[i],
             newState = gamePhysics.getNewEntityState(entity.state, self.physicsDelta);
 
-        if (newState.x < 0 - self.worldState.playerSize || newState.y < 0 - self.worldState.playerSize || newState.x > self.worldState.width || newState.y > self.worldState.height) {
+        if (newState.x < -200 || newState.y < -200 || newState.x > 2000 || newState.y > 2000) {
             self.server.removeEntity(entity.id);
         } else {
             self.server.updateEntityState(entity.id, newState);

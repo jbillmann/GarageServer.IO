@@ -1,13 +1,14 @@
 (function(exports){
 
     exports.getNewPlayerState = function (state, inputs, deltaTime, garageServer) {
-        var i = 0, distance = 0, notLaunched = false;
+        var i = 0, distance = 0;
 
         if (!state.ang && state.ang !== 0) {
            state.ang = 0;
            state.x = 0;
            state.y = 0;
            state.ship = Math.floor(Math.random() * 9) + 1;
+           state.lastFire = new Date().getTime();
         }
 
         for (i = 0; i < inputs.length; i ++) {
@@ -18,11 +19,11 @@
             } else if (inputs[i].input === 'up') {
                 distance += (125 * deltaTime);
             } else if (inputs[i].input === 'space') {
-                if (garageServer && !notLaunched) {
+                if (garageServer && (new Date().getTime() - state.lastFire) > 1000) {
                     var newId = guid();
                     garageServer.addEntity(newId);
                     garageServer.updateEntityState(newId, { x: state.x, y: state.y, ang: state.ang } );
-                    notLaunched = true;
+                    state.lastFire = new Date().getTime();
                 }
             }
         }

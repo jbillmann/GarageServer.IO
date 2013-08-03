@@ -2,7 +2,8 @@ $(function () {
 
     "use strict";
 
-    var canvas = document.getElementById('gameCanvas'), ctxCanvas = canvas.getContext('2d'), keyboard = new THREEx.KeyboardState(), ships = preloadShips();
+    var canvas = document.getElementById('gameCanvas'), ctxCanvas = canvas.getContext('2d'), keyboard = new THREEx.KeyboardState(), ships = preloadShips(), entityImage = new Image();
+    entityImage.src = '../images/entity.png';
 
     window.addEventListener('resize', resizeCanvas, false);
 
@@ -30,11 +31,11 @@ $(function () {
                 ctxCanvas.fillStyle = 'white';
                 var playerStates = GarageServerIO.getPlayerStates(),
                     entityStates = GarageServerIO.getEntityStates();
+                entityStates.forEach(function (entity) {
+                    drawRotatedImage(entity.state.ang, entity.state.x, entity.state.y, entityImage);
+                });
                 playerStates.forEach(function (player) {
                     drawRotatedImage(player.state.ang, player.state.x, player.state.y, ships[player.state.ship]);
-                });
-                entityStates.forEach(function (entity) {
-                    ctxCanvas.fillRect(entity.state.x, entity.state.y, 5, 5);
                 });
             },
             //Update Loop
