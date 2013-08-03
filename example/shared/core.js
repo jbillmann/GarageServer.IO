@@ -1,8 +1,7 @@
 (function(exports){
 
     exports.getNewPlayerState = function (state, inputs, deltaTime, garageServer) {
-        var i = 0,
-            distance = 0;
+        var i = 0, distance = 0, notLaunched = false;
 
         if (!state.ang && state.ang !== 0) {
            state.ang = 0;
@@ -19,10 +18,11 @@
             } else if (inputs[i].input === 'up') {
                 distance += (125 * deltaTime);
             } else if (inputs[i].input === 'space') {
-                if (garageServer) {
+                if (garageServer && !notLaunched) {
                     var newId = guid();
                     garageServer.addEntity(newId);
-                    garageServer.updateEntityState(newId, { x: state.x + 5, y: state.y + 5, direction: state.direction } );
+                    garageServer.updateEntityState(newId, { x: state.x, y: state.y, ang: state.ang } );
+                    notLaunched = true;
                 }
             }
         }
@@ -32,7 +32,7 @@
 
         return state;
     };
-    
+
     function getPoint(angle, distance, oldX, oldY) {
         var radians = angle * (Math.PI / 180);
         return {
@@ -42,15 +42,10 @@
     }
 
     exports.getNewEntityState = function (state, deltaTime) {
-        if (state.direction === 'left') {
-            state.x -= (300 * deltaTime);
-        } else if (state.direction === 'right') {
-            state.x += (300 * deltaTime);
-        } else if (state.direction === 'down') {
-            state.y += (300 * deltaTime);
-        } else if (state.direction === 'up') {
-            state.y -= (300 * deltaTime);
-        }
+        var distance = 300 * deltaTime;
+        var newPoint = getPoint(state.ang, distance, state.x, state.y);
+        state.x = newPoint.x;
+        state.y = newPoint.y;
 
         return state;
     };

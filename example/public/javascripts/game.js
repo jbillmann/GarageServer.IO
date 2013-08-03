@@ -45,9 +45,6 @@ $(function () {
                 if (keyboard.pressed('right')) {
                     GarageServerIO.addInput('right');
                 }
-                if (keyboard.pressed('down')) {
-                    GarageServerIO.addInput('down');
-                }
                 if (keyboard.pressed('up')) {
                     GarageServerIO.addInput('up');
                 }
