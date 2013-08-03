@@ -35,7 +35,9 @@ $(function () {
                     drawRotatedImage(entity.state.ang, entity.state.x, entity.state.y, entityImage);
                 });
                 playerStates.forEach(function (player) {
-                    drawRotatedImage(player.state.ang, player.state.x, player.state.y, ships[player.state.ship]);
+                    if (player.state.ship) {
+                        drawRotatedImage(player.state.ang, player.state.x, player.state.y, ships[player.state.ship]);
+                    }
                 });
             },
             //Update Loop
