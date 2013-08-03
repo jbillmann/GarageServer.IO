@@ -8,6 +8,7 @@
            state.ang = 0;
            state.x = 0;
            state.y = 0;
+           state.ship = Math.floor(Math.random() * 9) + 1;
         }
 
         for (i = 0; i < inputs.length; i ++) {
@@ -59,6 +60,7 @@
         interpolationState.x = (previousState.x + amount * (targetState.x - previousState.x));
         interpolationState.y = (previousState.y + amount * (targetState.y - previousState.y));
         interpolationState.ang = (previousState.ang + amount * (targetState.ang - previousState.ang));
+        interpolationState.ship = targetState.ship;
         return interpolationState;
     };
 

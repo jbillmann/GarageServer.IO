@@ -2,11 +2,7 @@ $(function () {
 
     "use strict";
 
-    var canvas = document.getElementById('gameCanvas'), ctxCanvas = canvas.getContext('2d'), keyboard = new THREEx.KeyboardState(),
-        playerSize = 0, entitySize = 0, 
-        image = new Image(),
-        shipNumber = Math.floor(Math.random() * 9) + 1;
-        image.src = '../images/' + shipNumber + '.png';
+    var canvas = document.getElementById('gameCanvas'), ctxCanvas = canvas.getContext('2d'), keyboard = new THREEx.KeyboardState(), ships = preloadShips();
 
     window.addEventListener('resize', resizeCanvas, false);
 
@@ -17,8 +13,6 @@ $(function () {
         onInterpolation: GamePhysics.getInterpolatedState,
         onWorldState: function (state) {
             //TODO THIS FOR DEMO AND DOCUMENTATION
-            playerSize = state.playerSize;
-            entitySize = state.entitySize;
         }
     });
 
@@ -37,10 +31,10 @@ $(function () {
                 var playerStates = GarageServerIO.getPlayerStates(),
                     entityStates = GarageServerIO.getEntityStates();
                 playerStates.forEach(function (player) {
-                    drawRotatedImage(player.state.ang, player.state.x, player.state.y, image);
+                    drawRotatedImage(player.state.ang, player.state.x, player.state.y, ships[player.state.ship]);
                 });
                 entityStates.forEach(function (entity) {
-                    ctxCanvas.fillRect(entity.state.x, entity.state.y, entitySize, entitySize);
+                    ctxCanvas.fillRect(entity.state.x, entity.state.y, 5, 5);
                 });
             },
             //Update Loop
@@ -63,12 +57,22 @@ $(function () {
             }
         );
     }
-    
+
     function drawRotatedImage(angle, x, y, img) {
         ctxCanvas.save();
         ctxCanvas.translate(x + img.width / 2, y + img.height / 2);
         ctxCanvas.rotate(angle * (Math.PI / 180));
         ctxCanvas.drawImage(img, 0, 0, img.width, img.height, -img.width / 2, -img.height / 2, img.width, img.height);
         ctxCanvas.restore();
+    }
+
+    function preloadShips() {
+        var ships = [];
+        for(var i = 0; i < 10; i ++) {
+            var img = new Image();
+            img.src = '../images/' + i + '.png';
+            ships.push(img);
+        }
+        return ships;
     }
 });

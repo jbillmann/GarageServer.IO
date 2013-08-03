@@ -201,7 +201,6 @@ var GarageServerIO = (function (socketio) {
 
                 _playerController = new PlayerController(_stateController.maxUpdateBuffer);
                 _entityController = new EntityController(_stateController.maxUpdateBuffer);
-                _playerController.add(_stateController.id);
 
                 _stateController.physicsDelta = data.physicsDelta;
                 _stateController.interpolation = data.interpolation;
