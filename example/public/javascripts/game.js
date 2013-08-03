@@ -24,6 +24,9 @@ $(function () {
             //Render Loop
             function () {
                 ctxCanvas.clearRect(0, 0, canvas.width, canvas.height);
+                ctxCanvas.font = "40pt Helvetica";
+                ctxCanvas.fillText('GarageServer.IO Demo', 10, canvas.height - 50);
+
                 ctxCanvas.fillStyle = 'white';
                 var playerStates = GarageServerIO.getPlayerStates(),
                     entityStates = GarageServerIO.getEntityStates();
