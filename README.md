@@ -8,6 +8,7 @@ A simple, lightweight, HTML multiplayer game server (and client) for Node.js
 - Entity Interpolation
 - Server State History
 - Server and Client Messaging
+- Server Reconciliation
 - Works with any Rendering and/or Physics Engine
 
 ## Install
