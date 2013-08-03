@@ -27,6 +27,10 @@ var GarageServerIO = (function (socketio) {
 
     "use strict";
 
+    if (!socketio) {
+        throw new Error("GarageServer.IO: Socket.IO not found. Please ensure socket.io.js is referenced before the garageserver.io.js file.");
+    }
+
     function StateController() {
         this.clientTime = 0;
         this.renderTime = 0;
@@ -422,4 +426,4 @@ var GarageServerIO = (function (socketio) {
         sendServerEvent: sendServerEvent
     };
 
-}) (io);
+}) (window.io);
