@@ -70,8 +70,8 @@ GarageServerIO.initializeGarageServer('http://insertmygameurlhere.com', {
         return { x: (previousState.x + amount * (targetState.x - previousState.x)) };
     },
     onWorldState: function (state) {
-        document.getElementById('gameCanvas').style.width = state.width;
-        document.getElementById('gameCanvas').style.height = state.height;
+        document.getElementById('gameCanvas').width = state.width;
+        document.getElementById('gameCanvas').height = state.height;
     }
 };
 ```
