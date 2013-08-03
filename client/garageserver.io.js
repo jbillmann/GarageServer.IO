@@ -188,12 +188,12 @@ var GarageServerIO = (function (socketio) {
         registerSocketEvents = function () {
             _socket.on('connect', function () {
                 _stateController.id = _socket.socket.sessionid;
+                if (_options.logging) {
+                    console.log('garageserver.io:: socket connect');
+                }
 
                 if (_options.onPlayerConnect) {
                     _options.onPlayerConnect(); 
-                }
-                if (_options.logging) {
-                    console.log('garageserver.io:: socket connect');
                 }
             });
 
@@ -224,20 +224,20 @@ var GarageServerIO = (function (socketio) {
             });
 
             _socket.on('disconnect', function () {
-                if (_options.onPlayerDisconnect) {
-                    _options.onPlayerDisconnect();
-                }
                 if (_options.logging) {
                     console.log('garageserver.io:: socket disconnect');
+                }
+                if (_options.onPlayerDisconnect) {
+                    _options.onPlayerDisconnect();
                 }
             });
 
             _socket.on('reconnect', function () {
-                if (_options.onPlayerReconnect) {
-                    _options.onPlayerReconnect();
-                }
                 if (_options.logging) {
                     console.log('garageserver.io:: socket reconnect');
+                }
+                if (_options.onPlayerReconnect) {
+                    _options.onPlayerReconnect();
                 }
             });
 
@@ -247,40 +247,40 @@ var GarageServerIO = (function (socketio) {
 
             _socket.on('ping', function (data) {
                 _stateController.pingDelay = new Date().getTime() - data;
-                if (_options.onPing) {
-                    _options.onPing(_stateController.pingDelay);
-                }
                 if (_options.logging) {
                     console.log('garageserver.io:: socket ping delay ' + _stateController.pingDelay);
+                }
+                if (_options.onPing) {
+                    _options.onPing(_stateController.pingDelay);
                 }
             });
 
             _socket.on('removePlayer', function (id) {
                 removePlayer(id);
-                if (_options.onPlayerRemove) {
-                    _options.onPlayerRemove(id);
-                }
                 if (_options.logging) {
                     console.log('garageserver.io:: socket removePlayer ' + id);
+                }
+                if (_options.onPlayerRemove) {
+                    _options.onPlayerRemove(id);
                 }
             });
 
             _socket.on('removeEntity', function (id) {
                 removeEntity(id);
-                if (_options.onEntityRemove) {
-                    _options.onEntityRemove(id);
-                }
                 if (_options.logging) {
                     console.log('garageserver.io:: socket removeEntity ' + id);
+                }
+                if (_options.onEntityRemove) {
+                    _options.onEntityRemove(id);
                 }
             });
 
             _socket.on('event', function(data) {
-                if (_options.onEvent) {
-                    _options.onEvent(data);
-                }
                 if (_options.logging) {
                     console.log('garageserver.io:: socket event ' + data);
+                }
+                if (_options.onEvent) {
+                    _options.onEvent(data);
                 }
             });
         },
