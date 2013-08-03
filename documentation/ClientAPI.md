@@ -117,12 +117,12 @@ options.onUpdatePlayerPrediction(callback(currentState, inputs, deltaTime) : new
 ```
 **_Returns:_ object literal**  
 
-If using client side prediction, this callback should return the new state based on the current state, inputs to be processed, and the delta time.  
+If using client side prediction, this callback should return the new state, `newState`, based on the current state, inputs to be processed, and the delta time.  
 
 `callback` **function**  
 Function to be invoked upon event firing.  
 
-`state` **object literal**  
+`currentState` **object literal**  
 The current state of the player.  
 
 `inputs` **array**  
@@ -137,7 +137,7 @@ options.onInterpolation(callback(previousState, targetState, amount) : newState)
 ```
 **_Returns:_ object literal**  
 
-If using interpolation, this callback should return the new state, based on the previous state, target state, and percent between frames.  
+If using interpolation, this callback should return the new state, `newState`, based on the previous state, target state, and percent between frames.  
 
 `callback` **function**  
 Function to be invoked upon event firing.  
