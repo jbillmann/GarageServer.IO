@@ -15,7 +15,7 @@ A simple, lightweight, HTML multiplayer game server (and client) for Node.js
 
 ### Server
 
-`npm install garageserver.io`
+`$ npm install garageserver.io`
 
 ### Client
 
