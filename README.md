@@ -19,7 +19,7 @@ A simple, lightweight, HTML multiplayer game server (and client) for Node.js
 
 ### Client
 
-Copy the [GarageServer.IO JavaScript Client](https://raw.github.com/jbillmann/GarageServer.IO/master/client/garageserver.io.js) locally.  (This will soon be refactored into the `npm` server module.)
+After server install, copy the client from `/node_modules/garageserver.io/client/garageserver.io.js` to a folder of your choosing within your web application for client/browser use.
 
 ## Quick Start
 
