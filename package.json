@@ -19,6 +19,7 @@
   ],
   "dependencies": {},
   "main": "./lib/garageserver.io",
+  "browserify": "./client/garageserver.io.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/jbillmann/GarageServer.IO.git"
