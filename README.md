@@ -3,7 +3,7 @@ A simple, lightweight, HTML multiplayer game server (and client) for Node.js
 
 ## Features
 - Authoritative Game Server
-- Client Side / Input Prediciton
+- Client Side / Input Prediction
 - Client Side Smoothing
 - Entity Interpolation
 - Server State History
