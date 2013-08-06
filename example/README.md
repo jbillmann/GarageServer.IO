@@ -3,4 +3,4 @@ A sample application using GarageServer.IO
 
 ## Install
 
-Execute `$ npm install` in the `example\` directory and `$ node app.js`.
+Execute `$ npm install` in the `example/` root directory and `$ node app.js`.
