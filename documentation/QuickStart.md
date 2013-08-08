@@ -15,11 +15,11 @@ var server = garageServer.createGarageServer(sockets,
         worldState: { width: '400px', height: '400px'; }
     });
 ```
-**2.** Start GarageServer.IO instance prior to starting physics loop.  This starts the clock that is used for broadcasting state and storing state history.
+**2.** Start GarageServer.IO instance prior to starting your physics loop.  This starts the clock that is used for broadcasting state and storing state history.
 ```js
 server.start();
 ```
-**3.** Inside physics loop, process inputs for players, process entites and update their states.  Note that state is an object literal effectively offering up any grab bag of properties that are specific to your game's state.
+**3.** Inside your physics loop, process the inputs for players, process entites and update their states.  Note that state is an object literal effectively offering up any grab bag of properties that are specific to your game's state.
 ```js
 var players = server.getPlayers(),
     entities = server.getEntities();
@@ -75,11 +75,11 @@ GarageServerIO.initializeGarageServer('http://insertmygameurlhere.com', {
     }
 };
 ```
-**2.** Inside physics loop, capture and send input via GarageServer.IO.  Similar to state, input offers up any grab bag of properties specific to your game's input.
+**2.** Inside your physics loop, capture and send input via GarageServer.IO.  Similar to state, input offers up any grab bag of properties specific to your game's input.
 ```js
 GarageServerIO.addInput(myInput);
 ```
-**3.** Inside render loop, extract player and entity states - this will retrieve the current states based on your interpolation, prediction and smoothing settings.  Players are effectively clients connected to GarageServer.IO whereas entities are determined by players inputs and controlled by the server.  
+**3.** Inside your render loop, extract player and entity states - this will retrieve the current states based on your interpolation, prediction and smoothing settings.  Players are effectively clients connected to GarageServer.IO whereas entities are determined by players inputs and controlled by the server.  
 ```js
 var playerStates = GarageServerIO.getPlayerStates(),
     entityStates = GarageServerIO.getEntityStates();  
