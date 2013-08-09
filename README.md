@@ -31,6 +31,8 @@ After server install, copy the client from `/node_modules/garageserver.io/client
 
 [Server API Documentation](https://github.com/jbillmann/GarageServer.IO/blob/master/documentation/ServerAPI.md)
 
+![garagerserver.io!](https://github.com/jbillmann/GarageServer.IO/tree/master/documentation/GarageServerIO_logo.png)
+
 ## License
 
 [MIT License](https://github.com/jbillmann/GarageServer.IO/blob/master/LICENSE.md)
