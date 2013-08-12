@@ -1,6 +1,8 @@
 # GarageServer.IO
 A simple, lightweight, HTML multiplayer game server (and client) for Node.js
 
+-![garagerserver.io](https://raw.github.com/jbillmann/GarageServer.IO/master/documentation/GarageServerIO_logo.png)
+
 ## Features
 - Authoritative Node.js game server and JavaScript client
 - Client Side / Input Prediction
