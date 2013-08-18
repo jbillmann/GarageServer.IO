@@ -48,7 +48,7 @@ entities.forEach(function (entity) {
 
 **1.** Initialize GarageServer.IO.
 ```js
-GarageServerIO.initializeGarageServer('http://insertmygameurlhere.com', {
+GarageServerIO.initializeGarageServer('http://insertmygameserverurlhere.com', {
     onReady: function () {
         // Call your game loop
     },
