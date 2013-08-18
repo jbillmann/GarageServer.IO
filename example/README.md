@@ -7,3 +7,5 @@ Change the `path` parameter of `GarageServerIO.initializeGarageServer` that is f
 
 
 Execute `$ npm install` in the `example/` root directory and `$ node app.js` to run the application.
+
+NOTE:  The example has `clientSidePrediction` and `interpolation` enabled.  If you're running it locally (no ping), you may want to disable these (`false`).
