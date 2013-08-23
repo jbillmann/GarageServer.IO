@@ -11,6 +11,7 @@ A simple, lightweight, HTML multiplayer game server (and client) for Node.js
 - Server State History
 - Server and Client Messaging
 - Server Reconciliation
+- Region Broadcasting
 - Works with any rendering and/or physics engine
 
 ## Install

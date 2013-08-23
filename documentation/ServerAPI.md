@@ -237,3 +237,29 @@ GarageServerIO.sendPlayersEvent(data)
 Allows server to broadcast events to all players.  Use this to make custom calls to GarageServer.IO clients for your game.  
 `data` **object literal**  
 Object containing all properties specific to the custom event.
+#### setPlayerRegion
+---
+```js
+GarageServerIO.setPlayerRegion(id, region)
+```
+Sets the player region.  GarageServer.IO will broadcast the state of players and entities who share the same region.  NOTE: This will implicitly enable GarageServer.IO region broadcasting - only those players and entities with regions with be notified of state.  Use `clearRegions` to revert region broadcasting.  
+`id` **string**  
+Id of the player to receive event.  
+`region` **string**  
+Name of the region.  
+#### setEntityRegion
+---
+```js
+GarageServerIO.setEntityRegion(id, region)
+```
+Sets the entity region.  GarageServer.IO will broadcast the state of players and entities who share the same region.  NOTE: This will implicitly enable GarageServer.IO region broadcasting - only those players and entities with regions with be notified of state.  Use `clearRegions` to revert region broadcasting.  
+`id` **string**  
+Id of the entity to receive event.  
+`region` **string**  
+Name of the region.  
+#### clearRegions
+---
+```js
+GarageServerIO.clearRegions()
+```
+Clears all regions associated with players and entities.  GarageServer.IO will default back to broadcasting state to all players.  
