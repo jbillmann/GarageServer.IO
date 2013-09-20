@@ -11,8 +11,7 @@
   "dependencies": {
       "express": "3.1.0",
       "jade": "*",
-      "socket.io": "0.9.14",
-      "garageserver.io": "0.6.0"
+      "socket.io": "0.9.14"
   },
   "engines": {
       "node": "0.8.x"
