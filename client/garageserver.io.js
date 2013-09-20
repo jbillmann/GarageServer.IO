@@ -405,6 +405,9 @@ var GarageServerIO = (function (socketio) {
                         newState = _options.onInterpolation(positions.previous.state, positions.target.state, amount);
                         entity.state = newState = _options.onInterpolation(entity.state, newState, _stateController.smoothingFactor);
                     }
+                    else if (entity.inputController.sequenceNumber === 1) {
+                        entity.state = entity.latestUpdate().state;
+                    }
                 }
             });
         },
