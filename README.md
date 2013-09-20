@@ -16,6 +16,10 @@ A simple, lightweight, HTML multiplayer game server (and client) for Node.js
 
 ## Install
 
+### Demo
+
+A playable [demo](http://garageserverio.jit.su/) of the [example](https://github.com/jbillmann/GarageServer.IO/tree/master/example) using GarageServer.IO.
+
 ### Server
 
 `$ npm install garageserver.io`
