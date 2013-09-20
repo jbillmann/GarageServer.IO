@@ -1,5 +1,6 @@
 {
   "name": "garageserver.io.example",
+  "subdomain": "garageserverio",
   "description": "A sample application using garageserver.io",
   "author": {
     "name": "Jeremiah Billmann",
@@ -10,6 +11,10 @@
   "dependencies": {
       "express": "3.1.0",
       "jade": "*",
-      "socket.io": "0.9.14"
+      "socket.io": "0.9.14",
+      "garageserver.io": "0.6.0"
+  },
+  "engines": {
+      "node": "0.8.x"
   }
 }
