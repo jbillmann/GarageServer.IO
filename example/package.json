@@ -1,5 +1,5 @@
 {
-  "name": "garageserver.io.example",
+  "name": "garageserver.io",
   "subdomain": "garageserverio",
   "description": "A sample application using garageserver.io",
   "author": {
@@ -7,13 +7,16 @@
     "email": "jcbillmann@yahoo.com"
   },
   "version": "0.6.0",
-  "license" : "MIT",
+  "license": "MIT",
   "dependencies": {
-      "express": "3.1.0",
-      "jade": "*",
-      "socket.io": "0.9.14"
+    "express": "3.1.0",
+    "jade": "*",
+    "socket.io": "0.9.14"
   },
   "engines": {
-      "node": "0.8.x"
+    "node": "0.8.x"
+  },
+  "scripts": {
+    "start": "node app.js"
   }
 }
