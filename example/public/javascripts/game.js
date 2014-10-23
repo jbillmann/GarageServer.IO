@@ -7,7 +7,7 @@ $(function () {
 
     window.addEventListener('resize', resizeCanvas, false);
 
-    GarageServerIO.initializeGarageServer('http://garageserver_io.jbillmann.c9.io', {
+    GarageServerIO.initializeGarageServer('https://garageserver_io-c9-jbillmann.c9.io', {
         logging: true,
         onReady: startGame,
         onUpdatePlayerPrediction: GamePhysics.getNewPlayerState,
