@@ -223,7 +223,7 @@ var GarageServerIO = (function (socketio) {
                 }, _stateController.pingInterval);
             });
 
-            _socket.on('d', function () {
+            _socket.on('disconnect', function () {
                 if (_options.logging) {
                     console.log('garageserver.io:: socket disconnect');
                 }
