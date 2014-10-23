@@ -1,6 +1,7 @@
 .idea
 node_modules
 .c9revisions
+.c9
 lib-cov
 *.seed
 *.log
