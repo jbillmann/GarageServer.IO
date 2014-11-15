@@ -346,15 +346,15 @@ var GarageServerIO = (function (socketio) {
         },
 
         update = function (data) {
-            _stateController.setTime(data.time);
+            _stateController.setTime(data.t);
 
             updatePlayers(data);
             updateEntities(data);
         },
 
         updatePlayers = function (data) {
-            data.playerStates.forEach(function (playerState) {
-                updateEntity(_playerController, playerState, data.time);
+            data.ps.forEach(function (playerState) {
+                updateEntity(_playerController, playerState, data.t);
 
                 if (_options.onPlayerUpdate) {
                     _options.onPlayerUpdate(playerState[1]);
@@ -363,8 +363,8 @@ var GarageServerIO = (function (socketio) {
         },
 
         updateEntities = function (data) {
-            data.entityStates.forEach(function (entityState) {
-                updateEntity(_entityController, entityState, data.time);
+            data.es.forEach(function (entityState) {
+                updateEntity(_entityController, entityState, data.t);
 
                 if (_options.onEntityUpdate) {
                     _options.onEntityUpdate(entityState[1]);
