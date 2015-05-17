@@ -181,6 +181,9 @@ var GarageServerIO = (function (socketio) {
 
         initializeGarageServer = function (path, options) {
             _options = options;
+            if(path == null || path.length <= 0) {
+                throw new Error('GarageServer.IO client is missing the server path - please verify the path argument passed to GarageServerIO.initializeGarageServer.');
+            }
             _socket = _io.connect(path + '/garageserver.io');
             registerSocketEvents();
         },
