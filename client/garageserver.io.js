@@ -21,6 +21,9 @@ api methods
     getPlayerStates : [, playerState]
     getEntityStates : [, entityState]
     updatePlayerState(id, state)
+    addEntity(id, state)
+    updateEntityState(id, state)
+    removeEntity(id)
     getId() : playerid
     sendServerEvent(data)
 */
@@ -354,6 +357,14 @@ var GarageServerIO = (function (socketio) {
             _playerController.remove(id);
         },
 
+        addEntity = function (id, state) {
+            
+        },
+        
+        updateEntityState = function (id, state) {
+            
+        },
+        
         removeEntity = function (id) {
             _entityController.remove(id);
         },
@@ -439,6 +450,9 @@ var GarageServerIO = (function (socketio) {
         getPlayerStates: getPlayerStates,
         getEntityStates: getEntityStates,
         updatePlayerState: updatePlayerState,
+        addEntity: addEntity,
+        updateEntityState: updateEntityState,
+        removeEntity: removeEntity,
         getId: getId,
         sendServerEvent: sendServerEvent
     };

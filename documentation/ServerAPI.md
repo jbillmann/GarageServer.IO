@@ -181,7 +181,7 @@ List of all previous states and their execution times up to `options.maxHistoryS
 GarageServerIO.updatePlayerState(id, state)
 ```
 
-Notify GargeServer.IO of a new state with an id of the player to be updated.  The idea here is that this call is made during each pass of the physics loop on the server.   
+Notify GarageServer.IO of a new state with an id of the player to be updated.  The idea here is that this call is made during each pass of the physics loop on the server.   
 
 `id` **string**  
 Id of the player whose state should be updated.  
@@ -193,7 +193,7 @@ New state of the entity containing all of the properties specific to a player fo
 GarageServerIO.updateEntityState(id, state)
 ```
 
-Notify GargeServer.IO of a new state with an id of the entity to be updated.  The idea here is that this call is made during each pass of the physics loop on the server.  
+Notify GarageServer.IO of a new state with an id of the entity to be updated.  The idea here is that this call is made during each pass of the physics loop on the server.  
 
 `id` **string**  
 Id of the entity whose state should be updated.  

@@ -201,6 +201,53 @@ Returns a list of current entity states from the most recent broadcast depending
 The id of the entity.  
 `state` **object literal**  
 Object containing all properties specific to entity state in your game.  
+
+#### updatePlayerState
+---
+```js
+GarageServerIO.updatePlayerState(id, state)
+```
+Notify the GarageServer.IO client of the new player state - this is intended to be used with client side prediction.
+
+`id` **string**  
+The id of the player.  
+`state` **object literal**  
+Object containing all properties specific to the new player state in your game.
+
+#### addEntity
+---
+```js
+GarageServerIO.addEntity(id, state)
+```
+Notify the GarageServer.IO client of a new entity with an initial state - this is intended to be used with client side prediction.
+
+`id` **string**  
+The id of the entity.  
+`state` **object literal**  
+Object containing all properties specific to new entity state in your game.
+
+#### updateEntityState
+---
+```js
+GarageServerIO.updateEntityState(id, state)
+```
+Notify the GarageServer.IO client of the new entity state - this is intended to be used with client side prediction.
+
+`id` **string**  
+The id of the entity.  
+`state` **object literal**  
+Object containing all properties specific to the new entity state in your game.
+
+#### removeEntity
+---
+```js
+GarageServerIO.removeEntity(id)
+```
+Notify the GarageServer.IO client that an entity has been removed from the game - this is intended to be used with client side prediction.
+
+`id` **string**  
+The id of the entity.
+
 #### getId
 ---
 ```js
