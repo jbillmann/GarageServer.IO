@@ -26,7 +26,7 @@
             } else if (inputs[i].input === 'up') {
                 distance += (125 * deltaTime);
             } else if (inputs[i].input === 'space') {
-                if (garageServer && (new Date().getTime() - newState.lastFire) > 1000) {
+                if ((new Date().getTime() - newState.lastFire) > 1000) {
                     var newId = guid();
                     garageServer.addEntity(newId, id);
                     garageServer.updateEntityState(newId, { x: newState.x, y: newState.y, ang: newState.ang } );
@@ -50,12 +50,15 @@
     }
 
     exports.getNewEntityState = function (state, deltaTime) {
+        var newState = {};
         var distance = 300 * deltaTime;
         var newPoint = getPoint(state.ang, distance, state.x, state.y);
-        state.x = newPoint.x;
-        state.y = newPoint.y;
+        
+        newState.ang = state.ang;
+        newState.x = newPoint.x;
+        newState.y = newPoint.y;
 
-        return state;
+        return newState;
     };
 
     exports.getInterpolatedState = function (previousState, targetState, amount) {

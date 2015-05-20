@@ -275,13 +275,23 @@ var GarageServerIO = (function (socketio) {
                 }
             });
 
-            _socket.on('re', function (id) {
-                removeEntity(id);
+            _socket.on('re', function (data) {
+                if (_stateController.clientSidePrediction) {
+                    _entityController.entities.forEach(function (entity) {
+                        if (entity.referrerId === data.id && entity.referrerSeq === data.seq) {
+                            removeEntity(entity.id);
+                        } 
+                    });
+                }
+                else {
+                    removeEntity(data.id);
+                }
+                
                 if (_options.logging) {
-                    console.log('garageserver.io:: socket removeEntity ' + id);
+                    console.log('garageserver.io:: socket removeEntity ' + data.id);
                 }
                 if (_options.onEntityRemove) {
-                    _options.onEntityRemove(id);
+                    _options.onEntityRemove(data.id);
                 }
             });
 
@@ -367,8 +377,8 @@ var GarageServerIO = (function (socketio) {
             _playerController.remove(id);
         },
 
-        addEntity = function (id, state) {
-            _entityController.add(id, _stateController.id).state = state;
+        addEntity = function (id) {
+            _entityController.add(id, _stateController.id);
         },
         
         updateEntityState = function (id, state) {
@@ -393,7 +403,19 @@ var GarageServerIO = (function (socketio) {
 
         updatePlayers = function (data) {
             data.ps.forEach(function (playerState) {
-                updateEntity(_playerController, playerState, data.t);
+                var playerFound = false;
+                _playerController.entities.some(function (player) {
+                    if (player.id === playerState[0]) {
+                        playerFound = true;
+                        player.updateState(playerState[1], playerState[2], data.t);
+                        return true;
+                    }
+                });
+
+                if (!playerFound) {
+                    var newPlayer = _playerController.add(playerState[0]);
+                    newPlayer.addUpdate(playerState[1], playerState[2], data.t);
+                }
 
                 if (_options.onPlayerUpdate) {
                     _options.onPlayerUpdate(playerState[1]);
@@ -403,27 +425,24 @@ var GarageServerIO = (function (socketio) {
 
         updateEntities = function (data) {
             data.es.forEach(function (entityState) {
-                updateEntity(_entityController, entityState, data.t);
+                var entityFound = false;
+                _entityController.entities.some(function (entity) {
+                    if (entity.id === entityState[0] || (entity.referrerId === entityState[3] && entity.referrerSeq === entityState[4])) {
+                        entityFound = true;
+                        entity.updateState(entityState[1], entityState[2], data.t);
+                        return true;
+                    }
+                });
+
+                if (!entityFound) {
+                    var newEntity = _entityController.add(entityState[0]);
+                    newEntity.addUpdate(entityState[1], entityState[2], data.t);
+                }
 
                 if (_options.onEntityUpdate) {
                     _options.onEntityUpdate(entityState[1]);
                 }
             });
-        },
-
-        updateEntity = function (entityController, entityState, time) {
-            var entityFound = false;
-            entityController.entities.some(function (entity) {
-                if (entity.id === entityState[0]) {
-                    entityFound = true;
-                    entity.updateState(entityState[1], entityState[2], time);
-                    return true;
-                }
-            });
-            if (!entityFound) {
-                var newEntity = entityController.add(entityState[0]);
-                newEntity.addUpdate(entityState[1], entityState[2], time);
-            }
         },
 
         processEntityStatesCurrent = function (entityController) {
