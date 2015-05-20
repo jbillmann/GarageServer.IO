@@ -1,6 +1,6 @@
 (function(exports){
 
-    exports.getNewPlayerState = function (state, inputs, deltaTime, garageServer) {
+    exports.getNewPlayerState = function (id, state, inputs, deltaTime, garageServer) {
         var i = 0, distance = 0, newState = {};
         
         if (!state.ang && state.ang !== 0) {
@@ -28,7 +28,7 @@
             } else if (inputs[i].input === 'space') {
                 if (garageServer && (new Date().getTime() - newState.lastFire) > 1000) {
                     var newId = guid();
-                    garageServer.addEntity(newId);
+                    garageServer.addEntity(newId, id);
                     garageServer.updateEntityState(newId, { x: newState.x, y: newState.y, ang: newState.ang } );
                     newState.lastFire = new Date().getTime();
                 }

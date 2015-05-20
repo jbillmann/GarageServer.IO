@@ -202,13 +202,15 @@ New state of the entity containing all of the properties specific to an entity f
 #### addEntity
 ---
 ```js
-GarageServerIO.addEntity(id)
+GarageServerIO.addEntity(id, referrerId)
 ```
 
 Notify GarageServer.IO that a new entity has been added to the game.  
 
 `id` **string**  
 Id of the entity to be added.  
+`referrerId` **string**  
+Id of the player who invoked/create the entity - optional and used primarily for client side prediction.  
 #### removeEntity
 ---
 ```js

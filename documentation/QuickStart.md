@@ -52,7 +52,7 @@ GarageServerIO.initializeGarageServer('http://insertmygameserverurlhere.com', {
     onReady: function () {
         // Call your game loop
     },
-    onUpdateClientPredictionReady: function (playerId, playerCurrentState, inputs, deltaTime) {
+    onUpdateClientPredictionReady: function (playerId, playerCurrentState, entityCurrentStates, inputs, deltaTime) {
         var newState = {};
         if (!playerCurrentState.x) {
             playerCurrentState.x = 0;

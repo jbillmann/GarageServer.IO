@@ -10,8 +10,8 @@ $(function () {
     GarageServerIO.initializeGarageServer('', {
         logging: true,
         onReady: startGame,
-        onUpdateClientPredictionReady: function(playerId, playerCurrentState, inputs, deltaTime) {
-            GarageServerIO.updatePlayerState(playerId, GamePhysics.getNewPlayerState(playerCurrentState, inputs, deltaTime));
+        onUpdateClientPredictionReady: function(playerId, playerCurrentState, entityCurrentStates, inputs, deltaTime) {
+            GarageServerIO.updatePlayerState(playerId, GamePhysics.getNewPlayerState(playerId, playerCurrentState, inputs, deltaTime));
         },
         onInterpolation: GamePhysics.getInterpolatedState
     });

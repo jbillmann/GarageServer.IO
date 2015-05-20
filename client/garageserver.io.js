@@ -10,7 +10,7 @@ options = {
     onEvent(callback(data)),
     onWorldState(callback(state)),
     onPing(callback(pingDelay)),
-    onUpdateClientPredictionReady(callback(playerId, playerCurrentState, inputs, deltaTime)),
+    onUpdateClientPredictionReady(callback(playerId, playerCurrentState, entityCurrentStates, inputs, deltaTime)),
     onInterpolation(callback(previousState, targetState, amount) : newState),
     onReady(callback),
     logging: true
@@ -88,10 +88,12 @@ var GarageServerIO = (function (socketio) {
         this.time = time;
     }
 
-    function Entity(id, maxUpdateBuffer) {
+    function Entity(id, referrerId, referrerSeq, maxUpdateBuffer) {
         this.updates = [];
         this.maxUpdateBuffer = maxUpdateBuffer;
         this.id = id;
+        this.referrerId = referrerId;
+        this.referrerSeq = referrerSeq;
         this.state = {};
         this.inputController = new InputController();
     }
@@ -142,7 +144,7 @@ var GarageServerIO = (function (socketio) {
     };
 
     function Player(id, maxUpdateBuffer) {
-        Entity.call(this, id, maxUpdateBuffer);
+        Entity.call(this, id, null, null, maxUpdateBuffer);
     }
     Player.prototype = Object.create(Entity.prototype);
 
@@ -151,8 +153,9 @@ var GarageServerIO = (function (socketio) {
         this.maxUpdateBuffer = maxUpdateBuffer;
     }
     EntityController.prototype = {
-        add: function (id) {
-            var entity = new Entity(id, this.maxUpdateBuffer);
+        add: function (id, referrerId) {
+            var referrerSeq = this.entities.filter(function (value) { return value.referrerId === referrerId; }).length;
+            var entity = new Entity(id, referrerId, referrerSeq, this.maxUpdateBuffer);
             this.entities.push(entity);
             return entity;
         },
@@ -303,9 +306,16 @@ var GarageServerIO = (function (socketio) {
         addInput = function (clientInput) {
             _playerController.entities.some(function (player) {
                 if (player.id === _stateController.id) {
-                    if (_stateController.clientSidePrediction && _options.onUpdatePlayerPrediction) {
+                    if (_stateController.clientSidePrediction && _options.onUpdateClientPredictionReady) {
+                        var entityCurrentStates = [];
+                        _entityController.entities.forEach(function(entity) {
+                            if (entity.referrerId === player.id) {
+                                entityCurrentStates.push({ id: entity.id, state: entity.state }); 
+                            }
+                        });
+            
                         player.inputController.add(clientInput);
-                        _options.onUpdateClientPredictionReady(player.state, [{ input: clientInput }], _stateController.physicsDelta);
+                        _options.onUpdateClientPredictionReady(player.id, player.state, entityCurrentStates, [{ input: clientInput }], _stateController.physicsDelta);
                     }
                     _socket.emit('i', [ clientInput, player.inputController.sequenceNumber, _stateController.renderTime ]);
                 }
@@ -358,11 +368,16 @@ var GarageServerIO = (function (socketio) {
         },
 
         addEntity = function (id, state) {
-            
+            _entityController.add(id, _stateController.id).state = state;
         },
         
         updateEntityState = function (id, state) {
-            
+            _entityController.entities.some(function(entity) {
+                if (entity.id === id) {
+                    entity.state = state;
+                    return true;
+                }
+            });
         },
         
         removeEntity = function (id) {

@@ -113,7 +113,7 @@ The current ping in milliseconds.
 
 ---
 ```js
-options.onUpdateClientPredictionReady(callback(playerId, playerCurrentState, inputs, deltaTime))  
+options.onUpdateClientPredictionReady(callback(playerId, playerCurrentState, entityCurrentStates: [, {id, state}], inputs, deltaTime))  
 ```
 If using client side prediction, this callback will fire when you should update player and entity states, based on the current states for player and entities, inputs to be processed, and the delta time.  
 
@@ -125,6 +125,9 @@ The id of the player.
 
 `playerCurrentState` **object literal**  
 The current state of the player.  
+
+`entityCurrentStates` **array**  
+The list of all entities and their current state that were invoked by the player.
 
 `inputs` **array**  
 List of all the inputs to be processed.  
