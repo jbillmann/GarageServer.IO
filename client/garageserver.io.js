@@ -10,7 +10,7 @@ options = {
     onEvent(callback(data)),
     onWorldState(callback(state)),
     onPing(callback(pingDelay)),
-    onUpdatePlayerPrediction(callback(currentState, inputs, deltaTime) : newState),
+    onUpdateClientPredictionReady(callback(playerId, playerCurrentState, inputs, deltaTime)),
     onInterpolation(callback(previousState, targetState, amount) : newState),
     onReady(callback),
     logging: true
@@ -20,6 +20,7 @@ api methods
     addInput(input)
     getPlayerStates : [, playerState]
     getEntityStates : [, entityState]
+    updatePlayerState(id, state)
     getId() : playerid
     sendServerEvent(data)
 */
@@ -301,7 +302,7 @@ var GarageServerIO = (function (socketio) {
                 if (player.id === _stateController.id) {
                     if (_stateController.clientSidePrediction && _options.onUpdatePlayerPrediction) {
                         player.inputController.add(clientInput);
-                        player.state = _options.onUpdatePlayerPrediction(player.state, [{ input: clientInput }], _stateController.physicsDelta);
+                        _options.onUpdateClientPredictionReady(player.state, [{ input: clientInput }], _stateController.physicsDelta);
                     }
                     _socket.emit('i', [ clientInput, player.inputController.sequenceNumber, _stateController.renderTime ]);
                 }
@@ -338,6 +339,15 @@ var GarageServerIO = (function (socketio) {
             });
 
             return entityStates;
+        },
+        
+        updatePlayerState = function (id, state) {
+            _playerController.entities.some(function(player) {
+                if (player.id === id) {
+                    player.state = state;
+                    return true;
+                }
+            });
         },
 
         removePlayer = function (id) {
@@ -428,6 +438,7 @@ var GarageServerIO = (function (socketio) {
         addInput: addInput,
         getPlayerStates: getPlayerStates,
         getEntityStates: getEntityStates,
+        updatePlayerState: updatePlayerState,
         getId: getId,
         sendServerEvent: sendServerEvent
     };
