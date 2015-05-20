@@ -1,37 +1,44 @@
 (function(exports){
 
     exports.getNewPlayerState = function (state, inputs, deltaTime, garageServer) {
-        var i = 0, distance = 0;
-
+        var i = 0, distance = 0, newState = {};
+        
         if (!state.ang && state.ang !== 0) {
-           state.ang = 0;
-           state.x = 0;
-           state.y = 0;
-           state.ship = Math.floor(Math.random() * 9) + 1;
-           state.lastFire = new Date().getTime();
+            newState.ang = 0;
+            newState.x = 0;
+            newState.y = 0;
+            newState.ship = Math.floor(Math.random() * 9) + 1;
+            newState.lastFire = new Date().getTime();
+        }
+        else {
+            newState.ang = state.ang;
+            newState.x = state.x;
+            newState.y = state.y;
+            newState.ship = state.ship;
+            newState.lastFire = state.lastFire;
         }
 
         for (i = 0; i < inputs.length; i ++) {
             if (inputs[i].input === 'left') {
-                state.ang -= (125 * deltaTime);
+                newState.ang -= (125 * deltaTime);
             } else if (inputs[i].input === 'right') {
-                state.ang += (125 * deltaTime);
+                newState.ang += (125 * deltaTime);
             } else if (inputs[i].input === 'up') {
                 distance += (125 * deltaTime);
             } else if (inputs[i].input === 'space') {
-                if (garageServer && (new Date().getTime() - state.lastFire) > 1000) {
+                if (garageServer && (new Date().getTime() - newState.lastFire) > 1000) {
                     var newId = guid();
                     garageServer.addEntity(newId);
-                    garageServer.updateEntityState(newId, { x: state.x, y: state.y, ang: state.ang } );
-                    state.lastFire = new Date().getTime();
+                    garageServer.updateEntityState(newId, { x: newState.x, y: newState.y, ang: newState.ang } );
+                    newState.lastFire = new Date().getTime();
                 }
             }
         }
-        var newPoint = getPoint(state.ang, distance, state.x, state.y);
-        state.x = newPoint.x;
-        state.y = newPoint.y;
+        var newPoint = getPoint(newState.ang, distance, newState.x, newState.y);
+        newState.x = newPoint.x;
+        newState.y = newPoint.y;
 
-        return state;
+        return newState;
     };
 
     function getPoint(angle, distance, oldX, oldY) {
