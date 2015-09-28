@@ -52,19 +52,20 @@ GarageServerIO.initializeGarageServer('http://insertmygameserverurlhere.com', {
     onReady: function () {
         // Call your game loop
     },
-    onUpdatePlayerPrediction: function (state, inputs, deltaTime) {
+    onUpdateClientPredictionReady: function (playerId, playerCurrentState, entityCurrentStates, inputs, deltaTime) {
         var newState = {};
-        if (!player.state.x) {
-        player.state.x = 0;
+        if (!playerCurrentState.x) {
+            playerCurrentState.x = 0;
         }
-        for (i = 0; i < player.inputs.length; i ++) {
-            if (player.inputs[i].input === 'left') {
-                newState.x = player.state.x - (50 * deltaTime);
+
+        for (i = 0; i < inputs.length; i ++) {
+            if (inputs[i].input === 'left') {
+                newState.x = playerCurrentState.x - (50 * deltaTime);
             } else if (inputs[i].input === 'right') {
-                newState.x = player.state.x + (50 * deltaTime);
+                newState.x = playerCurrentState.x + (50 * deltaTime);
             }
         }
-        return newState;
+        GarageServerIO.updatePlayerState(playerid, newState);
     },
     onInterpolation: function (previousState, targetState, amount) {
         return { x: (previousState.x + amount * (targetState.x - previousState.x)) };

@@ -10,7 +10,7 @@ options = {
     onEvent(callback(data)),
     onWorldState(callback(state)),
     onPing(callback(pingDelay)),
-    onUpdatePlayerPrediction(callback(currentState, inputs, deltaTime) : newState),
+    onUpdateClientPredictionReady(callback(playerId, playerCurrentState, entityCurrentStates, inputs, deltaTime)),
     onInterpolation(callback(previousState, targetState, amount) : newState),
     onReady(callback),
     logging: true
@@ -20,6 +20,10 @@ api methods
     addInput(input)
     getPlayerStates : [, playerState]
     getEntityStates : [, entityState]
+    updatePlayerState(id, state)
+    addEntity(id, state)
+    updateEntityState(id, state)
+    removeEntity(id)
     getId() : playerid
     sendServerEvent(data)
 */
@@ -80,10 +84,12 @@ var GarageServerIO = (function (socketio) {
         this.time = time;
     }
 
-    function Entity(id, maxUpdateBuffer) {
+    function Entity(id, referrerId, referrerSeq, maxUpdateBuffer) {
         this.updates = [];
         this.maxUpdateBuffer = maxUpdateBuffer;
         this.id = id;
+        this.referrerId = referrerId;
+        this.referrerSeq = referrerSeq;
         this.state = {};
         this.inputController = new InputController();
     }
@@ -134,7 +140,7 @@ var GarageServerIO = (function (socketio) {
     };
 
     function Player(id, maxUpdateBuffer) {
-        Entity.call(this, id, maxUpdateBuffer);
+        Entity.call(this, id, null, null, maxUpdateBuffer);
     }
     Player.prototype = Object.create(Entity.prototype);
 
@@ -143,8 +149,9 @@ var GarageServerIO = (function (socketio) {
         this.maxUpdateBuffer = maxUpdateBuffer;
     }
     EntityController.prototype = {
-        add: function (id) {
-            var entity = new Entity(id, this.maxUpdateBuffer);
+        add: function (id, referrerId) {
+            var referrerSeq = this.entities.filter(function (value) { return value.referrerId === referrerId; }).length;
+            var entity = new Entity(id, referrerId, referrerSeq, this.maxUpdateBuffer);
             this.entities.push(entity);
             return entity;
         },
@@ -181,7 +188,10 @@ var GarageServerIO = (function (socketio) {
                 _io = options.socketio;
             }
             if (!_io) {
-                throw new Error("GarageServer.IO: Socket.IO not found. Please ensure socket.io.js is referenced before the garageserver.io.js file.");
+                throw new Error('GarageServer.IO Socket.IO not found. Please ensure socket.io.js is referenced before the garageserver.io.js file.');
+            }
+            if(path == null || path.length <= 0) {
+                throw new Error('GarageServer.IO client is missing the server path - please verify the path argument passed to GarageServerIO.initializeGarageServer.');
             }
             _socket = _io.connect(path + '/garageserver.io');
             registerSocketEvents();
@@ -267,13 +277,23 @@ var GarageServerIO = (function (socketio) {
                 }
             });
 
-            _socket.on('re', function (id) {
-                removeEntity(id);
+            _socket.on('re', function (data) {
+                if (_stateController.clientSidePrediction) {
+                    _entityController.entities.forEach(function (entity) {
+                        if (entity.referrerId === data.id && entity.referrerSeq === data.seq) {
+                            removeEntity(entity.id);
+                        } 
+                    });
+                }
+                else {
+                    removeEntity(data.id);
+                }
+                
                 if (_options.logging) {
-                    console.log('garageserver.io:: socket removeEntity ' + id);
+                    console.log('garageserver.io:: socket removeEntity ' + data.id);
                 }
                 if (_options.onEntityRemove) {
-                    _options.onEntityRemove(id);
+                    _options.onEntityRemove(data.id);
                 }
             });
 
@@ -298,9 +318,16 @@ var GarageServerIO = (function (socketio) {
         addInput = function (clientInput) {
             _playerController.entities.some(function (player) {
                 if (player.id === _stateController.id) {
-                    if (_stateController.clientSidePrediction && _options.onUpdatePlayerPrediction) {
+                    if (_stateController.clientSidePrediction && _options.onUpdateClientPredictionReady) {
+                        var entityCurrentStates = [];
+                        _entityController.entities.forEach(function(entity) {
+                            if (entity.referrerId === player.id) {
+                                entityCurrentStates.push({ id: entity.id, state: entity.state }); 
+                            }
+                        });
+            
                         player.inputController.add(clientInput);
-                        player.state = _options.onUpdatePlayerPrediction(player.state, [{ input: clientInput }], _stateController.physicsDelta);
+                        _options.onUpdateClientPredictionReady(player.id, player.state, entityCurrentStates, [{ input: clientInput }], _stateController.physicsDelta);
                     }
                     _socket.emit('i', [ clientInput, player.inputController.sequenceNumber, _stateController.renderTime ]);
                 }
@@ -338,11 +365,33 @@ var GarageServerIO = (function (socketio) {
 
             return entityStates;
         },
+        
+        updatePlayerState = function (id, state) {
+            _playerController.entities.some(function(player) {
+                if (player.id === id) {
+                    player.state = state;
+                    return true;
+                }
+            });
+        },
 
         removePlayer = function (id) {
             _playerController.remove(id);
         },
 
+        addEntity = function (id) {
+            _entityController.add(id, _stateController.id);
+        },
+        
+        updateEntityState = function (id, state) {
+            _entityController.entities.some(function(entity) {
+                if (entity.id === id) {
+                    entity.state = state;
+                    return true;
+                }
+            });
+        },
+        
         removeEntity = function (id) {
             _entityController.remove(id);
         },
@@ -356,7 +405,19 @@ var GarageServerIO = (function (socketio) {
 
         updatePlayers = function (data) {
             data.ps.forEach(function (playerState) {
-                updateEntity(_playerController, playerState, data.t);
+                var playerFound = false;
+                _playerController.entities.some(function (player) {
+                    if (player.id === playerState[0]) {
+                        playerFound = true;
+                        player.updateState(playerState[1], playerState[2], data.t);
+                        return true;
+                    }
+                });
+
+                if (!playerFound) {
+                    var newPlayer = _playerController.add(playerState[0]);
+                    newPlayer.addUpdate(playerState[1], playerState[2], data.t);
+                }
 
                 if (_options.onPlayerUpdate) {
                     _options.onPlayerUpdate(playerState[1]);
@@ -366,27 +427,24 @@ var GarageServerIO = (function (socketio) {
 
         updateEntities = function (data) {
             data.es.forEach(function (entityState) {
-                updateEntity(_entityController, entityState, data.t);
+                var entityFound = false;
+                _entityController.entities.some(function (entity) {
+                    if (entity.id === entityState[0] || (entity.referrerId === entityState[3] && entity.referrerSeq === entityState[4])) {
+                        entityFound = true;
+                        entity.updateState(entityState[1], entityState[2], data.t);
+                        return true;
+                    }
+                });
+
+                if (!entityFound) {
+                    var newEntity = _entityController.add(entityState[0]);
+                    newEntity.addUpdate(entityState[1], entityState[2], data.t);
+                }
 
                 if (_options.onEntityUpdate) {
                     _options.onEntityUpdate(entityState[1]);
                 }
             });
-        },
-
-        updateEntity = function (entityController, entityState, time) {
-            var entityFound = false;
-            entityController.entities.some(function (entity) {
-                if (entity.id === entityState[0]) {
-                    entityFound = true;
-                    entity.updateState(entityState[1], entityState[2], time);
-                    return true;
-                }
-            });
-            if (!entityFound) {
-                var newEntity = entityController.add(entityState[0]);
-                newEntity.addUpdate(entityState[1], entityState[2], time);
-            }
         },
 
         processEntityStatesCurrent = function (entityController) {
@@ -427,6 +485,10 @@ var GarageServerIO = (function (socketio) {
         addInput: addInput,
         getPlayerStates: getPlayerStates,
         getEntityStates: getEntityStates,
+        updatePlayerState: updatePlayerState,
+        addEntity: addEntity,
+        updateEntityState: updateEntityState,
+        removeEntity: removeEntity,
         getId: getId,
         sendServerEvent: sendServerEvent
     };

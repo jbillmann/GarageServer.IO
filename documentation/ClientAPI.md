@@ -113,17 +113,21 @@ The current ping in milliseconds.
 
 ---
 ```js
-options.onUpdatePlayerPrediction(callback(currentState, inputs, deltaTime) : newState)  
+options.onUpdateClientPredictionReady(callback(playerId, playerCurrentState, entityCurrentStates: [, {id, state}], inputs, deltaTime))  
 ```
-**_Returns:_ object literal**  
-
-If using client side prediction, this callback should return the new state, `newState`, based on the current state, inputs to be processed, and the delta time.  
+If using client side prediction, this callback will fire when you should update player and entity states, based on the current states for player and entities, inputs to be processed, and the delta time.  
 
 `callback` **function**  
 Function to be invoked upon event firing.  
 
-`currentState` **object literal**  
+`playerId` **string**  
+The id of the player. 
+
+`playerCurrentState` **object literal**  
 The current state of the player.  
+
+`entityCurrentStates` **array**  
+The list of all entities and their current state that were invoked by the player.
 
 `inputs` **array**  
 List of all the inputs to be processed.  
@@ -200,6 +204,53 @@ Returns a list of current entity states from the most recent broadcast depending
 The id of the entity.  
 `state` **object literal**  
 Object containing all properties specific to entity state in your game.  
+
+#### updatePlayerState
+---
+```js
+GarageServerIO.updatePlayerState(id, state)
+```
+Notify the GarageServer.IO client of the new player state - this is intended to be used with client side prediction.
+
+`id` **string**  
+The id of the player.  
+`state` **object literal**  
+Object containing all properties specific to the new player state in your game.
+
+#### addEntity
+---
+```js
+GarageServerIO.addEntity(id, state)
+```
+Notify the GarageServer.IO client of a new entity with an initial state - this is intended to be used with client side prediction.
+
+`id` **string**  
+The id of the entity.  
+`state` **object literal**  
+Object containing all properties specific to new entity state in your game.
+
+#### updateEntityState
+---
+```js
+GarageServerIO.updateEntityState(id, state)
+```
+Notify the GarageServer.IO client of the new entity state - this is intended to be used with client side prediction.
+
+`id` **string**  
+The id of the entity.  
+`state` **object literal**  
+Object containing all properties specific to the new entity state in your game.
+
+#### removeEntity
+---
+```js
+GarageServerIO.removeEntity(id)
+```
+Notify the GarageServer.IO client that an entity has been removed from the game - this is intended to be used with client side prediction.
+
+`id` **string**  
+The id of the entity.
+
 #### getId
 ---
 ```js

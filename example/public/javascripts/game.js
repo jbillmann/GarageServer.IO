@@ -7,10 +7,15 @@ $(function () {
 
     window.addEventListener('resize', resizeCanvas, false);
 
-    GarageServerIO.initializeGarageServer('https://garageserver_io-c9-jbillmann.c9.io', {
+    GarageServerIO.initializeGarageServer('', {
         logging: true,
         onReady: startGame,
-        onUpdatePlayerPrediction: GamePhysics.getNewPlayerState,
+        onUpdateClientPredictionReady: function (playerId, playerCurrentState, entityCurrentStates, inputs, deltaTime) {
+            entityCurrentStates.forEach(function (entity) {
+                GarageServerIO.updateEntityState(entity.id, GamePhysics.getNewEntityState(entity.state, deltaTime));
+            });
+            GarageServerIO.updatePlayerState(playerId, GamePhysics.getNewPlayerState(playerId, playerCurrentState, inputs, deltaTime, GarageServerIO));
+        },
         onInterpolation: GamePhysics.getInterpolatedState
     });
 
