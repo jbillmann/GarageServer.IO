@@ -494,3 +494,7 @@ var GarageServerIO = (function (socketio) {
     };
 
 }) (window.io);
+
+if (module) {
+    module.exports = GarageServerIO;
+}
