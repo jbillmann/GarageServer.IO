@@ -12,7 +12,7 @@ var server = garageServer.createGarageServer(sockets,
     {
         interpolation: true,
         clientSidePrediction: true,
-        worldState: { width: '400px', height: '400px'; }
+        worldState: { width: '400px', height: '400px' }
     });
 ```
 **2.** Start GarageServer.IO instance prior to starting your physics loop.  This starts the clock that is used for broadcasting state and storing state history.
