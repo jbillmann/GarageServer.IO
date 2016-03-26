@@ -31,10 +31,6 @@ var GarageServerIO = (function (socketio) {
 
     "use strict";
 
-    if (!socketio) {
-        throw new Error("GarageServer.IO: Socket.IO not found. Please ensure socket.io.js is referenced before the garageserver.io.js file.");
-    }
-
     function StateController() {
         this.clientTime = 0;
         this.renderTime = 0;
@@ -188,6 +184,12 @@ var GarageServerIO = (function (socketio) {
 
         initializeGarageServer = function (path, options) {
             _options = options;
+            if (options.socketio) {
+                _io = options.socketio;
+            }
+            if (!_io) {
+                throw new Error('GarageServer.IO Socket.IO not found. Please ensure socket.io.js is referenced before the garageserver.io.js file.');
+            }
             if(path == null || path.length <= 0) {
                 throw new Error('GarageServer.IO client is missing the server path - please verify the path argument passed to GarageServerIO.initializeGarageServer.');
             }
@@ -492,3 +494,7 @@ var GarageServerIO = (function (socketio) {
     };
 
 }) (window.io);
+
+if (module) {
+    module.exports = GarageServerIO;
+}
